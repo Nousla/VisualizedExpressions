@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="Frontpage.css">
+    <title> Front Page </title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <div id="root_box">
+        <div id="content_box">
+            <div class="expression_box">
+                <label id="expression_des">Write the expression and choose the type of tool you want to use </label>
+                <input type="text" id="expression_field" name="Expression" value="Expression">
+                <button type="button" class="generatebtn">Generate</button>
+                <select id="dropdown">
+            <option selected disabled>Choose type</option>
+            <option value="visualization">Visualization</option>
+            <option value="problem_solving">Problem Solving</option>
+            <option value="sandbox">Sandbox</option>
+        </select>
+            </div>
+            <div id="sandbox_div">
+                <label id="sandbox_des"> If you just want to play</label>
+                <button type="button" class="sandboxbtn">Sandbox</button>
+            </div>
+        </div>
+        <div id="animation_box">
+            <button type="button" class="visualization_ani">Animation of Visualization</button>
+            <button type="button" class="problem_solving_ani">Animation of Problem Solving</button>
+            <button type="button" class="sandbox_ani">Animation of Sandbox</button>
+        </div>
+    </div>
+</body>
+
+</html>
