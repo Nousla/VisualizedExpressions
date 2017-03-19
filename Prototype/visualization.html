@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Visualize Expression</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="resources/visualization.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+
+<body>
+	<div id="root_box">
+		<div id="expression_box">
+			<p>Expression </p>
+			<div id="expression"></div>
+		</div>
+		<div id="visualization_box">
+			<div id="visualization_info">
+				<p id="visualization_header">Visualization </p>
+				<p>Type: </p>
+				<select>
+					<option>Syntax Tree</option>
+					<option>Onion</option>
+					<option>Color</option>
+				</select>
+				<p id="information_header">Information</p>
+				<div id="information">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sollicitudin et nunc et porttitor. Aliquam egestas
+					commodo risus, id ultrices est. Etiam tincidunt in ipsum vel pellentesque. Donec id sagittis mi. Nulla at ipsum non
+					orci porttitor feugiat. Nullam sed purus ligula. Nunc sagittis tortor sem, quis blandit turpis blandit eu. Integer blandit
+					sollicitudin dui, commodo porta mi cursus a. Mauris pretium purus imperdiet massa mollis fringilla. Pellentesque convallis
+					lacus ut risus suscipit, blandit pellentesque mauris malesuada. Donec non laoreet ante. Ut mauris mi, facilisis vel
+					tellus at, porttitor laoreet diam.</div>
+			</div>
+			<div id="visualization_render">
+				<img src="resources/visualization_tree.png" alt="Syntax tree visualization" />
+			</div>
+			<div id="zoom_box">
+				<button>Zoom out</button>
+				<div id="slider" style="width:50%"></div>
+				<button>Zoom in</button>
+			</div>
+		</div>
+	</div>
+	<script>
+		let expression = document.getElementById("expression");
+		katex.render("5x + 10 = 7 \\times 3 - \\frac{2}{8}", expression);
+
+		$(function () {
+			$("#slider").slider();
+		});
+	</script>
+</body>
+
+</html>
