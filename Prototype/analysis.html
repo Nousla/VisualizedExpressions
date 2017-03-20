@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Analysis</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="resources/analysis.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+</head>
+
+<body>
+    <div id="root_box">
+        <div id="analysis_header">
+            <p id="analysis_header_title">Expression Analysis</p>
+            <p>Analyse expressions to find possible actions with corresponding visualization.</p>
+            <div id="visualization_type">
+                <p>Visualization type: </p>
+                <select>
+                        <option>Syntax Tree</option>
+                        <option>Onion</option>
+                        <option>Color</option>
+				    </select>
+            </div>
+            <div id="header_box">
+                <div id="expression_box">
+                    <p>Expression</p>
+                    <div id="expression_edit">
+                        <textarea rows="1">5x + 10 = 7*3-(2/8)</textarea>
+                        <button>Analyse</button>
+                    </div>
+                    <div id="expression"></div>
+                </div>
+                <div id="expression_render">
+                    <p>Visualization</p>
+                    <img src="resources/visualization_tree.png" alt="Syntax tree visualization" />
+                </div>
+            </div>
+
+            <div id="analysis_box">
+                <div class="result_box">
+                    <div class="result_header">
+                        <p>1</p>
+                        <p>Solve variable: x</p>
+                        <button>Hide visualization</button>
+                    </div>
+                    <div class="result_left">
+                        <div class="result_info">
+                            <p>Result: </p>
+                            <div class="result" id="result__solve_x"></div>
+                        </div>
+                        <div class="result_options">
+                            <button>Open Guide View</button>
+                            <button>Open Visualization View</button>
+                        </div>
+                    </div>
+                    <div class="result_right">
+                        <div class="visualization_render">
+                            <img src="resources/visualization_tree_analysis.png" alt="Syntax tree visualization" />
+                        </div>
+                    </div>
+                </div>
+                <div class="result_box">
+                    <div class="result_header">
+                        <p>2</p>
+                        <p>Reduce expression</p>
+                        <button>Hide visualization</button>
+                    </div>
+                    <div class="result_left">
+                        <div class="result_info">
+                            <p>Result: </p>
+                            <div class="result" id="result__reduce"></div>
+                        </div>
+                        <div class="result_options">
+                            <button>Open Guide View</button>
+                            <button>Open Visualization View</button>
+                        </div>
+                    </div>
+                    <div class="result_right">
+                        <div class="visualization_render">
+                            <img src="resources/visualization_tree_analysis_2.png" alt="Syntax tree visualization" />
+                        </div>
+                    </div>
+                </div>
+                <div class="result_box">
+                    <div class="result_header">
+                        <p>3</p>
+                        <p>Isolate variable: x</p>
+                        <button>Show visualization</button>
+                    </div>
+                    <div class="result_left">
+                        <div class="result_info">
+                            <p>Result: </p>
+                            <div class="result" id="result__isolate_x"></div>
+                        </div>
+                        <div class="result_options">
+                            <button>Open Guide View</button>
+                            <button>Open Visualization View</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            let expression = document.getElementById("expression");
+            katex.render("5x + 10 = 7 \\times 3 - \\frac{2}{8}", expression);
+
+            let solve_x = document.getElementById("result__solve_x");
+            katex.render("x = 2.15", solve_x);
+
+            let reduce = document.getElementById("result__reduce");
+            katex.render("5x + 10 = 20.75", reduce);
+
+            let isolate_x = document.getElementById("result__isolate_x");
+            katex.render("x = \\frac{7 \\times 3 - \\frac{2}{8}}{5} - 10", isolate_x);
+        </script>
+</body>
+
+</html>
