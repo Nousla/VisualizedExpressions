@@ -8,7 +8,7 @@
 #original_expression_box p {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: bold;
-    font-size: 20pt;
+    font-size: 15pt;
 }
 
 #original_expression_box > * {
@@ -64,7 +64,7 @@
 #expressions_header #expressions_header_title {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: bold;
-    font-size: 15pt;
+    font-size: 20pt;
 }
 
 .expression_actions {

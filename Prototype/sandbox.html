@@ -8,29 +8,27 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="resources/sandbox.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
 
 <body>
     <div id="root_box">
+        <div id="expressions_header">
+            <p id="expressions_header_title">Expression Sandbox</p>
+            <p>Input expressions to visualize them.</p>
+            <div id="visualization_type">
+                <p>Visualization type: </p>
+                <select>
+                        <option>Syntax Tree</option>
+                        <option>Onion</option>
+                        <option>Color</option>
+				    </select>
+            </div>
+        </div>
         <div id="original_expression_box">
             <p>Original Expression </p>
             <div id="original_expression"></div>
         </div>
         <div id="submitted_expressions_box">
-            <div id="expressions_header">
-                <p id="expressions_header_title">Expression Sandbox</p>
-                <p>Input expressions to visualize them.</p>
-                <div id="visualization_type">
-                    <p>Visualization type: </p>
-                    <select>
-                        <option>Syntax Tree</option>
-                        <option>Onion</option>
-                        <option>Color</option>
-				    </select>
-                </div>
-            </div>
             <div class="expression_box">
                 <div class="expression_actions">
                     <p>1</p>
@@ -116,10 +114,6 @@
 
         let expression_4 = document.getElementById("expression_4");
         katex.render("x = \\frac{7 \\times 3 - \\frac{2}{8}}{5} - 10", expression_4);
-
-        $(function () {
-            $("#slider").slider();
-        });
     </script>
 </body>
 
