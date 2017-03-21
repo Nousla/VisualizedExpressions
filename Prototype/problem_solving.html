@@ -12,10 +12,14 @@
 <body>
     <div id="rootbox">
         <div id="original_expression_box">
-            <p>Original Expression </p>
-            <div id="original_expression"></div>
-            <div class="visualization_render_original">
-                <img src="resources/visualization_tree.png" alt="Syntax tree visualization" />
+            <div id="left">
+                <p>Original Expression </p>
+                <div id="original_expression"></div>
+            </div>
+            <div id="right">
+                <div class="visualization_render_original">
+                    <img src="resources/visualization_tree.png" alt="Syntax tree visualization" />
+                </div>
             </div>
         </div>
         <div id="submitted_expressions_box">
@@ -33,6 +37,7 @@
                 <div id="solution">
                     <p>Solution =</p>
                     <textarea rows="1">x = ((7*3 - (2/8))/5) - 10</textarea>
+                    <div id="analysis">&#x2612</div>
                 </div>
             </div>
             <div class="expression_box">
@@ -65,7 +70,7 @@
                 <div class="expression_edit">
                     <textarea rows="1">(5x/5) + 10 = (7*3-(2/8))/5</textarea>
                 </div>
-                <div id="analysis">&#x2611</div>
+                <div id="analysis">&#x2612</div>
                 <div class="visualization_render">
                     <img src="resources/visualization_tree_2.png" alt="Syntax tree visualization" />
                 </div>
@@ -83,7 +88,7 @@
                 <div class="expression_edit">
                     <textarea rows="1">x + 10 - 10 = ((7*3 - (2/8))/5) - 10</textarea>
                 </div>
-                <div id="analysis">&#x2611</div>
+                <div id="analysis">&#x2612</div>
                 <div class="visualization_render">
                     <img src="resources/visualization_tree_3.png" alt="Syntax tree visualization" />
                 </div>
@@ -101,7 +106,7 @@
                 <div class="expression_edit">
                     <textarea rows="1">x = ((7*3 - (2/8))/5) - 10</textarea>
                 </div>
-                <div id="analysis">&#x2611</div>
+                <div id="analysis">&#x2612</div>
                 <div class="visualization_render">
                     <img src="resources/visualization_tree_4.png" alt="Syntax tree visualization" />
                 </div>
@@ -124,7 +129,6 @@
 
         let expression_4 = document.getElementById("expression_4");
         katex.render("x = \\frac{7 \\times 3 - \\frac{2}{8}}{5} - 10", expression_4);
-
     </script>
 </body>
 
