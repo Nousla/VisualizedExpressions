@@ -1,3 +1,7 @@
+label {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 #root_box {
     display: block;
     align-content: center;

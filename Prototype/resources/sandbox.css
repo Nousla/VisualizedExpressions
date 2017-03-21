@@ -3,20 +3,36 @@
     border-radius: 10px;
     margin-bottom: 5px;
     padding: 5px 5px 5px 5px;
+    overflow: hidden;
 }
 
-#original_expression_box p {
+#left {
+    display: block;
+    float: left;
+}
+
+#right {
+    float: right;
+}
+
+#left p {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: bold;
     font-size: 15pt;
 }
 
-#original_expression_box > * {
+#left > * {
     margin: 0;
 }
 
-#original_expression_box #original_expression {
+#left #original_expression {
     margin-top: 5px;
+}
+
+.visualization_render_original {
+    display: inline-flex;
+    border-left: 2px dashed lightblue;
+    padding: 5px;
 }
 
 #submitted_expressions_box {

@@ -144,3 +144,15 @@
     border-radius: 20px;
     border: 1px solid black;
 }
+
+#play_box {
+    display: block;
+    margin-top: 5px;
+}
+
+#play_box > button {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12pt;
+    border-radius: 20px;
+    border: 1px solid black;
+}

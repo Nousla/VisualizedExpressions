@@ -44,6 +44,7 @@
 #solution{
     display: inline-flex;
     height: 50px;
+    width: 500px;
 }
 #solution > p{
     display: inline-table;
