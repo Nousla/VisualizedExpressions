@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Help Animation</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="resources/help_animation.css">
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+
+<body>
+	<div id="root_box">
+		<div id="goal_box">
+			<p>General Explanation</p>
+			<p>Type: </p>
+			<select>
+				<option>Syntax Tree</option>
+				<option>Onion</option>
+				<option>Color</option>
+			</select>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sollicitudin et nunc et porttitor. Aliquam egestas
+				commodo risus, id ultrices est. Etiam tincidunt in ipsum vel pellentesque. Donec id sagittis mi. Nulla at ipsum non orci
+				porttitor feugiat. Nullam sed purus ligula. Nunc sagittis tortor sem, quis blandit turpis blandit eu. Integer blandit
+				sollicitudin dui, commodo porta mi cursus a. Mauris pretium purus imperdiet massa mollis fringilla. Pellentesque convallis
+				lacus ut risus suscipit, blandit pellentesque mauris malesuada. Donec non laoreet ante. Ut mauris mi, facilisis vel tellus
+				at, porttitor laoreet diam.</p>
+		</div>
+		<div id="visualization_box">
+			<div id="visualization_box_left">
+				<div id="visualization_info">
+					<p id="visualization_header">Visualization </p>
+					<p id="information_header">Step explanation</p>
+					<div id="information">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sollicitudin et nunc et porttitor. Aliquam egestas
+						commodo risus, id ultrices est. Etiam tincidunt in ipsum vel pellentesque. Donec id sagittis mi. Nulla at ipsum non
+						orci porttitor feugiat. Nullam sed purus ligula. Nunc sagittis tortor sem, quis blandit turpis blandit eu. Integer
+						blandit sollicitudin dui, commodo porta mi cursus a. Mauris pretium purus imperdiet massa mollis fringilla. Pellentesque
+						convallis lacus ut risus suscipit, blandit pellentesque mauris malesuada. Donec non laoreet ante. Ut mauris mi, facilisis
+						vel tellus at, porttitor laoreet diam.</div>
+				</div>
+			</div>
+			<div id="visualization_box_right">
+				<div id="visualization_render">
+					<p>*Animated step*</p>
+					<img src="resources/visualization_tree.png" alt="Syntax tree visualization" />
+				</div>
+				<div id="options_box">
+					<div id="zoom_box">
+						<button>Zoom out</button>
+						<div id="slider" style="width:50%"></div>
+						<button>Zoom in</button>
+					</div>
+					<div id="step_box">
+						<button>&lt&lt</button>
+						<button>&lt</button>
+						<button>1</button>
+						<button>2</button>
+						<button>3</button>
+						<button>4</button>
+						<button>5</button>
+						<button>...</button>
+						<button>20</button>
+						<button>&gt</button>
+						<button>&gt&gt</button>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<script>
+		$(function () {
+			$("#slider").slider();
+		});
+	</script>
+</body>
+
+</html>

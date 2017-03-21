@@ -1,0 +1,146 @@
+#expression_box {
+    border: 2px solid black;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    padding: 5px 5px 5px 5px;
+}
+
+#expression_box p {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 20pt;
+}
+
+#expression_box > * {
+    margin: 0;
+}
+
+#expression_box #expression {
+    margin-top: 5px;
+}
+
+#goal_box {
+    border: 2px solid black;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    padding: 5px 5px 5px 5px;
+}
+
+#goal_box p {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#goal_box > p:first-child {
+    font-size: 20pt;
+    font-weight: bold;
+}
+
+#goal_box > p:nth-child(2){
+    display: inline-block;
+}
+
+#goal_box > * {
+    margin: 0;
+}
+
+#visualization_box {
+    display: inline-flex;
+    border: 2px solid black;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    padding: 5px 5px 5px 5px;
+    text-align: center;
+}
+
+#visualization_box_left {
+    display: block;
+    float: left;
+    width: 40%;
+    margin-right: 20px;
+}
+
+#visualization_box_right {
+    display: block;
+    float: right;
+    width: 100%;
+}
+
+#visualization_render {
+    display: inline-flex;
+    border: 2px solid lightblue;
+    border-radius: 5px;
+    padding: 10px 5px 10px 5px;
+    margin-right: 1%;
+    margin-bottom: -5px;
+}
+
+#visualization_info {
+    text-align: left;
+}
+
+#visualization_info > * {
+    margin: 0;
+}
+
+#visualization_info p {
+    display: inline-block;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 10pt;
+    text-align: left;
+}
+
+#visualization_info #visualization_header {
+    display: block;
+    font-weight: bold;
+    font-size: 20pt;
+    margin: 0;
+}
+
+#visualization_info #information_header {
+    display: block;
+    font-weight: bold;
+    font-size: 12pt;
+    margin-top: 20px;
+}
+
+#visualization_info #information {
+    text-align: justify;
+}
+
+#visualization_info select {
+    display: inline-block;
+}
+
+#options_box {
+    border-radius: 10px;
+    background-color: lightblue;
+    padding: 5px;
+}
+
+#zoom_box {
+    display: block;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+#zoom_box > button {
+    display: inline-block;
+}
+
+#zoom_box #slider {
+    display: inline-block;
+    margin-left: 20px;
+    margin-right: 20px;
+    top: 4px;
+}
+
+#step_box {
+    display: inline-block;
+}
+
+#step_box > button {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12pt;
+    border-radius: 20px;
+    border: 1px solid black;
+}

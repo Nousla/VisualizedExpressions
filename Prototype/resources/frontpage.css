@@ -8,7 +8,7 @@
     font-family: Georgia;
     display: inline-block;
     margin-top: 15%;
-    width: 40%;
+    width: 500px;
 }
 .expression_box {
     text-align: center;
@@ -18,21 +18,20 @@
     
 }
 #expression_field {
-    display: block;
+    display: inline-block;
     text-align: center;
-    margin-left: auto;
-    margin-right: auto;   
+    margin-left: 60px;
 }
 .generatebtn {
-    display: block;
-    margin-left: 70%;
+    display: inline-block;
 }
-#dropdown {
+.dropdown {
     display: block;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 2px;
 }
+
 #sandbox_div {
     text-align: center;
     display: block;
@@ -58,12 +57,4 @@
 }
 .visualization_ani {
     display: block;
-}
-.problem_solving_ani {
-    display: block;
-    margin-top: 10%;
-}
-.sandbox_ani {
-    display: block;
-    margin-top: 10%;
 }

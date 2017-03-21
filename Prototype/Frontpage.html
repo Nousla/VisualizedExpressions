@@ -12,26 +12,55 @@
         <div id="content_box">
             <div class="expression_box">
                 <label id="expression_des">Write the expression and choose the type of tool you want to use </label>
-                <input type="text" id="expression_field" name="Expression" value="Expression">
-                <button type="button" class="generatebtn">Generate</button>
-                <select id="dropdown">
-            <option selected disabled>Choose type</option>
-            <option value="visualization">Visualization</option>
-            <option value="problem_solving">Problem Solving</option>
-            <option value="sandbox">Sandbox</option>
-        </select>
+                <input type="text" id="expression_field" name="Expression" value="Expression"></input>
+                <button id="generatebtn" onclick="submitExpression()">Generate</button>
+                <select class="dropdown" onchange="changeType(this.value)">
+                    <option selected disabled>Choose type</option>
+                    <option value="visualization.html">Visualization</option>
+                    <option value="problem_solving.html">Problem Solving</option>
+                    <option value="sandbox.html">Sandbox</option>
+                    <option value="analysis.html">Analysis</option>
+                </select>
+                <select id="dropdown_problem_solving" class="dropdown" style="display:none">
+                    <option selected disabled>Choose problem</option>
+                    <option value="">Isolate variable: x</option>
+                    <option value="">Solve variable: x</option>
+                </select>
             </div>
             <div id="sandbox_div">
                 <label id="sandbox_des"> If you just want to play</label>
-                <button type="button" class="sandboxbtn">Sandbox</button>
+                <button class="sandboxbtn" onclick="window.location.href='sandbox.html'">Sandbox</button>
             </div>
         </div>
         <div id="animation_box">
-            <button type="button" class="visualization_ani">Animation of Visualization</button>
-            <button type="button" class="problem_solving_ani">Animation of Problem Solving</button>
-            <button type="button" class="sandbox_ani">Animation of Sandbox</button>
+            <button type="button" class="visualization_ani" onclick="window.location.href='help_animation.html'">Visualization help</button>
         </div>
     </div>
+
+    <script> 
+        var type = "none"
+
+        function changeType(value){
+            type = value;
+
+            if(type === "problem_solving.html"){
+                let dropdown = document.getElementById("dropdown_problem_solving");
+                dropdown.style = "display:block";
+            }
+            else{
+                let dropdown = document.getElementById("dropdown_problem_solving");
+                dropdown.style = "display:none";
+            }
+        }
+
+        function submitExpression(){
+            if(type === "none"){
+                return;
+            }
+
+            window.location.href = type;
+        }
+    </script>
 </body>
 
 </html>
