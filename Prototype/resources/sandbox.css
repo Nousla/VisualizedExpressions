@@ -124,7 +124,7 @@
 .expression_edit {
     display: inline-flex;
     float: left;
-    width: 60%;
+    width: 50%;
 }  
 
 .expression_edit > textarea {
@@ -144,7 +144,6 @@
     display: inline-flex;
     border-left: 1px dashed lightblue;
     float: right;
-    width: 39%;
     padding: 5px;
 }
 
