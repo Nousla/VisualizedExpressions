@@ -8,13 +8,40 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var core_1 = require("@angular/core");
 var AppComponent = (function () {
     function AppComponent() {
+        this.graphData = [
+            {
+                "name": "Top Level",
+                "parent": "null",
+                "children": [
+                    {
+                        "name": "Level 2: A",
+                        "parent": "Top Level",
+                        "children": [
+                            {
+                                "name": "Son of A",
+                                "parent": "Level 2: A"
+                            },
+                            {
+                                "name": "Daughter of A",
+                                "parent": "Level 2: A"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Level 2: B",
+                        "parent": "Top Level"
+                    }
+                ]
+            }
+        ];
     }
+    ;
     return AppComponent;
 }());
 AppComponent = __decorate([
     core_1.Component({
         selector: 'app',
-        template: "<h1>Test</h1>",
+        template: "<h1>Test</h1>\n             <visualization [data]=graphData></visualization>",
     })
 ], AppComponent);
 exports.AppComponent = AppComponent;
