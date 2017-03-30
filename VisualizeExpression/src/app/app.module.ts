@@ -1,11 +1,21 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 
 import { AppComponent }  from './app.component';
+import { SandboxComponent } from './sandbox.component';
+import { ExpressionComponent} from './expression.component';
 
 @NgModule({
-  imports:      [ BrowserModule ],
-  declarations: [ AppComponent ],
-  bootstrap:    [ AppComponent ]
+  imports:      [ BrowserModule,
+  RouterModule.forRoot([
+    {
+      path: 'sandbox',
+      component: SandboxComponent
+    }
+    ]) ],
+  declarations: [ AppComponent, SandboxComponent, ExpressionComponent ],
+  bootstrap:    [ AppComponent ],
+  entryComponents: [ExpressionComponent]
 })
 export class AppModule { }
