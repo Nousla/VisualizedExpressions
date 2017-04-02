@@ -18,6 +18,14 @@ export class VisualizationComponent implements OnInit {
   @ViewChild('graphContainer')
   private graphContainer: ElementRef;
 
+  // Send as configuration data
+  private width = 700;
+  private height = 500;
+  private nodeWidth = 40;
+  private nodeHeight = 40;
+  private fontOffset = 5;
+  private fontSize = this.nodeHeight - this.fontOffset;
+
   ngOnInit(): void {
     this.createChart();
   }
@@ -27,25 +35,18 @@ export class VisualizationComponent implements OnInit {
       return;
     }
 
-    var width = 700,
-      height = 500,
-      nodeWidth = 40,
-      nodeHeight = 40,
-      fontOffset = 5,
-      fontSize = nodeHeight - fontOffset;
-
     var svg = d3.select(this.graphContainer.nativeElement)
       .append("svg")
-      .attr("width", width)
-      .attr("height", height);
+      .attr("width", this.width)
+      .attr("height", this.height);
 
     var rootNode = d3.hierarchy(this.data[0]);
-    d3.cluster().nodeSize([nodeWidth, nodeHeight]).size([width, height / 2])(rootNode);
+    d3.cluster().nodeSize([this.nodeWidth, this.nodeHeight]).size([this.width, this.height / 2])(rootNode);
 
     var nodes = rootNode.descendants();
 
     nodes.forEach((node) => {
-      node["y"] = -node["y"] + (height / 2);
+      node["y"] = -node["y"] + (this.height / 2);
     });
 
     console.log(rootNode);
@@ -56,35 +57,75 @@ export class VisualizationComponent implements OnInit {
       .data(nodes.slice(1))
       .enter()
       .append("line")
-      .attr("x1", (node) => { return node.parent["x"] + (nodeWidth / 2) })
-      .attr("y1", (node) => { return node.parent["y"] + (nodeHeight / 2) })
-      .attr("x2", (node) => { return node["x"] + (nodeWidth / 2) })
-      .attr("y2", (node) => { return node["y"] + (nodeHeight / 2) })
+      .attr("x1", (node) => { return node.parent["x"] + (this.nodeWidth / 2) })
+      .attr("y1", (node) => { return node.parent["y"] + (this.nodeHeight / 2) })
+      .attr("x2", (node) => { return node["x"] + (this.nodeWidth / 2) })
+      .attr("y2", (node) => { return node["y"] + (this.nodeHeight / 2) })
       .attr("class", "chart-line");
 
-    var newNodeSelection = rootGroup.selectAll("g")
+    var instance = this;
+
+    rootGroup.selectAll("g")
       .data(nodes)
       .enter()
-      .append("g")
-      .attr("transform", (node) => { return "translate(" + node["x"] + "," + node["y"] + ")" });
+      .each(function (node: d3.HierarchyNode<any[]>) {
+        instance.processNode(node, this);
+      });
+  }
+
+  private processNode(node: d3.HierarchyNode<any[]>, element: d3.EnterElement): void {
+    switch (node.data["type"]) {
+      case "equality": this.processEqualityNode(node, element);
+        break;
+      case "number": this.processNumberNode(node, element);
+        break;
+      case "operator": this.processOperatorNode(node, element);
+        break;
+      case "variable": this.processVariableNode(node, element);
+        break;
+      default: this.processStandardNode(node, element);
+        break;
+    }
+  }
+
+  private processEqualityNode(node: d3.HierarchyNode<any[]>, element: d3.EnterElement): void {
+    this.processStandardNode(node, element);
+
+    d3.select(element)
+      .select("g")
+      .attr("transform", "translate(" + (this.width/2) + ",0)");
+  }
+
+  private processNumberNode(node: d3.HierarchyNode<any[]>, element: d3.EnterElement): void {
+    this.processStandardNode(node, element);
+  }
+
+  private processOperatorNode(node: d3.HierarchyNode<any[]>, element: d3.EnterElement): void {
+    this.processStandardNode(node, element);
+  }
+
+  private processVariableNode(node: d3.HierarchyNode<any[]>, element: d3.EnterElement): void {
+    this.processStandardNode(node, element);
+  }
+
+  private processStandardNode(node: d3.HierarchyNode<any[]>, element: d3.EnterElement): void {
+    var newNodeSelection = d3.select(element).append("g")
+      .attr("transform", (node: d3.HierarchyNode<any[]>) => { return "translate(" + node["x"] + "," + node["y"] + ")" });
 
     newNodeSelection.append("rect")
       .attr("x", "0")
       .attr("y", "0")
-      .attr("width", nodeWidth)
-      .attr("height", nodeHeight)
+      .attr("width", this.nodeWidth)
+      .attr("height", this.nodeHeight)
       .attr("class", this.getRectClassName);
 
     newNodeSelection.append("text")
-      .attr("font-size", fontSize)
+      .attr("font-size", this.fontSize)
       .attr("x", "0")
-      .attr("y", fontSize)
-      .attr("transform", "translate(" + (nodeWidth / 2) + "," + (-fontOffset) + ")")
-      .text((node) => { return node.data["value"] })
+      .attr("y", this.fontSize)
+      .attr("transform", "translate(" + (this.nodeWidth / 2) + "," + (-this.fontOffset) + ")")
+      .text((node: d3.HierarchyNode<any[]>) => { return node.data["value"] })
       .attr("class", "chart-text");
-
-    // this.createTree(rootNode, 0);
-    // rootNode.each(this.createNode.bind(this));
   }
 
   private getRectClassName(node: d3.HierarchyNode<any[]>): string {
@@ -94,52 +135,5 @@ export class VisualizationComponent implements OnInit {
     else {
       return "chart-rect";
     }
-  }
-
-  // Recursive node traversal
-  private createTree(node: d3.HierarchyNode<any[]>, siblingIndex: number): void {
-    node.data["siblingIndex"] = siblingIndex;
-    this.createNode(node);
-
-    if (!node.children) {
-      return;
-    }
-
-    for (var i = 0; i < node.children.length; i++) {
-      this.createTree(node.children[i], i);
-    }
-  }
-
-  private createNode(node: d3.HierarchyNode<any[]>): void {
-    // console.log(node.data["name"] + " : " + node.data["value"]);
-
-    var nodeWidth = 50,
-      nodeHeight = 50,
-      fontSize = 35,
-      allocatedWidth = (1000 / (node.parent ? node.parent.children.length : 1) / (node.depth == 0 ? 1 : node.depth));
-
-    var svg = d3.select(this.graphContainer.nativeElement)
-      .select("svg");
-
-    var g = svg.append("g")
-      .attr("transform", "translate(" + (allocatedWidth * node.data["siblingIndex"] + (allocatedWidth / 2) - nodeWidth) + "," + (node.depth * nodeHeight + nodeHeight) + ")");
-
-    g.append("rect")
-      .attr("x", "0")
-      .attr("y", "0")
-      .attr("width", nodeWidth)
-      .attr("height", nodeHeight)
-      .attr("class", "chart-rect");
-
-    g.append("text")
-      .attr("font-size", fontSize)
-      .attr("x", "0")
-      .attr("y", fontSize)
-      .attr("transform", "translate(" + (nodeWidth / 2) + ")")
-      .text(node.data["value"])
-      .attr("class", "chart-text");
-
-    svg.append("line")
-      .attr("x1", "")
   }
 }
