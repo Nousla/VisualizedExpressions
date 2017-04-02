@@ -10,32 +10,72 @@ var AppComponent = (function () {
     function AppComponent() {
         this.graphData = [
             {
-                "name": "Top Level",
-                "parent": "null",
+                "name": "root",
+                "value": "=",
+                "type": "equality",
                 "children": [
                     {
-                        "name": "Level 2: A",
-                        "parent": "Top Level",
+                        "name": "node1",
+                        "value": "+",
+                        "type": "addition",
                         "children": [
                             {
-                                "name": "Son of A",
-                                "parent": "Level 2: A"
+                                "name": "node1.1",
+                                "value": "5",
+                                "type": "number"
                             },
                             {
-                                "name": "Daughter of A",
-                                "parent": "Level 2: A"
+                                "name": "node1.2",
+                                "value": "-",
+                                "type": "subtraction",
+                                "children": [
+                                    {
+                                        "name": "node1.2.1",
+                                        "value": "8",
+                                        "type": "number"
+                                    },
+                                    {
+                                        "name": "node1.2.2",
+                                        "value": "12",
+                                        "type": "number"
+                                    }
+                                ]
                             }
                         ]
                     },
                     {
-                        "name": "Level 2: B",
-                        "parent": "Top Level"
+                        "name": "node2",
+                        "value": "*",
+                        "type": "multiplication",
+                        "children": [
+                            {
+                                "name": "node2.1",
+                                "value": "7",
+                                "type": "number"
+                            },
+                            {
+                                "name": "node2.2",
+                                "value": "/",
+                                "type": "division",
+                                "children": [
+                                    {
+                                        "name": "node2.2.1",
+                                        "value": "6",
+                                        "type": "number"
+                                    },
+                                    {
+                                        "name": "node2.2.2",
+                                        "value": "x",
+                                        "type": "variable"
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 ]
             }
         ];
     }
-    ;
     return AppComponent;
 }());
 AppComponent = __decorate([
