@@ -6,67 +6,92 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var core_1 = require("@angular/core");
+var internal_data_1 = require("./internal-data");
 var AppComponent = (function () {
     function AppComponent() {
-        this.graphData = [
+        this.graphData = new internal_data_1.InternalData([
             {
-                "name": "root",
-                "value": "=",
+                "name": "=",
                 "type": "equality",
+                "group": "operator",
                 "children": [
                     {
-                        "name": "node1",
-                        "value": "+",
+                        "name": "+",
                         "type": "addition",
+                        "group": "operator",
                         "children": [
                             {
-                                "name": "node1.1",
-                                "value": "5",
-                                "type": "number"
+                                "name": "5",
+                                "type": "integer",
+                                "group": "number"
                             },
                             {
-                                "name": "node1.2",
-                                "value": "-",
+                                "name": "-",
                                 "type": "subtraction",
+                                "group": "operator",
                                 "children": [
                                     {
-                                        "name": "node1.2.1",
-                                        "value": "8",
-                                        "type": "number"
+                                        "name": "8",
+                                        "type": "integer",
+                                        "group": "number"
                                     },
                                     {
-                                        "name": "node1.2.2",
-                                        "value": "12",
-                                        "type": "number"
+                                        "name": "12",
+                                        "type": "integer",
+                                        "group": "number"
                                     }
                                 ]
                             }
                         ]
                     },
                     {
-                        "name": "node2",
-                        "value": "*",
+                        "name": "*",
                         "type": "multiplication",
+                        "group": "operator",
                         "children": [
                             {
-                                "name": "node2.1",
-                                "value": "7",
-                                "type": "number"
-                            },
-                            {
-                                "name": "node2.2",
-                                "value": "/",
-                                "type": "division",
+                                "name": "+",
+                                "type": "addition",
+                                "group": "operator",
                                 "children": [
                                     {
-                                        "name": "node2.2.1",
-                                        "value": "6",
-                                        "type": "number"
+                                        "name": "7.4",
+                                        "type": "decimal",
+                                        "group": "number",
                                     },
                                     {
-                                        "name": "node2.2.2",
-                                        "value": "x",
-                                        "type": "variable"
+                                        "name": "-",
+                                        "type": "subtraction",
+                                        "group": "operator",
+                                        "children": [
+                                            {
+                                                "name": "2.5",
+                                                "type": "decimal",
+                                                "group": "number",
+                                            },
+                                            {
+                                                "name": "25",
+                                                "type": "integer",
+                                                "group": "number",
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "/",
+                                "type": "division",
+                                "group": "operator",
+                                "children": [
+                                    {
+                                        "name": "6",
+                                        "type": "integer",
+                                        "group": "number"
+                                    },
+                                    {
+                                        "name": "x",
+                                        "type": "variable",
+                                        "group": "extended"
                                     }
                                 ]
                             }
@@ -74,7 +99,7 @@ var AppComponent = (function () {
                     }
                 ]
             }
-        ];
+        ]);
     }
     return AppComponent;
 }());
