@@ -123,8 +123,8 @@ var MirrorMountainService = (function () {
             .attr("class", this.getTextClassName);
     };
     MirrorMountainService.prototype.getRectClassName = function (node) {
-        if (node.data["type"] === "variable") {
-            return "mirror-mountain-rect-var";
+        if (node.data["type"] === "equality") {
+            return "mirror-mountain-rect-equality";
         }
         else {
             return "mirror-mountain-rect";

@@ -27,8 +27,7 @@ var MirrorMountainComponent = (function () {
         if (!this.data) {
             return;
         }
-        // Verify data formatting
-        this.visualizationService.construct(this.graphContainer, this.data);
+        this.visualizationService.construct(this.chartContainer, this.data);
     };
     return MirrorMountainComponent;
 }());
@@ -37,13 +36,13 @@ __decorate([
     __metadata("design:type", internal_data_1.InternalData)
 ], MirrorMountainComponent.prototype, "data", void 0);
 __decorate([
-    core_1.ViewChild('graphContainer'),
+    core_1.ViewChild('chartContainer'),
     __metadata("design:type", core_1.ElementRef)
-], MirrorMountainComponent.prototype, "graphContainer", void 0);
+], MirrorMountainComponent.prototype, "chartContainer", void 0);
 MirrorMountainComponent = __decorate([
     core_1.Component({
         selector: 'visualization-mirror-mountain',
-        template: "\n            <p>Mirror Mountain / Root / Reverse Syntax Tree / dendrogram</p>\n            <div #graphContainer></div>\n            ",
+        template: '<div class="chartContainer" #chartContainer></div>',
         styleUrls: ['./mirror-mountain.component.css'],
         encapsulation: core_1.ViewEncapsulation.None,
         providers: [

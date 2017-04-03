@@ -134,8 +134,8 @@ export class MirrorMountainService implements IVisualizationService {
     }
 
     private getRectClassName(node: d3.HierarchyNode<any[]>): string {
-        if (node.data["type"] === "variable") {
-            return "mirror-mountain-rect-var";
+        if (node.data["type"] === "equality") {
+            return "mirror-mountain-rect-equality";
         }
         else {
             return "mirror-mountain-rect";

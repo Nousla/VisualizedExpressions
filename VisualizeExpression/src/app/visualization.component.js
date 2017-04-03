@@ -22,7 +22,7 @@ __decorate([
 VisualizationComponent = __decorate([
     core_1.Component({
         selector: 'visualization',
-        template: '<visualization-mirror-mountain [data]="data"></visualization-mirror-mountain><visualization-mirror-mountain [data]="data"></visualization-mirror-mountain>',
+        template: '<visualization-mirror-mountain [data]="data"></visualization-mirror-mountain>',
         styleUrls: ['./visualization.component.css']
     })
 ], VisualizationComponent);

@@ -8,10 +8,7 @@ export let VISUALIZATION_SERVICE = new InjectionToken<IVisualizationService>("Vi
 
 @Component({
   selector: 'visualization-mirror-mountain',
-  template: `
-            <p>Mirror Mountain / Root / Reverse Syntax Tree / dendrogram</p>
-            <div #graphContainer></div>
-            `,
+  template: '<div class="chartContainer" #chartContainer></div>',
   styleUrls: ['./mirror-mountain.component.css'],
   encapsulation: ViewEncapsulation.None,
   providers: [
@@ -29,8 +26,8 @@ export let VISUALIZATION_SERVICE = new InjectionToken<IVisualizationService>("Vi
 export class MirrorMountainComponent implements OnInit {
   @Input()
   private data: InternalData;
-  @ViewChild('graphContainer')
-  private graphContainer: ElementRef;
+  @ViewChild('chartContainer')
+  private chartContainer: ElementRef;
 
   constructor( @Inject(VISUALIZATION_SERVICE) private visualizationService: IVisualizationService) { }
 
@@ -43,8 +40,6 @@ export class MirrorMountainComponent implements OnInit {
       return;
     }
 
-    // Verify data formatting
-
-    this.visualizationService.construct(this.graphContainer, this.data);
+    this.visualizationService.construct(this.chartContainer, this.data);
   }
 }

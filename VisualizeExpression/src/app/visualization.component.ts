@@ -3,7 +3,7 @@ import { InternalData } from './internal-data';
 
 @Component({
   selector: 'visualization',
-  template: '<visualization-mirror-mountain [data]="data"></visualization-mirror-mountain><visualization-mirror-mountain [data]="data"></visualization-mirror-mountain>',
+  template: '<visualization-mirror-mountain [data]="data"></visualization-mirror-mountain>',
   styleUrls: ['./visualization.component.css']
 })
 
