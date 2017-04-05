@@ -5,10 +5,16 @@ import { Subject } from 'rxjs/Subject';
 export class ExpressionService {
 
     private expressionNewSource = new Subject<void>();
+    private expressionRemoveSource = new Subject<void>();
 
     expressionNew$ = this.expressionNewSource.asObservable();
+    expresionRemove$ = this.expressionRemoveSource.asObservable();
 
     addNew() {
         this.expressionNewSource.next();
+    }
+
+    remove(){
+        this.expressionRemoveSource.next();
     }
 }

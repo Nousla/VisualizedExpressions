@@ -9,9 +9,9 @@ import { Subscription } from 'rxjs/Subscription';
         <div class="expression_box">
             <div class="expression_actions">
                 <p>{{counter1}}</p>
-                <button (click)="click()">Insert New</button>
+                <button (click)="add()">Insert New</button>
                 <button>Clone</button>
-                <button>Remove</button>
+                <button (click)="remove()">Remove</button>
                 <button>Move up</button>
                 <button>Move down</button>
             </div>
@@ -35,7 +35,10 @@ export class ExpressionComponent {
     constructor(private es: ExpressionService){
         this.counter1 = ExpressionComponent.counter++;
     }
-    click(){
+    add(){
         this.es.addNew();
+    }
+    remove(){
+        this.es.remove();
     }
 }

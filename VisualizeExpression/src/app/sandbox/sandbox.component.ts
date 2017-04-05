@@ -17,6 +17,7 @@ export class SandboxComponent {
   constructor(private resolver: ComponentFactoryResolver, private expressionService: ExpressionService) {
 
       this.subscription = expressionService.expressionNew$.subscribe(this.onAddNewExpression.bind(this));
+      this.subscription = expressionService.expresionRemove$.subscribe(this.onRemoveExpression.bind(this));
 
   }
 
@@ -28,6 +29,10 @@ export class SandboxComponent {
   onAddNewExpression() {
     var factory = this.resolver.resolveComponentFactory(ExpressionComponent);
     this.container.createComponent(factory);
+  }
+
+  onRemoveExpression() {
+    
   }
 
 }
