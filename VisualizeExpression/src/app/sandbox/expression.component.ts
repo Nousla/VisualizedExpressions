@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs/Subscription';
                 <button>Move down</button>
             </div>
             <div class="expression_edit">
-                <textarea rows="1">Insert expression here</textarea>
+                <textarea rows="1" [(NgModel)]="inputBox">Insert expression here</textarea>
             </div>
             <div class="visualization_render">
                 <img src="" alt="Syntax tree visualization" />
@@ -29,6 +29,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 export class ExpressionComponent {
     static counter = 1;
+    inputBox: string;
     @Input()
     counter1: Number;
 

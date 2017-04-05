@@ -27,6 +27,7 @@
   "devDependencies": {
     "@types/d3": "^4.7.0",
     "@types/jasmine": "^2.5.47",
+    "@types/mathjs": "0.0.34",
     "angular2-template-loader": "^0.6.2",
     "css-loader": "^0.28.0",
     "html-loader": "^0.4.5",
