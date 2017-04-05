@@ -3,8 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent }  from './app.component';
-import { SandboxComponent } from './sandbox.component';
-import { ExpressionComponent} from './expression.component';
+import { SandboxComponent } from './sandbox/sandbox.component';
+import { ExpressionComponent} from './sandbox/expression.component';
 
 @NgModule({
   imports:      [ BrowserModule,

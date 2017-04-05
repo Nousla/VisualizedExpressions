@@ -9,8 +9,8 @@ var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var router_1 = require("@angular/router");
 var app_component_1 = require("./app.component");
-var sandbox_component_1 = require("./sandbox.component");
-var expression_component_1 = require("./expression.component");
+var sandbox_component_1 = require("./sandbox/sandbox.component");
+var expression_component_1 = require("./sandbox/expression.component");
 var AppModule = (function () {
     function AppModule() {
     }
