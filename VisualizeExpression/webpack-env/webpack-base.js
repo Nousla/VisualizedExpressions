@@ -1,8 +1,9 @@
 const Webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Path = require('path');
+const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 
-module.exports = function() {
+module.exports = function () {
     return {
         entry: {
             app: './src/main.ts',
@@ -29,7 +30,20 @@ module.exports = function() {
                 },
                 {
                     test: /\.css$/,
-                    loader: 'style-loader!css-loader'
+                    exclude: Path.resolve(__dirname, '../src/app/'),
+                    loader: ExtractTextWebpackPlugin.extract({
+                        fallback: "style-loader",
+                        use: "css-loader"
+                    })
+                },
+                {
+                    test: /\.css$/,
+                    include: Path.resolve(__dirname, '../src/app/'),
+                    loader: 'raw-loader'
+                },
+                {
+                    test: /\.html$/,
+                    loader: 'html-loader',
                 }
             ]
         },
@@ -45,6 +59,8 @@ module.exports = function() {
             new Webpack.optimize.CommonsChunkPlugin({
                 name: ['app', 'vendor', 'polyfills']
             }),
+
+            new ExtractTextWebpackPlugin('styles.css'),
 
             new HtmlWebpackPlugin({
                 template: './src/index.html'
