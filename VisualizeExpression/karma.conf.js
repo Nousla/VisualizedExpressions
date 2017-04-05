@@ -3,54 +3,47 @@ var src = "src/";
 var app = "src/app/";
 
 module.exports = function (config) {
-  config.set({
+    config.set({
 
-    basePath: '',
+        basePath: '',
 
-    frameworks: ['jasmine'],
+        frameworks: ['jasmine'],
 
-    plugins: [
-      require('karma-jasmine'),
-      require('karma-chrome-launcher'),
-      require('karma-firefox-launcher'),
-      require('karma-jasmine-html-reporter')
-    ],
+        plugins: [
+            require('karma-jasmine'),
+            require('karma-chrome-launcher'),
+            require('karma-webpack'),
+            require('karma-jasmine-html-reporter')
+        ],
 
-    files: [
-      { pattern: app + '*.spec.js', included: false, watched: true },
-      
-      { pattern: npm + '@angular/**/*.js', included: false, watched: false },
-      { pattern: npm + '@angular/**/*.js.map', included: false, watched: false },
+        files: [
+            { pattern: app + '*.spec.ts', included: false, watched: true },
 
-      npm + 'systemjs/dist/system.src.js',
-      npm + 'core-js/client/shim.js',
+            { pattern: npm + '@angular/**/*.js', included: false, watched: false },
+            { pattern: npm + '@angular/**/*.js.map', included: false, watched: false },
 
-      { pattern: src + 'systemjs.config.js', included: false, watched: false },
+            npm + 'core-js/client/shim.js',
 
-      { pattern: app + '*.html', included: false, watched: true },
-      { pattern: app + '*.css', included: false, watched: true },
-    ],
+            { pattern: app + '*.html', included: false, watched: true },
+            { pattern: app + '*.css', included: false, watched: true },
+        ],
 
-    exclude: [
-    ],
+        exclude: [
+        ],
 
-    preprocessors: {
-    },
+        webpack: require('./webpack-env/webpack-test'),
 
-    reporters: ['progress', 'kjhtml'],
+        preprocessors: {
+            '**/*.spec.ts': ['webpack']
+        },
 
-    port: 9876,
-
-    colors: true,
-
-    logLevel: config.LOG_INFO,
-
-    autoWatch: true,
-
-    browsers: ['Chrome'],
-
-    singleRun: false,
-
-    concurrency: Infinity
-  })
+        reporters: ['progress', 'kjhtml'],
+        port: 9876,
+        colors: true,
+        logLevel: config.LOG_INFO,
+        autoWatch: true,
+        browsers: ['Chrome'],
+        singleRun: false,
+        concurrency: Infinity
+    })
 }
