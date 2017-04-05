@@ -6,16 +6,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var core_1 = require("@angular/core");
-var AppComponent = (function () {
-    function AppComponent() {
+var Subject_1 = require("rxjs/Subject");
+var ExpressionService = (function () {
+    function ExpressionService() {
+        this.expressionNewSource = new Subject_1.Subject();
+        this.expressionNew$ = this.expressionNewSource.asObservable();
     }
-    return AppComponent;
+    ExpressionService.prototype.addNew = function () {
+        this.expressionNewSource.next();
+    };
+    return ExpressionService;
 }());
-AppComponent = __decorate([
-    core_1.Component({
-        selector: 'app',
-        template: "\n  <router-outlet></router-outlet>\n  "
-    })
-], AppComponent);
-exports.AppComponent = AppComponent;
-//# sourceMappingURL=app.component.js.map
+ExpressionService = __decorate([
+    core_1.Injectable()
+], ExpressionService);
+exports.ExpressionService = ExpressionService;
+//# sourceMappingURL=expression.service.js.map
