@@ -1,6 +1,6 @@
 import { Injectable, ElementRef } from '@angular/core';
-import { IVisualizationService } from './ivisualization';
-import { InternalData } from './internal-data';
+import { IVisualizationService } from '../ivisualization';
+import { InternalData } from '../internal-data';
 import { MirrorMountainConfig } from "./mirror-mountain-config";
 import * as d3 from 'd3';
 

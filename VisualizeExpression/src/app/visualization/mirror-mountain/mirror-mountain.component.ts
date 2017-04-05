@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild, ElementRef, OnInit, ViewEncapsulation, InjectionToken, Inject } from '@angular/core';
-import { InternalData } from './internal-data';
-import { IVisualizationService } from "./ivisualization";
+import { InternalData } from '../internal-data';
+import { IVisualizationService } from "../ivisualization";
 import { MirrorMountainService } from "./mirror-mountain.service";
 import { MirrorMountainConfig } from "./mirror-mountain-config";
 

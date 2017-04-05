@@ -12,7 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var core_1 = require("@angular/core");
-var internal_data_1 = require("./internal-data");
+var internal_data_1 = require("../internal-data");
 var mirror_mountain_service_1 = require("./mirror-mountain.service");
 var mirror_mountain_config_1 = require("./mirror-mountain-config");
 exports.VISUALIZATION_SERVICE = new core_1.InjectionToken("VisualizationServiceToken");
