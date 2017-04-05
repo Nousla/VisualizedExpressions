@@ -1,0 +1,53 @@
+/*:host /deep/ .chart div {
+    font: 10px sans-serif;
+    background-color: steelblue;
+    text-align: right;
+    padding: 3px;
+    margin: 1px;
+    color: white;
+}
+
+:host >>> .chart text {
+  fill: white;
+  font: 10px sans-serif;
+  text-anchor: end;
+}*/
+
+.mirror-mountain-rect {
+  fill: lightskyblue;
+  stroke: black;
+  stroke-width: 3;
+}
+
+.mirror-mountain-rect-equality {
+  fill: lawngreen;
+  stroke: black;
+  stroke-width: 3;
+}
+
+.mirror-mountain-text {
+  font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+  text-anchor: middle;
+  fill: black;
+}
+
+.mirror-mountain-text-number {
+  dominant-baseline: central;
+}
+
+.mirror-mountain-text-operator {
+  dominant-baseline: middle;
+}
+
+.mirror-mountain-text-operator-multiplication {
+  dominant-baseline: mathematical;
+}
+
+.mirror-mountain-text-variable {
+  dominant-baseline: middle;
+}
+
+.mirror-mountain-line {
+  stroke: black;
+  stroke-width: 2;
+}
