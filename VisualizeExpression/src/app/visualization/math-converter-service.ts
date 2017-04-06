@@ -1,6 +1,6 @@
 import { InternalData } from "./internal-data";
 
-interface MathConverterService {
+export interface MathConverterService {
     convert(input: string): InternalData;
 }
 

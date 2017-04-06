@@ -2,15 +2,24 @@ import * as math from 'mathjs';
 import { InternalNode, Type as InternalNodeType, Group as InternalNodeGroup } from './internal-node';
 import InternalData from './internal-data';
 import MathConverterService from './math-converter-service';
+import { Injectable } from "@angular/core";
 
+@Injectable()
 export class MathTextConverterService implements MathConverterService {
 
     convert(input: string): InternalData {
         var processedInput = this.preprocess(input);
 
         var nodeMap = new Map<mathjs.MathNode, InternalNode>();
-        var rootNode = math.parse(processedInput);
+        var rootNode: mathjs.MathNode;
+        try {
+            rootNode = math.parse(processedInput);
+        }
+        catch(ex){
+            return null;
+        }
         var rootInternalNode = this.createNode(rootNode);
+        nodeMap.set(rootNode, rootInternalNode);
         var internalData = new InternalData(rootInternalNode);
 
         rootNode.traverse(function (node: mathjs.MathNode, path: string, parent: mathjs.MathNode) {
@@ -27,16 +36,15 @@ export class MathTextConverterService implements MathConverterService {
                 if (internalParentNode.children === undefined) {
                     internalParentNode.children = [];
                 }
-
                 internalParentNode.children.push(internalNode);
             }
-        });
+        }.bind(this));
 
         return internalData;
     }
 
     private preprocess(input: string): string {
-        return input.replace('==', '=');
+        return input.replace('=', '==');
     }
 
     private createNode(node: mathjs.MathNode): InternalNode {

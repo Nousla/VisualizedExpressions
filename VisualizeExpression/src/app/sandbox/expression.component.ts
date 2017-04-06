@@ -1,42 +1,46 @@
-import { Component,EventEmitter,Output, Input } from '@angular/core';
-import { ExpressionService} from './expression.service';
+import { Component, EventEmitter, Output, Input, SimpleChanges, InjectionToken, Inject } from '@angular/core';
+import { ExpressionService } from './expression.service';
 import { Subscription } from 'rxjs/Subscription';
+import { InternalData } from "../visualization/internal-data";
+import { MathConverterService } from "../visualization/math-converter-service";
+import { MathTextConverterService } from "../visualization/math-text-converter.service";
+
+export let MATH_CONVERTER_SERVICE = new InjectionToken<MathConverterService>("MathConverterServiceToken");
 
 @Component({
     selector: 'expression',
-    template: 
-    `
-        <div class="expression_box">
-            <div class="expression_actions">
-                <p>{{counter1}}</p>
-                <button (click)="click()">Insert New</button>
-                <button>Clone</button>
-                <button>Remove</button>
-                <button>Move up</button>
-                <button>Move down</button>
-            </div>
-            <div class="expression_edit">
-                <textarea rows="1" [(NgModel)]="inputBox">Insert expression here</textarea>
-            </div>
-            <div class="visualization_render">
-                <img src="" alt="Syntax tree visualization" />
-            </div>
-            <div class="expression" id="expression_2"></div>
-        </div>
-    `,
-    styleUrls:[`./expression.component.css`]
+    templateUrl: './expression.component.html',
+    styleUrls: [`./expression.component.css`],
+    providers: [{ provide: MATH_CONVERTER_SERVICE, useClass: MathTextConverterService }]
 })
 
 export class ExpressionComponent {
     static counter = 1;
-    inputBox: string;
     @Input()
     counter1: Number;
+    private input: string;
+    private data: InternalData;
+    private config: Object;
 
-    constructor(private es: ExpressionService){
+    constructor(private es: ExpressionService, @Inject(MATH_CONVERTER_SERVICE) private mcs: MathConverterService) {
         this.counter1 = ExpressionComponent.counter++;
+
+        this.config = {
+            width: 600,
+            height: 200
+        }
     }
-    click(){
+
+    onInputChange(e: Event): void {
+        console.log("changing");
+        var tempData = this.mcs.convert(this.input);
+        if (tempData) {
+            this.data = tempData;
+            console.log(this.data);
+        }
+    }
+
+    click(): void {
         this.es.addNew();
     }
 }

@@ -1,10 +1,10 @@
-import { Component, Input, ViewChild, ElementRef, OnInit, ViewEncapsulation, InjectionToken, Inject } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, ViewEncapsulation, InjectionToken, Inject, OnChanges, SimpleChanges } from '@angular/core';
 import { InternalData } from '../internal-data';
-import { IVisualizationService } from "../ivisualization";
+import VisualizationService from "../visualization-service";
 import { MirrorMountainService } from "./mirror-mountain.service";
 import { MirrorMountainConfig } from "./mirror-mountain-config";
 
-export let VISUALIZATION_SERVICE = new InjectionToken<IVisualizationService>("VisualizationServiceToken");
+export let VISUALIZATION_SERVICE = new InjectionToken<VisualizationService>("VisualizationServiceToken");
 
 @Component({
   selector: 'visualization-mirror-mountain',
@@ -15,31 +15,27 @@ export let VISUALIZATION_SERVICE = new InjectionToken<IVisualizationService>("Vi
     {
       provide: VISUALIZATION_SERVICE,
       useFactory: () => { 
-        let config = new MirrorMountainConfig();
-        let service = new MirrorMountainService();
-        service.configure(config);
         return new MirrorMountainService();
       }
     }]
 })
 
-export class MirrorMountainComponent implements OnInit {
+export class MirrorMountainComponent implements OnChanges {
   @Input()
   private data: InternalData;
+  @Input()
+  private config: Object;
   @ViewChild('chartContainer')
   private chartContainer: ElementRef;
 
-  constructor( @Inject(VISUALIZATION_SERVICE) private visualizationService: IVisualizationService) { }
+  constructor( @Inject(VISUALIZATION_SERVICE) private visualizationService: VisualizationService) { }
 
-  ngOnInit(): void {
-    this.createChart();
-  }
-
-  private createChart(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     if (!this.data) {
       return;
     }
 
+    this.visualizationService.configure(this.config);
     this.visualizationService.construct(this.chartContainer, this.data);
   }
 }
