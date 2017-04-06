@@ -4,8 +4,8 @@ import { Subject } from 'rxjs/Subject';
 @Injectable()
 export class ExpressionService {
 
-    private expressionNewSource = new Subject<void>();
-    private expressionRemoveSource = new Subject<void>();
+    private expressionNewSource = new Subject();
+    private expressionRemoveSource = new Subject<number>();
 
     expressionNew$ = this.expressionNewSource.asObservable();
     expresionRemove$ = this.expressionRemoveSource.asObservable();
@@ -14,7 +14,7 @@ export class ExpressionService {
         this.expressionNewSource.next();
     }
 
-    remove(){
-        this.expressionRemoveSource.next();
+    remove(counter: number){
+        this.expressionRemoveSource.next(counter);
     }
 }
