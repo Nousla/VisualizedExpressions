@@ -2,12 +2,13 @@ import { Component, ViewChild, ViewContainerRef, ComponentFactoryResolver, Compo
 import { ExpressionComponent } from './expression.component';
 import { ExpressionService } from './expression.service';
 import { Subscription } from 'rxjs/Subscription';
+import { MathTextConverterService } from "../visualization/math-text-converter.service";
 
 @Component({
   selector: 'sandbox',
   templateUrl: './sandbox.html',
   styleUrls: ['./sandbox.css'],
-  providers: [ ExpressionService]
+  providers: [ExpressionService]
 })
 export class SandboxComponent {
   @ViewChild("submitted_expression_box", { read: ViewContainerRef })
@@ -15,14 +16,15 @@ export class SandboxComponent {
   subscription: Subscription;
 
   constructor(private resolver: ComponentFactoryResolver, private expressionService: ExpressionService) {
-
-      this.subscription = expressionService.expressionNew$.subscribe(this.onAddNewExpression.bind(this));
-
+    this.subscription = expressionService.expressionNew$.subscribe(this.onAddNewExpression.bind(this));
   }
 
   ngOnInit() {
     var factory = this.resolver.resolveComponentFactory(ExpressionComponent);
     this.container.createComponent(factory);
+
+    var mcs = new MathTextConverterService();
+    console.log(mcs.convert("5 + 4 - 7"));
   }
 
   onAddNewExpression() {

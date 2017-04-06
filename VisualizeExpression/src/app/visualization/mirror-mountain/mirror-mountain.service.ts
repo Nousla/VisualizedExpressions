@@ -1,11 +1,11 @@
 import { Injectable, ElementRef } from '@angular/core';
-import { IVisualizationService } from '../ivisualization';
+import { VisualizationService } from '../visualization';
 import { InternalData } from '../internal-data';
 import { MirrorMountainConfig } from "./mirror-mountain-config";
 import * as d3 from 'd3';
 
 @Injectable()
-export class MirrorMountainService implements IVisualizationService {
+export class MirrorMountainService implements VisualizationService {
     private width = 750;
     private height = 350;
     private nodeWidth = 40;
