@@ -1,6 +1,7 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent }  from './app.component';
 import { SandboxComponent } from './sandbox/sandbox.component';
@@ -9,7 +10,7 @@ import { VisualizationComponent } from './visualization/visualization.component'
 import { MirrorMountainComponent } from "./visualization/mirror-mountain/mirror-mountain.component";
 
 @NgModule({
-  imports:      [ BrowserModule,
+  imports:      [ BrowserModule, FormsModule,
   RouterModule.forRoot([
     {
       path: 'sandbox',

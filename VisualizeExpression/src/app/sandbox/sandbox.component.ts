@@ -13,7 +13,7 @@ export class SandboxComponent {
   @ViewChild("submitted_expression_box", { read: ViewContainerRef })
   container: ViewContainerRef;
   subscription: Subscription;
-   public listOfExpressions:ComponentRef<ExpressionComponent>[];
+  public listOfExpressions:ComponentRef<ExpressionComponent>[];
   
 
 
@@ -21,6 +21,7 @@ export class SandboxComponent {
     
       this.subscription = expressionService.expressionNew$.subscribe(this.onAddNewExpression.bind(this));
       this.subscription = expressionService.expresionRemove$.subscribe(this.onRemoveExpression.bind(this));
+      this.subscription = expressionService.expressionClone$.subscribe(this.onCloneExpression.bind(this));
       this.listOfExpressions = [];
 
   }
@@ -30,6 +31,7 @@ export class SandboxComponent {
     var expression = this.container.createComponent(factory);
     this.listOfExpressions.push(expression);
     (<ExpressionComponent>expression.instance).counter = this.listOfExpressions.length;
+    return expression;
   }
 
   ngOnInit() {
@@ -53,6 +55,13 @@ export class SandboxComponent {
         this.addNewExpression();
       }
     }
+  }
+
+  onCloneExpression( expression: Object) {
+    var element = this.listOfExpressions[expression["counter"]-1];
+    var clone = this.addNewExpression();
+    (<ExpressionComponent>clone.instance).expression = expression["expression"];
+
   }
 
 }

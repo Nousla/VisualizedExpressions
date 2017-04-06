@@ -10,13 +10,13 @@ import { Subscription } from 'rxjs/Subscription';
             <div class="expression_actions">
                 <p>{{counter}}</p>
                 <button (click)="add()">Insert New</button>
-                <button>Clone</button>
+                <button (click)="clone()">Clone</button>
                 <button (click)="remove()">Remove</button>
                 <button>Move up</button>
                 <button>Move down</button>
             </div>
             <div class="expression_edit">
-                <textarea rows="1">Insert expression here</textarea>
+                <textarea rows="1"[(ngModel)]="expression" (ngModelChange)="onInputChange($event)" >Insert expression here</textarea>
             </div>
             <div class="visualization_render">
                 <img src="" alt="Syntax tree visualization" />
@@ -30,6 +30,13 @@ import { Subscription } from 'rxjs/Subscription';
 export class ExpressionComponent {
     @Input()
     counter: number;
+    @Input()
+    expression: string;
+
+
+
+    onInputChange(newValue: string){
+    }
 
     constructor(private es: ExpressionService){
     }
@@ -38,5 +45,8 @@ export class ExpressionComponent {
     }
     remove(){
         this.es.remove(this.counter);
+    }
+    clone(){
+        this.es.clone({counter: this.counter, expression: this.expression});
     }
 }
