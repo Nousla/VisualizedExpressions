@@ -18,7 +18,7 @@ export class ExpressionComponent {
     @Input()
     counter: number;
     @Input()
-    private input: string;
+    input: string;
     private data: InternalData;
     private config: Object;
     private timeout: number;
@@ -29,6 +29,11 @@ export class ExpressionComponent {
             width: 600,
             height: 200
         }
+        this.input = "";
+    }
+
+    ngOnInit(): void {
+        this.onTimeOut();
     }
 
     onInputChange(e: Event): void {
@@ -40,14 +45,14 @@ export class ExpressionComponent {
         this.data = this.mcs.convert(this.input);
     }
 
-    add(){
+    add(): void{
         this.es.addNew();
     }
 
-    remove(){
+    remove(): void{
         this.es.remove(this.counter);
     }
-    clone(){
-        this.es.clone({counter: this.counter, expression: this.input});
+    clone(): void{
+        this.es.clone({counter: this.counter, input: this.input});
     }
 }

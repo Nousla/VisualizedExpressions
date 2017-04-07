@@ -60,7 +60,6 @@ export class SandboxComponent {
   onCloneExpression( expression: Object) {
     var element = this.listOfExpressions[expression["counter"]-1];
     var clone = this.addNewExpression();
-    (<ExpressionComponent>clone.instance).expression = expression["expression"];
-
+    (<ExpressionComponent>clone.instance).input = expression["input"];
   }
 }
