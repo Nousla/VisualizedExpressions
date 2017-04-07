@@ -16,8 +16,6 @@ export class SandboxComponent {
   container: ViewContainerRef;
   subscription: Subscription;
 
-  private data = new MathTextConverterService().convert("5 + 4 - 7");
-
   constructor(private resolver: ComponentFactoryResolver, private expressionService: ExpressionService) {
     this.subscription = expressionService.expressionNew$.subscribe(this.onAddNewExpression.bind(this));
   }

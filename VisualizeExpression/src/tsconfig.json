@@ -15,7 +15,8 @@
     "types": [
       "jasmine",
       "node",
-      "mathjs"
+      "mathjs",
+      "d3"
     ],
     "typeRoots": [ "../node_modules/@types" ]
   }

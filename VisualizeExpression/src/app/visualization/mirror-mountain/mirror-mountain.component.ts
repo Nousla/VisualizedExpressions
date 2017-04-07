@@ -8,7 +8,7 @@ export let VISUALIZATION_SERVICE = new InjectionToken<VisualizationService>("Vis
 
 @Component({
   selector: 'visualization-mirror-mountain',
-  template: '<div class="chartContainer" #chartContainer></div>',
+  template: '<div class="mirror-mountain-box" #mirrorMountainBox></div>',
   styleUrls: ['./mirror-mountain.component.css'],
   encapsulation: ViewEncapsulation.None,
   providers: [
@@ -25,17 +25,13 @@ export class MirrorMountainComponent implements OnChanges {
   private data: InternalData;
   @Input()
   private config: Object;
-  @ViewChild('chartContainer')
-  private chartContainer: ElementRef;
+  @ViewChild('mirrorMountainBox')
+  private mirrorMountainBox: ElementRef;
 
   constructor( @Inject(VISUALIZATION_SERVICE) private visualizationService: VisualizationService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!this.data) {
-      return;
-    }
-
     this.visualizationService.configure(this.config);
-    this.visualizationService.construct(this.chartContainer, this.data);
+    this.visualizationService.construct(this.mirrorMountainBox, this.data);
   }
 }

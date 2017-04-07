@@ -21,6 +21,7 @@ export class ExpressionComponent {
     private input: string;
     private data: InternalData;
     private config: Object;
+    private timeout: number;
 
     constructor(private es: ExpressionService, @Inject(MATH_CONVERTER_SERVICE) private mcs: MathConverterService) {
         this.counter1 = ExpressionComponent.counter++;
@@ -32,12 +33,12 @@ export class ExpressionComponent {
     }
 
     onInputChange(e: Event): void {
-        console.log("changing");
-        var tempData = this.mcs.convert(this.input);
-        if (tempData) {
-            this.data = tempData;
-            console.log(this.data);
-        }
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(this.onTimeOut.bind(this), 200);
+    }
+
+    onTimeOut(): void {
+        this.data = this.mcs.convert(this.input);
     }
 
     click(): void {

@@ -7,7 +7,7 @@ export class InternalData {
         this._rootNode = rootNode;
     }
 
-    get data (): InternalNode {
+    get rootNode (): InternalNode {
         return this._rootNode;
     }
 }

@@ -35,24 +35,33 @@ export class MirrorMountainService implements VisualizationService {
     }
 
     construct(elementRef: ElementRef, internalData: InternalData): void {
-        d3.select(elementRef.nativeElement)
-            .selectAll("*")
-            .remove();
-        var svg = d3.select(elementRef.nativeElement)
-            .append("svg")
-            .attr("width", this.width)
-            .attr("height", this.height);
+        if (!elementRef) {
+            return;
+        }
 
-        var rootNode = d3.hierarchy(internalData.data);
-        d3.cluster().nodeSize([this.nodeWidth, this.nodeHeight])/*.size([this.width, this.height])*/(rootNode);
+        this.clearNodes(elementRef);
 
-        var instance = this;
-        var rootGroup = svg.append("g");
+        if (!internalData) {
+            return;
+        }
+
+        var rootNode = d3.hierarchy(internalData.rootNode);
+        d3.cluster().nodeSize([this.nodeWidth + 10, this.nodeHeight + 10])(rootNode);
+
+        // Determine new x and width based on text length. Push all sibling nodes 
+        // or fill the total width with all sibling nodes.
+        // Custom layout in layers.
+
         var nodes = rootNode.descendants();
         var links = rootNode.links();
 
-        var topLeftLeaf = this.findEdgeLeaf(rootNode.children[0], true);
-        console.log(topLeftLeaf);
+        var errorX: number;
+        var errorY: number;
+        if (rootNode.children && rootNode.children.length > 0) {
+            let topLeftLeafNode = this.findEdgeLeaf(rootNode.children[0], true);
+            errorX = topLeftLeafNode["x"];
+            errorY = topLeftLeafNode["y"];
+        }
 
         nodes.forEach((node: d3.HierarchyNode<InternalNode>) => {
             if (node.data.type === InternalNodeType.Equality) {
@@ -61,11 +70,26 @@ export class MirrorMountainService implements VisualizationService {
                 var edgeLeafGapWidth = leftEdgeLeaf["x"] + rightEdgeLeaf["x"];
 
                 node["x"] = edgeLeafGapWidth / 2;
+                node["y"] -= leftEdgeLeaf["y"];
             }
             else {
-                node["y"] = -node["y"] + (this.height);
+                node["y"] = -node["y"];
+            }
+
+            if (errorX && errorX < 0) {
+                node["x"] -= errorX;
+            }
+
+            if (errorY && errorY > 0) {
+                node["y"] += errorY;
             }
         });
+
+        var svg = d3.select(elementRef.nativeElement)
+            .append("svg");
+
+        var rootGroup = svg.append("g");
+        var instance = this;
 
         rootGroup.selectAll("line")
             .data(links)
@@ -80,6 +104,20 @@ export class MirrorMountainService implements VisualizationService {
             .each(function (node: d3.HierarchyNode<InternalNode>) {
                 instance.processNode(node, this);
             });
+
+        var gNode = <SVGGElement>rootGroup.node();
+        if (gNode) {
+            var boundingBox = gNode.getBBox();
+            svg.attr("width", boundingBox.width)
+                .attr("height", boundingBox.height)
+                .attr("viewBox", "0 0 " + boundingBox.width + " " + boundingBox.height);
+        }
+    }
+
+    private clearNodes(elementRef: ElementRef): void {
+        d3.select(elementRef.nativeElement)
+            .selectAll("*")
+            .remove();
     }
 
     private processLink(link: d3.HierarchyLink<InternalNode>, element: d3.EnterElement): void {
@@ -154,9 +192,9 @@ export class MirrorMountainService implements VisualizationService {
     private getTextClassName(node: d3.HierarchyNode<InternalNode>): string {
         switch (node.data.group) {
             case InternalNodeGroup.Number: return "mirror-mountain-text mirror-mountain-text-number";
-            /*case "operator": return (node.data["type"] === "multiplication") ? 
-                "mirror-mountain-text mirror-mountain-text-operator-multiplication" : 
-                "mirror-mountain-text mirror-mountain-text-operator";*/
+            case InternalNodeGroup.Operator: /*return (node.data["type"] === "multiplication") ? 
+                "mirror-mountain-text mirror-mountain-text-operator-multiplication" :*/ 
+                return "mirror-mountain-text mirror-mountain-text-operator";
             //case "extended": return "mirror-mountain-text mirror-mountain-text-variable";
             default: ""
                 break;
