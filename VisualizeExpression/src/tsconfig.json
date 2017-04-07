@@ -14,7 +14,9 @@
     "suppressImplicitAnyIndexErrors": true,
     "types": [
       "jasmine",
-      "node"
+      "node",
+      "mathjs",
+      "d3"
     ],
     "typeRoots": [ "../node_modules/@types" ]
   }

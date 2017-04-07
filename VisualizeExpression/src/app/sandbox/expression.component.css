@@ -84,9 +84,7 @@
 }
 
 .expression_edit {
-    display: inline-flex;
-    float: left;
-    width: 50%;
+    margin-bottom: 5px;
 }  
 
 .expression_edit > textarea {
@@ -97,15 +95,14 @@
     padding-left: 5px;
     padding-right: 5px;
     margin-left: 5px;
-    width: 100%;
-    resize: none;
+    width: 98%;
+    resize: vertical;
     overflow: hidden;
 }
 
 .visualization_render {
-    display: inline-flex;
-    border-left: 1px dashed lightblue;
-    float: right;
+    display: block;
+    border-top: 1px dashed lightblue;
     padding: 5px;
 }
 

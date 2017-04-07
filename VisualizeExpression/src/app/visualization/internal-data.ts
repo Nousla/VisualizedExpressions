@@ -1,11 +1,15 @@
-export class InternalData {
-    private _data: Array<any>;
+import { InternalNode } from "./internal-node";
 
-    constructor(data: Array<any>) {
-        this._data = data;
+export class InternalData {
+    private _rootNode: InternalNode;
+
+    constructor(rootNode: InternalNode) {
+        this._rootNode = rootNode;
     }
 
-    get data (): Array<any> {
-        return this._data;
+    get rootNode (): InternalNode {
+        return this._rootNode;
     }
 }
+
+export default InternalData;

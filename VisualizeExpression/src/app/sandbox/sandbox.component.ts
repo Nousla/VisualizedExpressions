@@ -2,6 +2,8 @@ import { Component, ViewChild, ViewContainerRef, ComponentFactoryResolver, Compo
 import { ExpressionComponent } from './expression.component';
 import { ExpressionService } from './expression.service';
 import { Subscription } from 'rxjs/Subscription';
+import { MathTextConverterService } from "../visualization/math-text-converter.service";
+import { InternalData } from "../visualization/internal-data";
 
 @Component({
   selector: 'sandbox',
@@ -16,14 +18,12 @@ export class SandboxComponent {
   public listOfExpressions:ComponentRef<ExpressionComponent>[];
   
 
-
   constructor(private resolver: ComponentFactoryResolver, private expressionService: ExpressionService) {
     
       this.subscription = expressionService.expressionNew$.subscribe(this.onAddNewExpression.bind(this));
       this.subscription = expressionService.expresionRemove$.subscribe(this.onRemoveExpression.bind(this));
       this.subscription = expressionService.expressionClone$.subscribe(this.onCloneExpression.bind(this));
       this.listOfExpressions = [];
-
   }
 
   addNewExpression(){
@@ -56,12 +56,11 @@ export class SandboxComponent {
       }
     }
   }
-
+   
   onCloneExpression( expression: Object) {
     var element = this.listOfExpressions[expression["counter"]-1];
     var clone = this.addNewExpression();
     (<ExpressionComponent>clone.instance).expression = expression["expression"];
 
   }
-
 }

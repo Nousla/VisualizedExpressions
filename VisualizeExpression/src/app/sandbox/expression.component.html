@@ -1,0 +1,17 @@
+<div class="expression_box">
+    <div class="expression_actions">
+        <p>{{counter}}</p>
+        <button (click)="add()">Insert New</button>
+        <button>Clone</button>
+        <button (click)="remove()">Remove</button>
+        <button>Move up</button>
+        <button>Move down</button>
+    </div>
+    <div class="expression_edit">
+        <textarea rows="1" [(ngModel)]="input" (ngModelChange)="onInputChange($event)">Insert expression here</textarea>
+    </div>
+    <div class="visualization_render">
+        <visualization [data]="data" [config]="config"></visualization>
+    </div>
+    <div class="expression" id="expression_2"></div>
+</div>
