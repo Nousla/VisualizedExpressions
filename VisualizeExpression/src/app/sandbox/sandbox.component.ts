@@ -41,9 +41,9 @@ export class SandboxComponent {
   }
 
   onRemoveExpression(index: number) {
+    if(index-1 > -1){
     var element = this.listOfExpressions[index-1];
     element.destroy();
-    if(index-1 > -1) {
       this.listOfExpressions.splice(index-1, 1);
       for(var i = index-1; i < this.listOfExpressions.length; i++) {
         var tempEl = this.listOfExpressions[i];
