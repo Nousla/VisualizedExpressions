@@ -21,12 +21,14 @@
     "@angular/router": "~4.0.0",
     "core-js": "^2.4.1",
     "d3": "^4.7.4",
+    "mathjs": "^3.11.4",
     "rxjs": "5.0.1",
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
     "@types/d3": "^4.7.0",
     "@types/jasmine": "^2.5.47",
+    "@types/mathjs": "0.0.34",
     "@types/node": "^7.0.12",
     "angular2-template-loader": "^0.6.2",
     "css-loader": "^0.28.0",

@@ -3,11 +3,13 @@ import { InternalData } from './internal-data';
 
 @Component({
   selector: 'visualization',
-  template: '<visualization-mirror-mountain [data]="data"></visualization-mirror-mountain>',
+  template: '<visualization-mirror-mountain [data]="data" [config]="config"></visualization-mirror-mountain>',
   styleUrls: ['./visualization.component.css']
 })
 
 export class VisualizationComponent {
   @Input()
   private data: InternalData;
+  @Input()
+  private config: Object;
 }

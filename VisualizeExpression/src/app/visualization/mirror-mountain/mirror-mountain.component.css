@@ -13,6 +13,10 @@
   text-anchor: end;
 }*/
 
+.mirror-mountain-box {
+  overflow: auto;
+}
+
 .mirror-mountain-rect {
   fill: lightskyblue;
   stroke: black;
