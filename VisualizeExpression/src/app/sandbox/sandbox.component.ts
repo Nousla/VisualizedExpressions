@@ -2,6 +2,8 @@ import { Component, ViewChild, ViewContainerRef, ComponentFactoryResolver, Compo
 import { ExpressionComponent } from './expression.component';
 import { ExpressionService } from './expression.service';
 import { Subscription } from 'rxjs/Subscription';
+import { MathTextConverterService } from "../visualization/math-text-converter.service";
+import { InternalData } from "../visualization/internal-data";
 
 @Component({
   selector: 'sandbox',
@@ -13,16 +15,14 @@ export class SandboxComponent {
   @ViewChild("submitted_expression_box", { read: ViewContainerRef })
   container: ViewContainerRef;
   subscription: Subscription;
-   public listOfExpressions:ComponentRef<ExpressionComponent>[];
+  public listOfExpressions:ComponentRef<ExpressionComponent>[];
   
-
 
   constructor(private resolver: ComponentFactoryResolver, private expressionService: ExpressionService) {
     
       this.subscription = expressionService.expressionNew$.subscribe(this.onAddNewExpression.bind(this));
       this.subscription = expressionService.expresionRemove$.subscribe(this.onRemoveExpression.bind(this));
       this.listOfExpressions = [];
-
   }
 
   addNewExpression(){
