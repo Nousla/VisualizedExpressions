@@ -15,9 +15,8 @@ export let MATH_CONVERTER_SERVICE = new InjectionToken<MathConverterService>("Ma
 })
 
 export class ExpressionComponent {
-    static counter = 1;
     @Input()
-    counter1: Number;
+    counter: number;
     private input: string;
     private data: InternalData;
     private config: Object;
@@ -41,7 +40,11 @@ export class ExpressionComponent {
         this.data = this.mcs.convert(this.input);
     }
 
-    click(): void {
+    add(){
         this.es.addNew();
+    }
+
+    remove(){
+        this.es.remove(this.counter);
     }
 }
