@@ -17,14 +17,14 @@ export let MATH_CONVERTER_SERVICE = new InjectionToken<MathConverterService>("Ma
 export class ExpressionComponent {
     @Input()
     counter: number;
+    @Input()
     private input: string;
     private data: InternalData;
     private config: Object;
     private timeout: number;
 
     constructor(private es: ExpressionService, @Inject(MATH_CONVERTER_SERVICE) private mcs: MathConverterService) {
-        this.counter1 = ExpressionComponent.counter++;
-
+      
         this.config = {
             width: 600,
             height: 200
@@ -46,5 +46,8 @@ export class ExpressionComponent {
 
     remove(){
         this.es.remove(this.counter);
+    }
+    clone(){
+        this.es.clone({counter: this.counter, expression: this.input});
     }
 }

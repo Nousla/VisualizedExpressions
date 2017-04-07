@@ -22,6 +22,7 @@ export class SandboxComponent {
     
       this.subscription = expressionService.expressionNew$.subscribe(this.onAddNewExpression.bind(this));
       this.subscription = expressionService.expresionRemove$.subscribe(this.onRemoveExpression.bind(this));
+      this.subscription = expressionService.expressionClone$.subscribe(this.onCloneExpression.bind(this));
       this.listOfExpressions = [];
   }
 
@@ -30,6 +31,7 @@ export class SandboxComponent {
     var expression = this.container.createComponent(factory);
     this.listOfExpressions.push(expression);
     (<ExpressionComponent>expression.instance).counter = this.listOfExpressions.length;
+    return expression;
   }
 
   ngOnInit() {
@@ -41,7 +43,7 @@ export class SandboxComponent {
   }
 
   onRemoveExpression(index: number) {
-    if(index-1 > -1){
+    if(index-1 > -1) {
     var element = this.listOfExpressions[index-1];
     element.destroy();
       this.listOfExpressions.splice(index-1, 1);
@@ -54,5 +56,11 @@ export class SandboxComponent {
       }
     }
   }
+   
+  onCloneExpression( expression: Object) {
+    var element = this.listOfExpressions[expression["counter"]-1];
+    var clone = this.addNewExpression();
+    (<ExpressionComponent>clone.instance).expression = expression["expression"];
 
+  }
 }
