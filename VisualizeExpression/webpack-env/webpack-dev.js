@@ -1,6 +1,7 @@
 const WebpackMerge = require('webpack-merge');
 const WebpackBase = require('./webpack-base.js');
 const Path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = WebpackMerge(WebpackBase(), {
   devtool: 'cheap-module-source-map',
@@ -18,4 +19,8 @@ module.exports = WebpackMerge(WebpackBase(), {
       noInfo: false,
       historyApiFallback: true
   },
+  
+  new HtmlWebpackPlugin({
+	template: './src/index.ejs'
+	})
 })

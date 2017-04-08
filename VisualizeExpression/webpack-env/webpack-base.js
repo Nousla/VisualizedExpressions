@@ -17,7 +17,7 @@ module.exports = function () {
 
         output: {
             filename: '[name].js',
-            publicPath: '/',
+            publicPath: '',
             path: Path.resolve(__dirname, '../dist')
         },
 
@@ -60,11 +60,7 @@ module.exports = function () {
                 name: ['app', 'vendor', 'polyfills']
             }),
 
-            new ExtractTextWebpackPlugin('styles.css'),
-
-            new HtmlWebpackPlugin({
-                template: './src/index.html'
-            })
+            new ExtractTextWebpackPlugin('styles.css')
         ]
     }
 }
