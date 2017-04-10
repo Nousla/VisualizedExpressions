@@ -24,11 +24,6 @@ module.exports = function () {
         module: {
             rules: [
                 {
-                    test: /\.ts$/,
-                    loader: 'ts-loader!angular2-template-loader',
-                    exclude: [/\.(spec|e2e)\.ts$/]
-                },
-                {
                     test: /\.css$/,
                     exclude: Path.resolve(__dirname, '../src/app/'),
                     loader: ExtractTextWebpackPlugin.extract({
@@ -55,10 +50,6 @@ module.exports = function () {
                 /angular(\\|\/)core(\\|\/)@angular/,
                 Path.resolve(__dirname, '../src')
             ),
-
-            new Webpack.optimize.CommonsChunkPlugin({
-                name: ['app', 'vendor', 'polyfills']
-            }),
 
             new ExtractTextWebpackPlugin('styles.css')
         ]

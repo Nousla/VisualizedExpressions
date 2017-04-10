@@ -17,7 +17,7 @@ describe('MirrorMountainComponent suite', () => {
         componentFixture = TestBed.createComponent(MirrorMountainComponent);
         component = componentFixture.componentInstance;
 
-        debugElement = componentFixture.debugElement.query(By.css(".chartContainer"));
+        debugElement = componentFixture.debugElement;
         htmlElement = debugElement.nativeElement;
     });
 
@@ -27,6 +27,6 @@ describe('MirrorMountainComponent suite', () => {
 
     it('should display nothing if no data', () => {
         componentFixture.detectChanges();
-        expect(htmlElement.innerHTML).toBeNull();
+        expect(htmlElement.querySelector(".mirror-mountain-box").innerHTML).toBe('');
     });
 });

@@ -17,15 +17,7 @@ module.exports = function (config) {
         ],
 
         files: [
-            { pattern: app + '*.spec.ts', included: false, watched: true },
-
-            { pattern: npm + '@angular/**/*.js', included: false, watched: false },
-            { pattern: npm + '@angular/**/*.js.map', included: false, watched: false },
-
-            npm + 'core-js/client/shim.js',
-
-            { pattern: app + '*.html', included: false, watched: true },
-            { pattern: app + '*.css', included: false, watched: true },
+            { pattern: 'karma-test-shim.js', watched: false }
         ],
 
         exclude: [
@@ -33,11 +25,15 @@ module.exports = function (config) {
 
         webpack: require('./webpack-env/webpack-test'),
 
-        preprocessors: {
-            '**/*.spec.ts': ['webpack']
+        webpackMiddleware: {
+            stats: 'errors-only'
         },
 
-        reporters: ['progress', 'kjhtml'],
+        preprocessors: {
+            'karma-test-shim.js': ['webpack']
+        },
+
+        reporters: ['kjhtml'],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
