@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, SimpleChanges, InjectionToken, Inject } from '@angular/core';
+import { Component, EventEmitter, Output, Input, SimpleChanges, InjectionToken, Inject, ViewChild, ElementRef, Renderer } from '@angular/core';
 import { ExpressionService } from './expression.service';
 import { Subscription } from 'rxjs/Subscription';
 import { InternalData } from "../visualization/internal-data";
@@ -22,13 +22,17 @@ export class ExpressionComponent {
     input: string;
     private data: InternalData;
     private config: Object;
-    private timeout: number;
-    private testInputExpression = "4x+5=9";
-    private testInputRightSol = 1;
+    private timeoutVisualization: number;
+    private timeoutCheck: number;
+    @ViewChild('banner')     
+    banner: ElementRef;
+    private testInputExpression = "4z+5=9";
+    private testInputCorrectSol = 1;
     private testInputWrongSol = 2;
   
 
-    constructor(private es: ExpressionService, @Inject(MATH_CONVERTER_SERVICE) private mcs: MathConverterService, private pss: ProblemSolvingService) {
+    constructor(private es: ExpressionService, @Inject(MATH_CONVERTER_SERVICE) private mcs: MathConverterService, 
+                private pss: ProblemSolvingService, private renderer: Renderer) {
       
         this.config = {
             width: 600,
@@ -38,29 +42,27 @@ export class ExpressionComponent {
     }
 
     ngOnInit(): void {
-        this.onTimeOut();
+        this.onTimeOutVisualization();
     }
 
     onInputChange(e: Event): void {
-        clearTimeout(this.timeout);
-        this.timeout = setTimeout(this.onTimeOut.bind(this), 200);
+        clearTimeout(this.timeoutVisualization);
+        clearTimeout(this.timeoutCheck);
+        this.timeoutVisualization = setTimeout(this.onTimeOutVisualization.bind(this), 200);
+        this.timeoutCheck = setTimeout(this.onTimeOutCheck.bind(this), 1000);
     }
 
-    onTimeOut(): void {
+    onTimeOutVisualization(): void {
         this.data = this.mcs.convert(this.input);
-        var solution = this.pss.checkExpression(this.testInputExpression, this.testInputRightSol, this.testInputWrongSol);
-        console.log(solution);
-        var banner = document.querySelector("#banner");
+    }
+    onTimeOutCheck(): void {
+        var solution = this.pss.checkExpression(this.input, this.testInputCorrectSol, this.testInputWrongSol);
         if(solution == true) {
-            banner.classList.remove("expression_actions");
-            banner.classList.add("expression_actions_correct");
+            this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','green');
         }
         else {
-            banner.classList.remove("expression_actions");
-            banner.classList.add("expression_actions_wrong");
+            this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','red');
         }
-
-
     }
 
     add(): void{
