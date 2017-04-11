@@ -9,7 +9,7 @@ module.exports = WebpackMerge(WebpackBase(), {
 		
 		new HtmlWebpackPlugin({
 			template: './src/index.ejs',
-			baseUrl: 'https://goodfoamy.github.io/Bachelor/'
+			baseUrl: 'https://goodfoamy.github.io/'
 		})
     ]
 });

@@ -60,7 +60,7 @@ module.exports = function () {
                 name: ['app', 'vendor', 'polyfills']
             }),
 
-            new ExtractTextWebpackPlugin('styles.css')
+            new ExtractTextWebpackPlugin('styles.css'),
         ]
     }
 }
