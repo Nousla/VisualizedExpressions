@@ -1,48 +1,11 @@
-#submitted_expressions_box {
-    display: block;
-    margin-bottom: 5px;
-    padding: 5px 5px 5px 5px;
-}
-
-#submitted_expressions_box > p {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: bold;
-    font-size: 15pt;
-    margin-bottom: 5px;
-    margin-top: 0;
-}
-
 .expression_box {
     position: relative;
     border: 2px solid black;
-    border-radius: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     padding: 5px;
     overflow: hidden;
     margin-bottom: 10px;
-}
-
-#expressions_header {
-    margin-bottom: 10px;
-}
-
-#expressions_header > p {
-    display: block;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 11pt;
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-#visualization_type > * {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 11pt;
-    display: inline-block;
-}
-
-#expressions_header #expressions_header_title {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: bold;
-    font-size: 20pt;
 }
 
 .expression_actions {

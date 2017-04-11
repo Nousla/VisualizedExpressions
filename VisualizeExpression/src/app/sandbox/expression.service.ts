@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
 @Injectable()
@@ -16,10 +16,10 @@ export class ExpressionService {
         this.expressionNewSource.next();
     }
 
-    remove(counter: number){
+    remove(counter: number) {
         this.expressionRemoveSource.next(counter);
     }
-    clone(expression: Object){
+    clone(expression: Object) {
         this.expressionCloneSource.next(expression);
     }
 }

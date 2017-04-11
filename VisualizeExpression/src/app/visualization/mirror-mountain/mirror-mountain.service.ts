@@ -3,7 +3,8 @@ import VisualizationService from '../visualization-service';
 import { InternalData } from '../internal-data';
 import { MirrorMountainConfig } from "./mirror-mountain-config";
 import * as d3 from 'd3';
-import { InternalNode, Type as InternalNodeType, Group as InternalNodeGroup } from "../internal-node";
+import { InternalNode, Type as InternalNodeType, Group as InternalNodeGroup } from '../internal-node';
+import VisualizationEventHandler from '../visualization-event-handler';
 
 @Injectable()
 export class MirrorMountainService implements VisualizationService {
@@ -12,7 +13,9 @@ export class MirrorMountainService implements VisualizationService {
     private nodeWidth = 40;
     private nodeHeight = 40;
 
-    configure(config: Object): void {
+    private eventHandler: VisualizationEventHandler;
+
+    configure(config: Object, eventHandler: VisualizationEventHandler): void {
         if (!config) {
             return;
         }
@@ -31,6 +34,10 @@ export class MirrorMountainService implements VisualizationService {
 
         if (config.hasOwnProperty("nodeHeight")) {
             this.width = config["nodeHeight"];
+        }
+
+        if(eventHandler) {
+            this.eventHandler = eventHandler;
         }
     }
 
@@ -165,7 +172,8 @@ export class MirrorMountainService implements VisualizationService {
             .attr("y", "0")
             .attr("width", this.nodeWidth)
             .attr("height", this.nodeHeight)
-            .attr("class", this.getRectClassName);
+            .attr("class", this.getRectClassName)
+            .on("click", (node: d3.HierarchyNode<InternalNode>) => {this.eventHandler.selectNode(node.data)});
 
         newNodeSelection.append("svg")
             .attr("width", this.nodeWidth)
@@ -177,7 +185,8 @@ export class MirrorMountainService implements VisualizationService {
             .attr("x", "50%")
             .attr("y", "50%")
             .text((node: d3.HierarchyNode<InternalNode>) => { return node.data.name })
-            .attr("class", this.getTextClassName);
+            .attr("class", this.getTextClassName)
+            .on("click", (node: d3.HierarchyNode<InternalNode>) => {this.eventHandler.selectNode(node.data)});
     }
 
     private getRectClassName(node: d3.HierarchyNode<InternalNode>): string {

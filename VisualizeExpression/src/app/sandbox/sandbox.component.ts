@@ -19,7 +19,6 @@ export class SandboxComponent {
   
 
   constructor(private resolver: ComponentFactoryResolver, private expressionService: ExpressionService) {
-    
       this.subscription = expressionService.expressionNew$.subscribe(this.onAddNewExpression.bind(this));
       this.subscription = expressionService.expresionRemove$.subscribe(this.onRemoveExpression.bind(this));
       this.subscription = expressionService.expressionClone$.subscribe(this.onCloneExpression.bind(this));
