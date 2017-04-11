@@ -1,4 +1,5 @@
 const WebpackMerge = require('webpack-merge');
+const Webpack = require('webpack');
 const WebpackBase = require('./webpack-base.js');
 const Path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -20,9 +21,8 @@ module.exports = WebpackMerge(WebpackBase(), {
             }
         ]
     },
-
     devServer: {
-        contentBase: './src/',
+        contentBase: '/',
         port: 8080,
         host: 'localhost',
         inline: true,
@@ -36,7 +36,8 @@ module.exports = WebpackMerge(WebpackBase(), {
         }),
 
         new HtmlWebpackPlugin({
-            template: './src/index.ejs'
+            template: './src/index.ejs',
+			baseUrl: '/'
         })
     ]
 })

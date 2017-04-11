@@ -50,7 +50,6 @@ module.exports = function () {
                 /angular(\\|\/)core(\\|\/)@angular/,
                 Path.resolve(__dirname, '../src')
             ),
-
             new ExtractTextWebpackPlugin('styles.css')
         ]
     }

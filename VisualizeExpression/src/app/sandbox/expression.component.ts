@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { InternalData } from "../visualization/internal-data";
 import { MathConverterService } from "../visualization/math-converter-service";
 import { MathTextConverterService } from "../visualization/math-text-converter.service";
+import { ProblemSolvingService } from "./problemsolving.service"
 
 export let MATH_CONVERTER_SERVICE = new InjectionToken<MathConverterService>("MathConverterServiceToken");
 
@@ -11,7 +12,7 @@ export let MATH_CONVERTER_SERVICE = new InjectionToken<MathConverterService>("Ma
     selector: 'expression',
     templateUrl: './expression.component.html',
     styleUrls: [`./expression.component.css`],
-    providers: [{ provide: MATH_CONVERTER_SERVICE, useClass: MathTextConverterService }]
+    providers: [{ provide: MATH_CONVERTER_SERVICE, useClass: MathTextConverterService, }, ProblemSolvingService]
 })
 
 export class ExpressionComponent {
@@ -22,8 +23,12 @@ export class ExpressionComponent {
     private data: InternalData;
     private config: Object;
     private timeout: number;
+    private testInputExpression = "4x+5=9";
+    private testInputRightSol = 1;
+    private testInputWrongSol = 2;
+  
 
-    constructor(private es: ExpressionService, @Inject(MATH_CONVERTER_SERVICE) private mcs: MathConverterService) {
+    constructor(private es: ExpressionService, @Inject(MATH_CONVERTER_SERVICE) private mcs: MathConverterService, private pss: ProblemSolvingService) {
       
         this.config = {
             width: 600,
@@ -43,6 +48,19 @@ export class ExpressionComponent {
 
     onTimeOut(): void {
         this.data = this.mcs.convert(this.input);
+        var solution = this.pss.checkExpression(this.testInputExpression, this.testInputRightSol, this.testInputWrongSol);
+        console.log(solution);
+        var banner = document.querySelector("#banner");
+        if(solution == true) {
+            banner.classList.remove("expression_actions");
+            banner.classList.add("expression_actions_correct");
+        }
+        else {
+            banner.classList.remove("expression_actions");
+            banner.classList.add("expression_actions_wrong");
+        }
+
+
     }
 
     add(): void{
