@@ -17,7 +17,7 @@ module.exports = function () {
 
         output: {
             filename: '[name].js',
-            publicPath: '',
+            publicPath: '/public/',
             path: Path.resolve(__dirname, '../dist')
         },
 
@@ -44,6 +44,11 @@ module.exports = function () {
                 {
                     test: /\.html$/,
                     loader: 'html-loader',
+                },
+                {
+                    test: /\.png$/,
+                    include: Path.resolve(__dirname, '..src/assets/'),
+                    loader: 'file?name=/public/images/[name].[ext]'
                 }
             ]
         },

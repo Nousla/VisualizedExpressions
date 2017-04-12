@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, SimpleChanges, InjectionToken, Inject } from '@angular/core';
+import { Component, EventEmitter, Input, SimpleChanges, InjectionToken, Inject, Output } from '@angular/core';
 import { ExpressionService } from './expression.service';
 import { Subscription } from 'rxjs/Subscription';
 import { InternalData } from "../visualization/internal-data";
@@ -23,14 +23,14 @@ export class ExpressionComponent {
     @Input()
     input: string;
 
+    @Output()
+    operationState: OperationState;
+
     private data: InternalData;
     private config: Object;
     private timeout: number;
 
     private selectedNode: InternalNode;
-
-    @Output()
-    operationState: OperationState;
 
     constructor(private es: ExpressionService,
         @Inject(MATH_CONVERTER_SERVICE) private mcs: MathConverterService,
@@ -48,7 +48,7 @@ export class ExpressionComponent {
     ngOnInit(): void {
         this.onTimeOut();
 
-        this.eventHandler.visualizationSelectNode$.subscribe(this.onNodeSelected);
+        this.eventHandler.visualizationSelectNode$.subscribe(this.onNodeSelected.bind(this));
     }
 
     onInputChange(e: Event): void {
@@ -80,7 +80,6 @@ export class ExpressionComponent {
         else {
             this.selectedNode = node;
             this.operationState = OperationState.Selected;
-            console.log(this.operationState);
         }
     }
 }
