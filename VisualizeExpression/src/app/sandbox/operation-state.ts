@@ -1,5 +1,6 @@
 const enum OperationState {
     Closed,
+    Waiting,
     Selected,
     Added
 }

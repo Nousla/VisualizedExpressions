@@ -1,12 +1,25 @@
 <div class="expression_operation_box" [ngSwitch]="operationState">
-    <div *ngSwitchDefault class="expression_operation_closed">
-        <img src="/assets/icon-information-white-32x32.png"/>
-        <p>Select a node in the visualization to add an operation</p>
+    <div *ngSwitchDefault class="expression_operation expression_operation_closed">
+        <div class="expression_operation_info_box">
+            <img src="/assets/images/icon-information-white-32x32.png" />
+            <p>Visualize an expression to add operations</p>
+        </div>
     </div>
-    <div *ngSwitchCase="1" class="expression_operation_selected">
-        <p>{{operationState}}</p>
+    <div *ngSwitchCase="1" class="expression_operation expression_operation_waiting">
+        <div class="expression_operation_info_box">
+            <img src="/assets/images/icon-information-white-32x32.png" />
+            <p>Select a node in the visualization to add an operation</p>
+        </div>
     </div>
-    <div *ngSwitchCase="2" class="expression_operation_added">
+    <div *ngSwitchCase="2" class="expression_operation expression_operation_selected">
+        <div class="expression_operation_info_box">
+            <img src="/assets/images/icon-information-white-32x32.png" />
+            <p>Add operation to node:</p>
+        </div>
+        <visualization [data]="data" class="expression_operation_visualization"></visualization>
+        <button>Add Operation</button>
+    </div>
+    <div *ngSwitchCase="3" class="expression_operation expression_operation_added">
         <div class="expression_operation_edit">
             <p>Replace</p>
             <p>expression</p>

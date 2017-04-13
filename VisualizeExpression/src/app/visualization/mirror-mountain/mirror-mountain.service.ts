@@ -36,7 +36,7 @@ export class MirrorMountainService implements VisualizationService {
             this.width = config["nodeHeight"];
         }
 
-        if(eventHandler) {
+        if (eventHandler) {
             this.eventHandler = eventHandler;
         }
     }
@@ -173,7 +173,7 @@ export class MirrorMountainService implements VisualizationService {
             .attr("width", this.nodeWidth)
             .attr("height", this.nodeHeight)
             .attr("class", this.getRectClassName)
-            .on("click", (node: d3.HierarchyNode<InternalNode>) => {this.eventHandler.selectNode(node.data)});
+            .on("click", this.onClick.bind(this));
 
         newNodeSelection.append("svg")
             .attr("width", this.nodeWidth)
@@ -186,7 +186,13 @@ export class MirrorMountainService implements VisualizationService {
             .attr("y", "50%")
             .text((node: d3.HierarchyNode<InternalNode>) => { return node.data.name })
             .attr("class", this.getTextClassName)
-            .on("click", (node: d3.HierarchyNode<InternalNode>) => {this.eventHandler.selectNode(node.data)});
+            .on("click", this.onClick.bind(this));
+    }
+
+    private onClick(node: d3.HierarchyNode<InternalNode>): void {
+        if (this.eventHandler) {
+            this.eventHandler.selectNode(node.data)
+        }
     }
 
     private getRectClassName(node: d3.HierarchyNode<InternalNode>): string {
@@ -202,7 +208,7 @@ export class MirrorMountainService implements VisualizationService {
         switch (node.data.group) {
             case InternalNodeGroup.Number: return "mirror-mountain-text mirror-mountain-text-number";
             case InternalNodeGroup.Operator: /*return (node.data["type"] === "multiplication") ? 
-                "mirror-mountain-text mirror-mountain-text-operator-multiplication" :*/ 
+                "mirror-mountain-text mirror-mountain-text-operator-multiplication" :*/
                 return "mirror-mountain-text mirror-mountain-text-operator";
             //case "extended": return "mirror-mountain-text mirror-mountain-text-variable";
             default: ""

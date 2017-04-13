@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, SimpleChanges, InjectionToken, Inject, Output } from '@angular/core';
+import { Component, EventEmitter, Input, SimpleChanges, InjectionToken, Inject, Output, OnChanges } from '@angular/core';
 import { ExpressionService } from './expression.service';
 import { Subscription } from 'rxjs/Subscription';
 import { InternalData } from "../visualization/internal-data";
@@ -17,20 +17,18 @@ export let MATH_CONVERTER_SERVICE = new InjectionToken<MathConverterService>("Ma
     providers: [{ provide: MATH_CONVERTER_SERVICE, useClass: MathTextConverterService }, ExpressionEventHandler]
 })
 
-export class ExpressionComponent {
+export class ExpressionComponent implements OnChanges {
     @Input()
     counter: number;
     @Input()
     input: string;
-
-    @Output()
-    operationState: OperationState;
 
     private data: InternalData;
     private config: Object;
     private timeout: number;
 
     private selectedNode: InternalNode;
+    private operationState: OperationState;
 
     constructor(private es: ExpressionService,
         @Inject(MATH_CONVERTER_SERVICE) private mcs: MathConverterService,
@@ -42,18 +40,35 @@ export class ExpressionComponent {
         }
 
         this.input = "";
-        this.operationState = OperationState.Closed;
+        this.updateOperationState();
     }
 
     ngOnInit(): void {
         this.onTimeOut();
-
         this.eventHandler.visualizationSelectNode$.subscribe(this.onNodeSelected.bind(this));
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        var inputChanges = changes["input"];
+        if (inputChanges) {
+            if (inputChanges.currentValue !== "") {
+                this.operationState = OperationState.Closed;
+            }
+            else {
+                this.updateOperationState();
+            }
+        }
     }
 
     onInputChange(e: Event): void {
         clearTimeout(this.timeout);
         this.timeout = setTimeout(this.onTimeOut.bind(this), 200);
+        if (this.input !== "") {
+            this.operationState = OperationState.Closed;
+        }
+        else {
+            this.updateOperationState();
+        }
     }
 
     onTimeOut(): void {
@@ -73,13 +88,21 @@ export class ExpressionComponent {
     }
 
     onNodeSelected(node: InternalNode): void {
-        if (this.selectedNode === node) {
-            this.selectedNode = null;
-            this.operationState = OperationState.Closed;
+        this.selectedNode = (this.selectedNode === node) ? null : node;
+        this.updateOperationState();
+    }
+
+    updateOperationState(): void {
+        if (this.input !== "") {
+            if (this.selectedNode) {
+                this.operationState = OperationState.Selected;
+            }
+            else {
+                this.operationState = OperationState.Waiting;
+            }
         }
         else {
-            this.selectedNode = node;
-            this.operationState = OperationState.Selected;
+            this.operationState = OperationState.Closed;
         }
     }
 }
