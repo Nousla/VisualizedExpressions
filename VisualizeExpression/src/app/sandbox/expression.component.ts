@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, SimpleChanges, InjectionToken, Inject, Output, OnChanges } from '@angular/core';
-import { ExpressionService } from './expression.service';
+import { ExpressionEventService } from './expression-event.service';
 import { Subscription } from 'rxjs/Subscription';
 import { InternalData } from "../visualization/internal-data";
 import { MathConverterService } from "../visualization/math-converter-service";
@@ -7,8 +7,7 @@ import { MathTextConverterService } from "../visualization/math-text-converter.s
 import ExpressionEventHandler from './expression-event-handler';
 import OperationState from './operation-state';
 import { InternalNode } from "../visualization/internal-node";
-
-export let MATH_CONVERTER_SERVICE = new InjectionToken<MathConverterService>("MathConverterServiceToken");
+import { MATH_CONVERTER_SERVICE } from "../visualization/math-text-convert-service-token";
 
 @Component({
     selector: 'expression',
@@ -30,7 +29,7 @@ export class ExpressionComponent implements OnChanges {
     private selectedNode: InternalNode;
     private operationState: OperationState;
 
-    constructor(private es: ExpressionService,
+    constructor(private ees: ExpressionEventService,
         @Inject(MATH_CONVERTER_SERVICE) private mcs: MathConverterService,
         private eventHandler: ExpressionEventHandler) {
 
@@ -60,7 +59,7 @@ export class ExpressionComponent implements OnChanges {
         }
     }
 
-    onInputChange(e: Event): void {
+    onInputChange(event: Event): void {
         clearTimeout(this.timeout);
         this.timeout = setTimeout(this.onTimeOut.bind(this), 200);
         if (this.input !== "") {
@@ -76,15 +75,15 @@ export class ExpressionComponent implements OnChanges {
     }
 
     addExpression(): void {
-        this.es.addNew();
+        this.ees.addNew();
     }
 
     removeExpression(): void {
-        this.es.remove(this.counter);
+        this.ees.remove(this.counter);
     }
 
     cloneExpression(): void {
-        this.es.clone({ counter: this.counter, input: this.input });
+        this.ees.clone({ counter: this.counter, input: this.input });
     }
 
     onNodeSelected(node: InternalNode): void {
@@ -92,10 +91,20 @@ export class ExpressionComponent implements OnChanges {
         this.updateOperationState();
     }
 
+    onOperationApplied(newNode: InternalNode): void {
+        // replace old node with new node
+        console.log(newNode);
+    }
+
+    onOperationCanceled(): void {
+        this.selectedNode = null;
+        this.updateOperationState();
+    }
+
     updateOperationState(): void {
         if (this.input !== "") {
             if (this.selectedNode) {
-                this.operationState = OperationState.Selected;
+                this.operationState = OperationState.Added;
             }
             else {
                 this.operationState = OperationState.Waiting;

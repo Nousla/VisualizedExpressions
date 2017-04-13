@@ -1,15 +1,15 @@
 import { Component, ViewChild, ViewContainerRef, ComponentFactoryResolver, ComponentFactory, ComponentRef } from '@angular/core';
 import { ExpressionComponent } from './expression.component';
-import { ExpressionService } from './expression.service';
+import { ExpressionEventService } from './expression-event.service';
 import { Subscription } from 'rxjs/Subscription';
 import { MathTextConverterService } from "../visualization/math-text-converter.service";
 import { InternalData } from "../visualization/internal-data";
 
 @Component({
   selector: 'sandbox',
-  templateUrl: './sandbox.html',
-  styleUrls: ['./sandbox.css'],
-  providers: [ExpressionService]
+  templateUrl: './sandbox.component.html',
+  styleUrls: ['./sandbox.component.css'],
+  providers: [ExpressionEventService]
 })
 export class SandboxComponent {
   @ViewChild("submitted_expression_box", { read: ViewContainerRef })
@@ -18,14 +18,15 @@ export class SandboxComponent {
   public listOfExpressions:ComponentRef<ExpressionComponent>[];
   
 
-  constructor(private resolver: ComponentFactoryResolver, private expressionService: ExpressionService) {
-      this.subscription = expressionService.expressionNew$.subscribe(this.onAddNewExpression.bind(this));
-      this.subscription = expressionService.expresionRemove$.subscribe(this.onRemoveExpression.bind(this));
-      this.subscription = expressionService.expressionClone$.subscribe(this.onCloneExpression.bind(this));
+  constructor(private resolver: ComponentFactoryResolver, private ees: ExpressionEventService) {
+      this.subscription = ees.expressionAddNew$.subscribe(this.onAddNewExpression.bind(this));
+      this.subscription = ees.expressionAdd$.subscribe(this.onAddExpression.bind(this));      
+      this.subscription = ees.expresionRemove$.subscribe(this.onRemoveExpression.bind(this));
+      this.subscription = ees.expressionClone$.subscribe(this.onCloneExpression.bind(this));
       this.listOfExpressions = [];
   }
 
-  addNewExpression(){
+  addNewExpression(): ComponentRef<ExpressionComponent> {
     var factory = this.resolver.resolveComponentFactory(ExpressionComponent);
     var expression = this.container.createComponent(factory);
     this.listOfExpressions.push(expression);
@@ -33,15 +34,19 @@ export class SandboxComponent {
     return expression;
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.addNewExpression();
   }
 
-  onAddNewExpression() {
+  onAddNewExpression(): void {
     this.addNewExpression();
   }
 
-  onRemoveExpression(index: number) {
+  onAddExpression(): void {
+    this.addNewExpression();
+  }
+
+  onRemoveExpression(index: number): void {
     if(index-1 > -1) {
     var element = this.listOfExpressions[index-1];
     element.destroy();
@@ -56,7 +61,7 @@ export class SandboxComponent {
     }
   }
    
-  onCloneExpression( expression: Object) {
+  onCloneExpression( expression: Object): void {
     var element = this.listOfExpressions[expression["counter"]-1];
     var clone = this.addNewExpression();
     (<ExpressionComponent>clone.instance).input = expression["input"];

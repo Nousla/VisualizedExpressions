@@ -11,19 +11,34 @@
             <p>Select a node in the visualization to add an operation</p>
         </div>
     </div>
-    <div *ngSwitchCase="2" class="expression_operation expression_operation_selected">
+    <div *ngSwitchCase="2" class="expression_operation expression_operation_added">
         <div class="expression_operation_info_box">
             <img src="/assets/images/icon-information-white-32x32.png" />
-            <p>Add operation to node:</p>
+            <p>Replacement operation added to node. Input the replacement expression and click apply, or click cancel to remove
+                the operation.</p>
         </div>
-        <visualization [data]="data" class="expression_operation_visualization"></visualization>
-        <button>Add Operation</button>
-    </div>
-    <div *ngSwitchCase="3" class="expression_operation expression_operation_added">
-        <div class="expression_operation_edit">
-            <p>Replace</p>
-            <p>expression</p>
-            <textarea rows="1">Insert expression here</textarea>
+        <div class="expression_operation_line-divider"></div>
+        <div class="expression_operation_comparison">
+            <div class="expression_operation_current">
+                <p>Current expression</p>
+                <visualization [data]="currentData" class="expression_operation_visualization"></visualization>
+            </div>
+            <div class="expression_operation_arrow">
+                <img src="/assets/images/icon-arrow-white-32x24.png" />
+            </div>
+            <div class="expression_operation_new">
+                <div class="expression_operation_edit">
+                    <label for="replace">Replacement expression</label>
+                    <textarea rows="1" (ngModelChange)="onInputChange($event)" [(ngModel)]="input" id="replace"></textarea> 
+                </div>
+                <div class="expression_operation_visualization">
+                    <visualization [data]="newData" class="expression_operation_visualization"></visualization>
+                </div>
+                <div class="expression_operation_actions">
+                    <button (click)="applyOperation()">Apply Operation</button>
+                    <button (click)="cancelOperation()">Cancel Operation</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
