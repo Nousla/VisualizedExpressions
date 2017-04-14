@@ -92,8 +92,22 @@ export class ExpressionComponent implements OnChanges {
     }
 
     onOperationApplied(newNode: InternalNode): void {
-        // replace old node with new node
-        console.log(newNode);
+        var dataCopy = Object.create(this.data);
+
+        var newData;
+        if (!this.selectedNode.parent) {
+            newData = new InternalData(newNode);
+        }
+        else {
+            var index = this.selectedNode.parent.children.indexOf(this.selectedNode);
+            this.selectedNode.parent.children.splice(index, 1);
+            this.selectedNode.parent.children.push(newNode);
+            newNode.parent = this.selectedNode.parent;
+        }
+        
+        // Convert to text
+
+        this.data = dataCopy;
     }
 
     onOperationCanceled(): void {
