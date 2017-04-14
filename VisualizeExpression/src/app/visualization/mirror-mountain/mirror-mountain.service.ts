@@ -52,7 +52,9 @@ export class MirrorMountainService implements VisualizationService {
             return;
         }
 
-        var rootNode = d3.hierarchy(internalData.rootNode);
+        var processedRootNode = this.preprocessRootNode(Object.create(internalData.rootNode));
+
+        var rootNode = d3.hierarchy(processedRootNode);
         d3.cluster().nodeSize([this.nodeWidth + 10, this.nodeHeight + 10])(rootNode);
 
         // Determine new x and width based on text length. Push all sibling nodes 
@@ -127,17 +129,47 @@ export class MirrorMountainService implements VisualizationService {
             .remove();
     }
 
-    private processLink(link: d3.HierarchyLink<InternalNode>, element: d3.EnterElement): void {
-        if (link.source && link.source.data.type === InternalNodeType.Equality) {
+    private preprocessRootNode(rootNode: InternalNode): InternalNode {
+        var nodeStack = [];
+
+        while(rootNode.type === InternalNodeType.Parentheses && rootNode.children) {
+            rootNode = rootNode.children[0];
+        }
+
+        nodeStack.push(rootNode);
+
+        while (nodeStack.length > 0) {
+            let node = nodeStack.pop();
+            this.preprocessNode(node, nodeStack);
+        }
+
+        return rootNode;
+    }
+
+    private preprocessNode(node: InternalNode, nodeStack: InternalNode[]): void {
+        if (!node.children) {
             return;
         }
 
-        d3.select(element).append("line")
-            .attr("x1", () => { return link.source["x"] + (this.nodeWidth / 2) })
-            .attr("y1", () => { return link.source["y"] + (this.nodeHeight / 2) })
-            .attr("x2", () => { return link.target["x"] + (this.nodeWidth / 2) })
-            .attr("y2", () => { return link.target["y"] + (this.nodeHeight / 2) })
-            .attr("class", "mirror-mountain-line")
+        var childrenToAdd: InternalNode[];
+        if (node.type === InternalNodeType.Parentheses) {
+            for (var i = 0; i < node.children.length; i++) {
+                node.children[i].parent = node.parent;
+                nodeStack.push(node.children[i]);
+            }
+
+            childrenToAdd = node.children;
+
+            var index = node.parent.children.indexOf(node);
+            node.parent.children.splice(index, 1);
+            node.parent.children.push.apply(node.parent.children, childrenToAdd);
+            node.parent = undefined;
+        }
+        else {
+            for (var i = 0; i < node.children.length; i++) {
+                nodeStack.push(node.children[i]);
+            }
+        }
     }
 
     private processNode(node: d3.HierarchyNode<InternalNode>, element: d3.EnterElement): void {
@@ -146,6 +178,7 @@ export class MirrorMountainService implements VisualizationService {
                 break;
             case InternalNodeGroup.Operator: this.processOperatorNode(node, element);
                 break;
+            case InternalNodeGroup.Container: this.processContainerNode(node, element);
             default: this.processStandardNode(node, element);
                 break;
         }
@@ -159,7 +192,7 @@ export class MirrorMountainService implements VisualizationService {
         this.processStandardNode(node, element);
     }
 
-    private processExtendedNode(node: d3.HierarchyNode<InternalNode>, element: d3.EnterElement): void {
+    private processContainerNode(node: d3.HierarchyNode<InternalNode>, element: d3.EnterElement): void {
         this.processStandardNode(node, element);
     }
 
@@ -187,6 +220,24 @@ export class MirrorMountainService implements VisualizationService {
             .text((node: d3.HierarchyNode<InternalNode>) => { return node.data.name })
             .attr("class", this.getTextClassName)
             .on("click", this.onClick.bind(this));
+    }
+
+    private processLink(link: d3.HierarchyLink<InternalNode>, element: d3.EnterElement): void {
+        if (link.source && link.source.data.type === InternalNodeType.Equality) {
+            return;
+        }
+
+        var source = link.source;
+        if (link.source.data.type === InternalNodeType.Parentheses && link.source.parent) {
+            source = link.source.parent;
+        }
+
+        d3.select(element).append("line")
+            .attr("x1", () => { return source["x"] + (this.nodeWidth / 2) })
+            .attr("y1", () => { return source["y"] + (this.nodeHeight / 2) })
+            .attr("x2", () => { return link.target["x"] + (this.nodeWidth / 2) })
+            .attr("y2", () => { return link.target["y"] + (this.nodeHeight / 2) })
+            .attr("class", "mirror-mountain-line")
     }
 
     private onClick(node: d3.HierarchyNode<InternalNode>): void {
