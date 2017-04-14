@@ -1,5 +1,5 @@
 import { InternalNode } from "./internal-node";
-import UndefinedParameterException from "../exceptions/undefined-parameter-exception";
+import UndefinedArgumentException from "../exceptions/undefined-argument-exception";
 
 export class InternalData {
     private _rootNode: InternalNode;
@@ -15,7 +15,7 @@ export class InternalData {
     // Pre-order traversal
     traverseNodes(callback: (node: InternalNode) => void): void {
         if (!callback) {
-            throw new UndefinedParameterException("callback not defined");
+            throw new UndefinedArgumentException("callback not defined");
         }
 
         this.traverseNodesInternal(callback, this.rootNode);

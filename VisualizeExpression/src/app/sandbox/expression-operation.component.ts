@@ -35,6 +35,8 @@ export class ExpressionOperationComponent implements OnChanges {
         var selectedNodeChanges = changes["selectedNode"];
         if (selectedNodeChanges) {
             this.currentData = new InternalData(this.selectedNode);
+            this.newData = null;
+            this.input = "";
         }
     }
 
@@ -50,12 +52,18 @@ export class ExpressionOperationComponent implements OnChanges {
     }
 
     applyOperation(): void {
-        if(!this.updated) {
+        if (!this.updated) {
             clearTimeout(this.timeout);
             this.onTimeOut();
         }
 
-        this.onApplied.emit(this.newData.rootNode);
+        if (this.newData) {
+            this.onApplied.emit(this.newData.rootNode);
+        }
+        else {
+            // Show error message,
+            // or indicate impossible action
+        }
     }
 
     cancelOperation(): void {

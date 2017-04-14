@@ -3,6 +3,7 @@ import MATH_OUTPUT_SERVICE from "../visualization/math-output-service-token";
 import MathOutputService from "../visualization/math-output-service";
 import InternalData from "../visualization/internal-data";
 import { InternalNode } from "../visualization/internal-node";
+import UndefinedArgumentException from "../exceptions/undefined-argument-exception";
 
 Injectable()
 export class ExpressionService {
@@ -10,6 +11,18 @@ export class ExpressionService {
     }
 
     applyChange(data: InternalData, selectedNode: InternalNode, newNode: InternalNode): Object {
+        if(!data) {
+            throw new UndefinedArgumentException("data is undefined!");
+        }
+
+        if(!selectedNode) {
+            throw new UndefinedArgumentException("selectedNode is undefined!");
+        }
+
+        if(!newNode) {
+            throw new UndefinedArgumentException("newNode is undefined!");
+        }
+
         var math: Object;
 
         if (!selectedNode.parent) {

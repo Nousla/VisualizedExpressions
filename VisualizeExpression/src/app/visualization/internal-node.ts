@@ -12,11 +12,13 @@ export const enum Type {
     Equality,
     Integer,
     Parentheses,
-    Subtraction
+    Subtraction,
+    Unknown
 }
 
 export const enum Group {
     Number,
     Operator,
-    Container
+    Container,
+    Unknown
 }

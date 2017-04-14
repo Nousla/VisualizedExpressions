@@ -80,8 +80,8 @@ export class MathTextInputService implements MathInputService {
                 break;
             default:
                 internalNode.name = "?";
-                internalNode.type = undefined;
-                internalNode.group = undefined;
+                internalNode.type = InternalNodeType.Unknown;
+                internalNode.group = InternalNodeGroup.Unknown;
                 break;
         }
 

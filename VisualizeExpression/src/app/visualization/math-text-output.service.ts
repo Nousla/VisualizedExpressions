@@ -1,4 +1,3 @@
-import * as math from 'mathjs';
 import { InternalNode, Type as InternalNodeType, Group as InternalNodeGroup } from './internal-node';
 import InternalData from './internal-data';
 import { MathOutputService } from "./math-output-service";
@@ -7,62 +6,62 @@ import { Injectable } from "@angular/core";
 @Injectable()
 export class MathTextOutputService implements MathOutputService {
     convert(data: InternalData): Object {
-        var nodeMap = new Map<InternalNode, mathjs.MathNode>();
+        var mathBuilder: string[] = [];
 
-        data.traverseNodes((node: InternalNode) => { this.traverseNode(node, nodeMap) });
+        this.processNode(data.rootNode, mathBuilder);
 
-        var rootNode = nodeMap.get(data.rootNode);
-        var math = this.postprocess((<Object>rootNode).toString());
-
-        return math;
+        return mathBuilder.join("");
     }
 
-    traverseNode(node: InternalNode, nodeMap: Map<InternalNode, mathjs.MathNode>) {
-        var mathJSNode = this.createMathJSNode(node);
-
-        var parent = nodeMap.get(node.parent);
-        if (parent) {
-            if (node.parent.group === InternalNodeGroup.Operator) {
-                parent["args"].push(mathJSNode);
-            }
-            else if (node.parent.group === InternalNodeGroup.Container) {
-                parent["content"] = mathJSNode;
-            }
-        }
-
-        nodeMap.set(node, mathJSNode);
-    }
-
-    createMathJSNode(node: InternalNode): mathjs.MathNode {
-        var mathJSNode: mathjs.MathNode;
-
-        switch (node.type) {
-            case InternalNodeType.Addition:
-            case InternalNodeType.Subtraction:
-                mathJSNode = new math.expression["node"].OperatorNode(node.name, "operator", []);
+    processNode(node: InternalNode, mathBuilder: string[]) {
+        switch (node.group) {
+            case InternalNodeGroup.Container:
+                this.processContainerGroupNode(node, mathBuilder);
                 break;
-            case InternalNodeType.Decimal:
-            case InternalNodeType.Integer:
-                mathJSNode = new math.expression["node"].ConstantNode(node.name);
+            case InternalNodeGroup.Number:
+                this.processNumberGroupNode(node, mathBuilder);
                 break;
-            case InternalNodeType.Equality:
-                mathJSNode = new math.expression["node"].OperatorNode("==", "equality", []);
-                break;
-            case InternalNodeType.Parentheses:
-                // Adds dummy object as content until it gets replaced by the child.
-                let dummyNode = new math.expression["node"].SymbolNode("dummy");
-                mathJSNode = new math.expression["node"].ParenthesisNode(dummyNode);
+            case InternalNodeGroup.Operator:
+                this.processOperatorGroupNode(node, mathBuilder);
                 break;
             default:
-                mathJSNode = new math.expression["node"].SymbolNode("?");
+                this.processUnknownGroupNode(node, mathBuilder);
                 break;
         }
-
-        return mathJSNode;
     }
 
-    postprocess(math: string): string {
-        return math.replace("==", "=");
+    processContainerGroupNode(node: InternalNode, mathBuilder: string[]): void {
+        if (node.type !== InternalNodeType.Parentheses) {
+            return;
+        }
+
+        mathBuilder.push("(");
+
+        if (node.children) {
+            for (var i = 0; i < node.children.length; i++) {
+                this.processNode(node.children[i], mathBuilder);
+            }
+        }
+
+        mathBuilder.push(")");
+    }
+
+    processNumberGroupNode(node: InternalNode, mathBuilder: string[]): void {
+        mathBuilder.push(node.name);
+    }
+
+    processOperatorGroupNode(node: InternalNode, mathBuilder: string[]): void {
+        if (!node.children || node.children.length !== 2) {
+            return;
+        }
+
+        this.processNode(node.children[0], mathBuilder);
+        mathBuilder.push(node.name);
+        this.processNode(node.children[1], mathBuilder);
+    }
+
+    processUnknownGroupNode(node: InternalNode, mathBuilder: string[]): void {
+        mathBuilder.push(node.name);
     }
 }
 

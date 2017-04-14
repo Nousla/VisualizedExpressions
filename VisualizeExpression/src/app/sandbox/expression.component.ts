@@ -90,6 +90,8 @@ export class ExpressionComponent implements OnChanges {
     onOperationApplied(newNode: InternalNode): void {
         var math = this.es.applyChange(this.data, this.selectedNode, newNode);
         this.ees.add(<string>math);
+
+        this.onOperationCanceled();
     }
 
     onOperationCanceled(): void {
