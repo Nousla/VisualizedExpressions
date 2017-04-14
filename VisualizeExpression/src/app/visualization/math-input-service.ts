@@ -1,7 +1,7 @@
 import { InternalData } from "./internal-data";
 
-export interface MathConverterService {
+export interface MathInputService {
     convert(input: Object): InternalData;
 }
 
-export default MathConverterService;
+export default MathInputService;

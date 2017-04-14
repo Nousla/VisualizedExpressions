@@ -1,10 +1,9 @@
 import { Component, Input, OnChanges, SimpleChanges, EventEmitter, Output, InjectionToken, Inject } from '@angular/core';
 import OperationState from './operation-state';
 import { InternalNode } from "../visualization/internal-node";
-import { InternalData } from "../visualization/internal-data";
-import { MathConverterService } from "../visualization/math-converter-service";
-import { MathTextConverterService } from "../visualization/math-text-converter.service";
-import { MATH_CONVERTER_SERVICE } from "../visualization/math-text-convert-service-token";
+import InternalData from "../visualization/internal-data";
+import MathInputService from "../visualization/math-input-service";
+import MATH_INPUT_SERVICE from "../visualization/math-input-service-token";
 
 @Component({
     selector: 'expression-operation',
@@ -29,7 +28,7 @@ export class ExpressionOperationComponent implements OnChanges {
     private timeout: number;
     private updated: boolean;
 
-    constructor( @Inject(MATH_CONVERTER_SERVICE) private mcs: MathConverterService) {
+    constructor( @Inject(MATH_INPUT_SERVICE) private mis: MathInputService) {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -46,7 +45,7 @@ export class ExpressionOperationComponent implements OnChanges {
     }
 
     onTimeOut(): void {
-        this.newData = this.mcs.convert(this.input);
+        this.newData = this.mis.convert(this.input);
         this.updated = true;
     }
 

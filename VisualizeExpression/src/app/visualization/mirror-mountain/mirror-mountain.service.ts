@@ -16,24 +16,22 @@ export class MirrorMountainService implements VisualizationService {
     private eventHandler: VisualizationEventHandler;
 
     configure(config: Object, eventHandler: VisualizationEventHandler): void {
-        if (!config) {
-            return;
-        }
+        if (config) {
+            if (config.hasOwnProperty("width")) {
+                this.width = config["width"];
+            }
 
-        if (config.hasOwnProperty("width")) {
-            this.width = config["width"];
-        }
+            if (config.hasOwnProperty("height")) {
+                this.width = config["height"];
+            }
 
-        if (config.hasOwnProperty("height")) {
-            this.width = config["height"];
-        }
+            if (config.hasOwnProperty("nodeWidth")) {
+                this.width = config["nodeWidth"];
+            }
 
-        if (config.hasOwnProperty("nodeWidth")) {
-            this.width = config["nodeWidth"];
-        }
-
-        if (config.hasOwnProperty("nodeHeight")) {
-            this.width = config["nodeHeight"];
+            if (config.hasOwnProperty("nodeHeight")) {
+                this.width = config["nodeHeight"];
+            }
         }
 
         if (eventHandler) {
@@ -132,7 +130,7 @@ export class MirrorMountainService implements VisualizationService {
     private preprocessRootNode(rootNode: InternalNode): InternalNode {
         var nodeStack = [];
 
-        while(rootNode.type === InternalNodeType.Parentheses && rootNode.children) {
+        while (rootNode.type === InternalNodeType.Parentheses && rootNode.children) {
             rootNode = rootNode.children[0];
         }
 

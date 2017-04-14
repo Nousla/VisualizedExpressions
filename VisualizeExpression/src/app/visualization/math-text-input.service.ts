@@ -1,11 +1,11 @@
 import * as math from 'mathjs';
 import { InternalNode, Type as InternalNodeType, Group as InternalNodeGroup } from './internal-node';
 import InternalData from './internal-data';
-import MathConverterService from './math-converter-service';
+import MathInputService from './math-input-service';
 import { Injectable } from "@angular/core";
 
 @Injectable()
-export class MathTextConverterService implements MathConverterService {
+export class MathTextInputService implements MathInputService {
 
     convert(input: string): InternalData {
         var processedInput = this.preprocess(input);
@@ -98,3 +98,5 @@ export class MathTextConverterService implements MathConverterService {
         return undefined;
     }
 }
+
+export default MathTextInputService;

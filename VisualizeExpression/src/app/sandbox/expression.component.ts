@@ -1,19 +1,19 @@
 import { Component, EventEmitter, Input, SimpleChanges, InjectionToken, Inject, Output, OnChanges } from '@angular/core';
 import { ExpressionEventService } from './expression-event.service';
 import { Subscription } from 'rxjs/Subscription';
-import { InternalData } from "../visualization/internal-data";
-import { MathConverterService } from "../visualization/math-converter-service";
-import { MathTextConverterService } from "../visualization/math-text-converter.service";
+import InternalData from "../visualization/internal-data";
 import ExpressionEventHandler from './expression-event-handler';
 import OperationState from './operation-state';
 import { InternalNode } from "../visualization/internal-node";
-import { MATH_CONVERTER_SERVICE } from "../visualization/math-text-convert-service-token";
+import MATH_INPUT_SERVICE from "../visualization/math-input-service-token";
+import MathInputService from "../visualization/math-input-service";
+import ExpressionService from "./expression.service";
 
 @Component({
     selector: 'expression',
     templateUrl: './expression.component.html',
     styleUrls: [`./expression.component.css`],
-    providers: [{ provide: MATH_CONVERTER_SERVICE, useClass: MathTextConverterService }, ExpressionEventHandler]
+    providers: [ExpressionEventHandler, ExpressionService]
 })
 
 export class ExpressionComponent implements OnChanges {
@@ -30,13 +30,9 @@ export class ExpressionComponent implements OnChanges {
     private operationState: OperationState;
 
     constructor(private ees: ExpressionEventService,
-        @Inject(MATH_CONVERTER_SERVICE) private mcs: MathConverterService,
+        @Inject(MATH_INPUT_SERVICE) private mis: MathInputService,
+        private es: ExpressionService,
         private eventHandler: ExpressionEventHandler) {
-
-        this.config = {
-            width: 600,
-            height: 200
-        }
 
         this.input = "";
         this.updateOperationState();
@@ -71,7 +67,7 @@ export class ExpressionComponent implements OnChanges {
     }
 
     onTimeOut(): void {
-        this.data = this.mcs.convert(this.input);
+        this.data = this.mis.convert(this.input);
     }
 
     addExpression(): void {
@@ -92,22 +88,8 @@ export class ExpressionComponent implements OnChanges {
     }
 
     onOperationApplied(newNode: InternalNode): void {
-        var dataCopy = Object.create(this.data);
-
-        var newData;
-        if (!this.selectedNode.parent) {
-            newData = new InternalData(newNode);
-        }
-        else {
-            var index = this.selectedNode.parent.children.indexOf(this.selectedNode);
-            this.selectedNode.parent.children.splice(index, 1);
-            this.selectedNode.parent.children.push(newNode);
-            newNode.parent = this.selectedNode.parent;
-        }
-        
-        // Convert to text
-
-        this.data = dataCopy;
+        var math = this.es.applyChange(this.data, this.selectedNode, newNode);
+        this.ees.add(<string>math);
     }
 
     onOperationCanceled(): void {
