@@ -2,20 +2,19 @@
     <div *ngSwitchDefault class="expression_operation expression_operation_closed">
         <div class="expression_operation_info_box">
             <img src="/assets/images/icon-information-white-32x32.png" />
-            <p>Visualize an expression to add operations</p>
+            <p>{{infoText}}</p>
         </div>
     </div>
     <div *ngSwitchCase="1" class="expression_operation expression_operation_waiting">
         <div class="expression_operation_info_box">
             <img src="/assets/images/icon-information-white-32x32.png" />
-            <p>Select a node in the visualization to add an operation</p>
+            <p>{{infoText}}</p>
         </div>
     </div>
     <div *ngSwitchCase="2" class="expression_operation expression_operation_added">
         <div class="expression_operation_info_box">
             <img src="/assets/images/icon-information-white-32x32.png" />
-            <p>Replacement operation added to node. Input the replacement expression and click apply, or click cancel to remove
-                the operation.</p>
+            <p>{{infoText}}</p>
         </div>
         <div class="expression_operation_line-divider"></div>
         <div class="expression_operation_comparison">

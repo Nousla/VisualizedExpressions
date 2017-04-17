@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, SimpleChanges, InjectionToken, Inject, Output, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, SimpleChanges, InjectionToken, Inject, Output, OnChanges, OnInit, OnDestroy } from '@angular/core';
 import { ExpressionEventService } from './expression-event.service';
 import { Subscription } from 'rxjs/Subscription';
 import InternalData from "../visualization/internal-data";
@@ -16,58 +16,59 @@ import ExpressionService from "./expression.service";
     providers: [ExpressionEventHandler, ExpressionService]
 })
 
-export class ExpressionComponent implements OnChanges {
+export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
     @Input()
     counter: number;
     @Input()
     input: string;
 
+    private subscription: Subscription;
+
     private data: InternalData;
     private config: Object;
-    private timeout: number;
 
     private selectedNode: InternalNode;
     private operationState: OperationState;
+
+    private timeout: number;
+    private readonly TIMEOUT_LIMIT_MS: Number = 200;
 
     constructor(private ees: ExpressionEventService,
         @Inject(MATH_INPUT_SERVICE) private mis: MathInputService,
         private es: ExpressionService,
         private eventHandler: ExpressionEventHandler) {
-
-        this.input = "";
-        this.updateOperationState();
+            this.input = "";
+            this.operationState = OperationState.Closed;
     }
 
     ngOnInit(): void {
-        this.onTimeOut();
-        this.eventHandler.visualizationSelectNode$.subscribe(this.onNodeSelected.bind(this));
+        this.subscription = this.eventHandler.visualizationSelectNode$.subscribe(this.onNodeSelected.bind(this));
+        this.updateOperationState();
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         var inputChanges = changes["input"];
         if (inputChanges) {
-            if (inputChanges.currentValue !== "") {
-                this.operationState = OperationState.Closed;
-            }
-            else {
-                this.updateOperationState();
-            }
+            this.startInputTimeout();
         }
     }
 
     onInputChange(event: Event): void {
+        this.startInputTimeout();
+    }
+
+    startInputTimeout(): void {
         clearTimeout(this.timeout);
-        this.timeout = setTimeout(this.onTimeOut.bind(this), 200);
-        if (this.input !== "") {
-            this.operationState = OperationState.Closed;
-        }
-        else {
-            this.updateOperationState();
-        }
+        this.timeout = setTimeout(this.onTimeOut.bind(this), this.TIMEOUT_LIMIT_MS);
     }
 
     onTimeOut(): void {
         this.data = this.mis.convert(this.input);
+        this.updateOperationState();
     }
 
     addExpression(): void {
