@@ -4,7 +4,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { InternalData } from "../visualization/internal-data";
 import { MathConverterService } from "../visualization/math-converter-service";
 import { MathTextConverterService } from "../visualization/math-text-converter.service";
-import { ProblemSolvingService } from "./problemsolving.service"
+import { ProblemSolvingService } from "./problemsolving.service";
+import { ImportExpressionService } from "./importexpression.service";
 
 export let MATH_CONVERTER_SERVICE = new InjectionToken<MathConverterService>("MathConverterServiceToken");
 
@@ -12,7 +13,7 @@ export let MATH_CONVERTER_SERVICE = new InjectionToken<MathConverterService>("Ma
     selector: 'expression',
     templateUrl: './expression.component.html',
     styleUrls: [`./expression.component.css`],
-    providers: [{ provide: MATH_CONVERTER_SERVICE, useClass: MathTextConverterService, }, ProblemSolvingService]
+    providers: [{ provide: MATH_CONVERTER_SERVICE, useClass: MathTextConverterService, }, ProblemSolvingService, ImportExpressionService]
 })
 
 export class ExpressionComponent {
@@ -26,13 +27,10 @@ export class ExpressionComponent {
     private timeoutCheck: number;
     @ViewChild('banner')     
     banner: ElementRef;
-    private testInputExpression = "4z+5=9";
-    private testInputCorrectSol = 1;
-    private testInputWrongSol = 2;
   
 
     constructor(private es: ExpressionService, @Inject(MATH_CONVERTER_SERVICE) private mcs: MathConverterService, 
-                private pss: ProblemSolvingService, private renderer: Renderer) {
+                private pss: ProblemSolvingService, private renderer: Renderer, private imp: ImportExpressionService) {
       
         this.config = {
             width: 600,
@@ -56,12 +54,14 @@ export class ExpressionComponent {
         this.data = this.mcs.convert(this.input);
     }
     onTimeOutCheck(): void {
-        var solution = this.pss.checkExpression(this.input, this.testInputCorrectSol, this.testInputWrongSol);
-        if(solution == true) {
-            this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','green');
-        }
-        else {
-            this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','red');
+        if(this.imp.importedSpecifier == "ps"){
+            var solution = this.pss.checkExpression(this.imp.importedExpression, this.imp.importedCorrectSolution, this.imp.importedWrongSolution);
+            if(solution == true) {
+                this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','green');
+            }
+            else {
+                this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','red');
+            }
         }
     }
 
