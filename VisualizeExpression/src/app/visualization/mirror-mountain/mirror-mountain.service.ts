@@ -50,7 +50,7 @@ export class MirrorMountainService implements VisualizationService {
             return;
         }
 
-        var processedRootNode = this.preprocessRootNode(Object.create(internalData.rootNode));
+        var processedRootNode = this.preprocessRootNode(internalData.clone().rootNode);
 
         var rootNode = d3.hierarchy(processedRootNode);
         d3.cluster().nodeSize([this.nodeWidth + 10, this.nodeHeight + 10])(rootNode);

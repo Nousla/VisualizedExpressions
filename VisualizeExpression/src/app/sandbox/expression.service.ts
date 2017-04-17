@@ -23,11 +23,11 @@ export class ExpressionService {
             throw new UndefinedArgumentException("newNode is undefined!");
         }
 
-        var math: Object;
+        var expression: Object;
 
         if (!selectedNode.parent) {
             let newData = new InternalData(newNode);
-            math = this.mus.convert(newData);
+            expression = this.mus.convert(newData);
         }
         else {
             var children = selectedNode.parent.children;
@@ -36,14 +36,14 @@ export class ExpressionService {
             var newNodeIndex = children.push(newNode) - 1;
             newNode.parent = selectedNode.parent;
 
-            math = this.mus.convert(data);
+            expression = this.mus.convert(data);
 
             // Reverse changes in the data
             children.splice(newNodeIndex, 1);
             children.splice(selectedNodeIndex, 0, selectedNode);
         }
 
-        return math;
+        return expression;
     }
 }
 

@@ -32,6 +32,32 @@ export class InternalData {
             this.traverseNodesInternal(callback, node.children[i]);
         }
     }
+
+    clone(): InternalData {
+        return new InternalData(this.cloneNode(this.rootNode));
+    }
+
+    private cloneNode(node: InternalNode): InternalNode {
+        var clonedNode = new InternalNode();
+        clonedNode.name = node.name;
+        clonedNode.type = node.type;
+        clonedNode.group = node.group;
+
+        if (!node.children) {
+            return clonedNode;
+        }
+
+        var children = [];
+        for (let i = 0; i < node.children.length; i++) {
+            let child = this.cloneNode(node.children[i]);
+            child.parent = clonedNode;
+            children.push(child);
+        }
+
+        clonedNode.children = children;
+
+        return clonedNode;
+    }
 }
 
 export default InternalData;
