@@ -12,6 +12,14 @@ export class MirrorMountainService implements VisualizationService {
     private nodeWidth = 40;
     private nodeHeight = 40;
 
+    constructor() {
+        d3.select("body")
+            .append("svg")
+            .attr("id", "svg-text-measurement")
+            .append("text")
+            .attr("visibility", "hidden");
+    }
+
     configure(config: Object): void {
         if (!config) {
             return;
@@ -193,12 +201,17 @@ export class MirrorMountainService implements VisualizationService {
         switch (node.data.group) {
             case InternalNodeGroup.Number: return "mirror-mountain-text mirror-mountain-text-number";
             case InternalNodeGroup.Operator: /*return (node.data["type"] === "multiplication") ? 
-                "mirror-mountain-text mirror-mountain-text-operator-multiplication" :*/ 
+                "mirror-mountain-text mirror-mountain-text-operator-multiplication" :*/
                 return "mirror-mountain-text mirror-mountain-text-operator";
             //case "extended": return "mirror-mountain-text mirror-mountain-text-variable";
             default: ""
                 break;
         }
+    }
+
+    private getTextWidth(text: string): Number {
+        var node = <SVGTextElement>d3.select("#svg-text-measurement text").text(text).node();
+        return node ? node.getComputedTextLength() : 0;
     }
 
     private findEdgeLeaf(node: d3.HierarchyNode<InternalNode>, left: boolean): d3.HierarchyNode<InternalNode> {
