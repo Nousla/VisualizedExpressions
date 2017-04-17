@@ -13,6 +13,9 @@ export class MirrorMountainService implements VisualizationService {
     private nodeWidth = 40;
     private nodeHeight = 40;
 
+    private nodeHorizontalSpacing = 10;
+    private nodeVerticalSpacing = 10;
+
     private eventHandler: VisualizationEventHandler;
 
     configure(config: Object, eventHandler: VisualizationEventHandler): void {
@@ -53,42 +56,40 @@ export class MirrorMountainService implements VisualizationService {
         var processedRootNode = this.preprocessRootNode(internalData.clone().rootNode);
 
         var rootNode = d3.hierarchy(processedRootNode);
-        d3.cluster().nodeSize([this.nodeWidth + 10, this.nodeHeight + 10])(rootNode);
+        d3.cluster().nodeSize([this.nodeWidth + this.nodeHorizontalSpacing, this.nodeHeight + this.nodeVerticalSpacing])(rootNode);
 
-        // Determine new x and width based on text length. Push all sibling nodes 
-        // or fill the total width with all sibling nodes.
-        // Custom layout in layers.
+        this.processHierarchy();
 
         var nodes = rootNode.descendants();
         var links = rootNode.links();
 
-        var errorX: number;
-        var errorY: number;
+        var offsetX: number;
+        var offsetY: number;
         if (rootNode.children && rootNode.children.length > 0) {
             let topLeftLeafNode = this.findEdgeLeaf(rootNode.children[0], true);
-            errorX = topLeftLeafNode["x"];
-            errorY = topLeftLeafNode["y"];
+            offsetX = topLeftLeafNode["x"];
+            offsetY = topLeftLeafNode["y"];
         }
 
-        nodes.forEach((node: d3.HierarchyNode<InternalNode>) => {
+        nodes.forEach((node: D3Node) => {
             if (node.data.type === InternalNodeType.Equality) {
                 var leftEdgeLeaf = this.findEdgeLeaf(rootNode.children[0], false);
                 var rightEdgeLeaf = this.findEdgeLeaf(rootNode.children[1], true);
-                var edgeLeafGapWidth = leftEdgeLeaf["x"] + rightEdgeLeaf["x"];
-
-                node["x"] = edgeLeafGapWidth / 2;
-                node["y"] -= leftEdgeLeaf["y"];
+                if (leftEdgeLeaf && rightEdgeLeaf) {
+                    node["x"] = (leftEdgeLeaf["x"] + rightEdgeLeaf["x"]) / 2;
+                    node["y"] -= leftEdgeLeaf["y"];
+                }
             }
             else {
                 node["y"] = -node["y"];
             }
 
-            if (errorX && errorX < 0) {
-                node["x"] -= errorX;
+            if (offsetX && offsetX < 0) {
+                node["x"] -= offsetX;
             }
 
-            if (errorY && errorY > 0) {
-                node["y"] += errorY;
+            if (offsetY && offsetY > 0) {
+                node["y"] += offsetY;
             }
         });
 
@@ -101,14 +102,14 @@ export class MirrorMountainService implements VisualizationService {
         rootGroup.selectAll("line")
             .data(links)
             .enter()
-            .each(function (link: d3.HierarchyLink<InternalNode>) {
+            .each(function (link: D3Link) {
                 instance.processLink(link, this);
             });
 
         rootGroup.selectAll("g")
             .data(nodes)
             .enter()
-            .each(function (node: d3.HierarchyNode<InternalNode>) {
+            .each(function (node: D3Node) {
                 instance.processNode(node, this);
             });
 
@@ -128,7 +129,7 @@ export class MirrorMountainService implements VisualizationService {
     }
 
     private preprocessRootNode(rootNode: InternalNode): InternalNode {
-        var nodeStack = [];
+        var nodeStack: InternalNode[] = [];
 
         while (rootNode.type === InternalNodeType.Parentheses && rootNode.children) {
             rootNode = rootNode.children[0];
@@ -149,18 +150,15 @@ export class MirrorMountainService implements VisualizationService {
             return;
         }
 
-        var childrenToAdd: InternalNode[];
         if (node.type === InternalNodeType.Parentheses) {
-            for (var i = 0; i < node.children.length; i++) {
-                node.children[i].parent = node.parent;
-                nodeStack.push(node.children[i]);
-            }
-
-            childrenToAdd = node.children;
+            let childToAdd = node.children[0];
+            childToAdd.parent = node.parent;
+            nodeStack.push(childToAdd);
 
             var index = node.parent.children.indexOf(node);
             node.parent.children.splice(index, 1);
-            node.parent.children.push.apply(node.parent.children, childrenToAdd);
+            node.parent.children.splice(index, 0, childToAdd);
+
             node.parent = undefined;
         }
         else {
@@ -170,7 +168,13 @@ export class MirrorMountainService implements VisualizationService {
         }
     }
 
-    private processNode(node: d3.HierarchyNode<InternalNode>, element: d3.EnterElement): void {
+    private processHierarchy() {
+        // Determine new x and width based on text length. Push all sibling nodes 
+        // or fill the total width with all sibling nodes.
+        // Custom layout in layers.
+    }
+
+    private processNode(node: D3Node, element: d3.EnterElement): void {
         switch (node.data.group) {
             case InternalNodeGroup.Number: this.processNumberNode(node, element);
                 break;
@@ -182,21 +186,21 @@ export class MirrorMountainService implements VisualizationService {
         }
     }
 
-    private processNumberNode(node: d3.HierarchyNode<InternalNode>, element: d3.EnterElement): void {
+    private processNumberNode(node: D3Node, element: d3.EnterElement): void {
         this.processStandardNode(node, element);
     }
 
-    private processOperatorNode(node: d3.HierarchyNode<InternalNode>, element: d3.EnterElement): void {
+    private processOperatorNode(node: D3Node, element: d3.EnterElement): void {
         this.processStandardNode(node, element);
     }
 
-    private processContainerNode(node: d3.HierarchyNode<InternalNode>, element: d3.EnterElement): void {
+    private processContainerNode(node: D3Node, element: d3.EnterElement): void {
         this.processStandardNode(node, element);
     }
 
-    private processStandardNode(node: d3.HierarchyNode<InternalNode>, element: d3.EnterElement): void {
+    private processStandardNode(node: D3Node, element: d3.EnterElement): void {
         var newNodeSelection = d3.select(element).append("g")
-            .attr("transform", (node: d3.HierarchyNode<InternalNode>) => { return "translate(" + node["x"] + "," + node["y"] + ")" })
+            .attr("transform", (node: D3Node) => { return "translate(" + node["x"] + "," + node["y"] + ")" })
 
         newNodeSelection.append("rect")
             .attr("x", "0")
@@ -215,20 +219,17 @@ export class MirrorMountainService implements VisualizationService {
             .attr("font-size", this.getFontSize())
             .attr("x", "50%")
             .attr("y", "50%")
-            .text((node: d3.HierarchyNode<InternalNode>) => { return node.data.name })
+            .text((node: D3Node) => { return node.data.name })
             .attr("class", this.getTextClassName)
             .on("click", this.onClick.bind(this));
     }
 
-    private processLink(link: d3.HierarchyLink<InternalNode>, element: d3.EnterElement): void {
+    private processLink(link: D3Link, element: d3.EnterElement): void {
         if (link.source && link.source.data.type === InternalNodeType.Equality) {
             return;
         }
 
         var source = link.source;
-        if (link.source.data.type === InternalNodeType.Parentheses && link.source.parent) {
-            source = link.source.parent;
-        }
 
         d3.select(element).append("line")
             .attr("x1", () => { return source["x"] + (this.nodeWidth / 2) })
@@ -238,13 +239,13 @@ export class MirrorMountainService implements VisualizationService {
             .attr("class", "mirror-mountain-line")
     }
 
-    private onClick(node: d3.HierarchyNode<InternalNode>): void {
+    private onClick(node: D3Node): void {
         if (this.eventHandler) {
             this.eventHandler.selectNode(node.data)
         }
     }
 
-    private getRectClassName(node: d3.HierarchyNode<InternalNode>): string {
+    private getRectClassName(node: D3Node): string {
         if (node.data.type === InternalNodeType.Equality) {
             return "mirror-mountain-rect-equality";
         }
@@ -253,7 +254,7 @@ export class MirrorMountainService implements VisualizationService {
         }
     }
 
-    private getTextClassName(node: d3.HierarchyNode<InternalNode>): string {
+    private getTextClassName(node: D3Node): string {
         switch (node.data.group) {
             case InternalNodeGroup.Number: return "mirror-mountain-text mirror-mountain-text-number";
             case InternalNodeGroup.Operator: /*return (node.data["type"] === "multiplication") ? 
@@ -265,7 +266,7 @@ export class MirrorMountainService implements VisualizationService {
         }
     }
 
-    private findEdgeLeaf(node: d3.HierarchyNode<InternalNode>, left: boolean): d3.HierarchyNode<InternalNode> {
+    private findEdgeLeaf(node: D3Node, left: boolean): D3Node {
         var currentNode = node;
         while (currentNode && currentNode.children) {
             currentNode = left ? currentNode.children[0] : currentNode.children[1];
@@ -278,3 +279,6 @@ export class MirrorMountainService implements VisualizationService {
         return this.nodeHeight;
     }
 }
+
+type D3Node = d3.HierarchyNode<InternalNode>;
+type D3Link = d3.HierarchyLink<InternalNode>;

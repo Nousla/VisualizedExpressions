@@ -59,6 +59,7 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
 
     onInputChange(event: Event): void {
         this.startInputTimeout();
+        this.selectedNode = null;
     }
 
     startInputTimeout(): void {
@@ -89,9 +90,8 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     onOperationApplied(newNode: InternalNode): void {
-        var math = this.es.applyChange(this.data, this.selectedNode, newNode);
-        this.ees.add(<string>math);
-
+        var expression = this.es.applyChange(this.data, this.selectedNode, newNode);
+        this.ees.add(<string>expression);
         this.onOperationCanceled();
     }
 

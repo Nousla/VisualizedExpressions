@@ -48,13 +48,16 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         var selectedNodeChanges = changes["selectedNode"];
         if (selectedNodeChanges) {
-            this.currentData = new InternalData(this.selectedNode);
+            if (selectedNodeChanges.currentValue) {
+                this.currentData = new InternalData(this.selectedNode);
+            }
+            
             this.newData = null;
             this.input = "";
         }
 
         var operationStateChanges = changes["operationState"];
-        if(operationStateChanges) {
+        if (operationStateChanges) {
             this.updateInfoText();
         }
     }
