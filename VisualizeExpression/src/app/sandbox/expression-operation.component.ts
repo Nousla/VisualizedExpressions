@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, EventEmitter, Output, InjectionToken, Inject, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, EventEmitter, Output, InjectionToken, Inject, OnInit, ViewChild, ElementRef } from '@angular/core';
 import OperationState from './operation-state';
 import { InternalNode } from "../visualization/internal-node";
 import InternalData from "../visualization/internal-data";
@@ -22,6 +22,9 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
     @Output()
     onCanceled = new EventEmitter();
 
+    @ViewChild("applyBtn")
+    applyBtn: HTMLButtonElement;
+
     private currentData: InternalData;
     private newData: InternalData;
     private input: string;
@@ -39,6 +42,7 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
 
     constructor( @Inject(MATH_INPUT_SERVICE) private mis: MathInputService) {
         this.operationState = OperationState.Closed;
+        this.updated = false;
     }
 
     ngOnInit(): void {
@@ -51,7 +55,7 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
             if (selectedNodeChanges.currentValue) {
                 this.currentData = new InternalData(this.selectedNode);
             }
-            
+
             this.newData = null;
             this.input = "";
         }
@@ -78,14 +82,7 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
     }
 
     private applyOperation(): void {
-        if (!this.updated) {
-            clearTimeout(this.timeout);
-            this.onTimeOut();
-        }
-
-        if (this.newData) {
-            this.onApplied.emit(this.newData.rootNode);
-        }
+        this.onApplied.emit(this.newData.rootNode);
     }
 
     private cancelOperation(): void {
@@ -94,6 +91,18 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
 
     private updateInfoText(): void {
         this.infoText = this.getInfoText();
+    }
+
+    private isApplyBtnDisabled(): boolean {
+        if(this.input === "") {
+            return true;
+        }
+
+        if(!this.newData) {
+            return true;
+        }
+
+        return !this.updated;
     }
 
     private getInfoText(): string {
