@@ -50,17 +50,15 @@
     margin-bottom: 5px;
 }  
 
-.expression_edit > textarea {
+.expression_edit > input {
     display: inline-flex;
     font-family: monospace;
     font-size: 15pt;
     border: 1px solid grey;
     padding-left: 5px;
     padding-right: 5px;
-    margin-left: 5px;
-    width: 98%;
-    resize: vertical;
-    overflow: hidden;
+    width: 99%;
+
 }
 
 .visualization_render {

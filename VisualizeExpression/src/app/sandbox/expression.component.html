@@ -8,12 +8,11 @@
         <button>Move down</button>
     </div>
     <div class="expression_edit">
-        <textarea rows="1" (ngModelChange)="onInputChange($event)" [(ngModel)]="input" >Insert expression here</textarea>
+        <input type="text" (ngModelChange)="onInputChange($event)" [(ngModel)]="input">
     </div>
     <div class="visualization_render">
         <visualization [data]="data" [config]="config" [eventHandler]="eventHandler"></visualization>
     </div>
-    <!--<div class="expression" id="expression_2"></div>-->
 </div>
 
 <expression-operation 
