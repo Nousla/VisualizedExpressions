@@ -53,9 +53,10 @@ export class MirrorMountainService implements VisualizationService {
             return;
         }
 
-        var processedRootNode = this.preprocessRootNode(internalData.clone().rootNode);
+        //var processedRootNode = this.preprocessRootNode(internalData.clone().rootNode);
 
-        var rootNode = d3.hierarchy(processedRootNode);
+        var rootNode = d3.hierarchy(internalData.rootNode);
+        rootNode = this.preprocessRootNode(rootNode);
         d3.cluster().nodeSize([this.nodeWidth + this.nodeHorizontalSpacing, this.nodeHeight + this.nodeVerticalSpacing])(rootNode);
 
         this.processHierarchy();
@@ -128,10 +129,10 @@ export class MirrorMountainService implements VisualizationService {
             .remove();
     }
 
-    private preprocessRootNode(rootNode: InternalNode): InternalNode {
-        var nodeStack: InternalNode[] = [];
+    private preprocessRootNode(rootNode: D3Node): D3Node {
+        var nodeStack: D3Node[] = [];
 
-        while (rootNode.type === InternalNodeType.Parentheses && rootNode.children) {
+        while (rootNode.data.type === InternalNodeType.Parentheses && rootNode.children) {
             rootNode = rootNode.children[0];
         }
 
@@ -145,12 +146,12 @@ export class MirrorMountainService implements VisualizationService {
         return rootNode;
     }
 
-    private preprocessNode(node: InternalNode, nodeStack: InternalNode[]): void {
+    private preprocessNode(node: D3Node, nodeStack: D3Node[]): void {
         if (!node.children) {
             return;
         }
 
-        if (node.type === InternalNodeType.Parentheses) {
+        if (node.data.type === InternalNodeType.Parentheses) {
             let childToAdd = node.children[0];
             childToAdd.parent = node.parent;
             nodeStack.push(childToAdd);

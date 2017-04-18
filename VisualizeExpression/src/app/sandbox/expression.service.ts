@@ -11,15 +11,15 @@ export class ExpressionService {
     }
 
     applyChange(data: InternalData, selectedNode: InternalNode, newNode: InternalNode): Object {
-        if(!data) {
+        if (!data) {
             throw new UndefinedArgumentException("data is undefined!");
         }
 
-        if(!selectedNode) {
+        if (!selectedNode) {
             throw new UndefinedArgumentException("selectedNode is undefined!");
         }
 
-        if(!newNode) {
+        if (!newNode) {
             throw new UndefinedArgumentException("newNode is undefined!");
         }
 
@@ -30,16 +30,16 @@ export class ExpressionService {
             expression = this.mus.convert(newData);
         }
         else {
-            var children = selectedNode.parent.children;
-            var selectedNodeIndex = children.indexOf(selectedNode);
-            var splicedNode = children.splice(selectedNodeIndex, 1);
-            var newNodeIndex = children.push(newNode) - 1;
+            let children = selectedNode.parent.children;
+            let selectedNodeIndex = children.indexOf(selectedNode);
+            let splicedNode = children.splice(selectedNodeIndex, 1);
+            children.splice(selectedNodeIndex, 0, newNode);
             newNode.parent = selectedNode.parent;
 
             expression = this.mus.convert(data);
 
             // Reverse changes in the data
-            children.splice(newNodeIndex, 1);
+            children.splice(selectedNodeIndex, 1);
             children.splice(selectedNodeIndex, 0, selectedNode);
         }
 
