@@ -62,22 +62,22 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
         }
     }
 
-    onInputChange(event: Event): void {
+    private onInputChange(event: Event): void {
         this.updated = false;
         this.startInputTimeout();
     }
 
-    startInputTimeout(): void {
+    private startInputTimeout(): void {
         clearTimeout(this.timeout);
         this.timeout = setTimeout(this.onTimeOut.bind(this), this.TIMEOUT_LIMIT_MS);
     }
 
-    onTimeOut(): void {
+    private onTimeOut(): void {
         this.newData = this.mis.convert(this.input);
         this.updated = true;
     }
 
-    applyOperation(): void {
+    private applyOperation(): void {
         if (!this.updated) {
             clearTimeout(this.timeout);
             this.onTimeOut();
@@ -86,21 +86,17 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
         if (this.newData) {
             this.onApplied.emit(this.newData.rootNode);
         }
-        else {
-            // Show error message,
-            // or indicate impossible action
-        }
     }
 
-    cancelOperation(): void {
+    private cancelOperation(): void {
         this.onCanceled.emit();
     }
 
-    updateInfoText(): void {
+    private updateInfoText(): void {
         this.infoText = this.getInfoText();
     }
 
-    getInfoText(): string {
+    private getInfoText(): string {
         switch (this.operationState) {
             case OperationState.Closed: return this.TEXT_VISUALIZE_EXPRESSION;
             case OperationState.Waiting: return this.TEXT_SELECT_NODE;

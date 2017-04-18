@@ -26,7 +26,7 @@ export class ExpressionService {
         var expression: Object;
         var targetNode = this.optimizeTargetNode(selectedNode, newNode);
 
-        if (!targetNode || !selectedNode.parent) {
+        if (!targetNode) {
             expression = this.mus.convert(new InternalData(newNode));
         }
         else {
@@ -48,6 +48,10 @@ export class ExpressionService {
 
     // Optimize away containers
     private optimizeTargetNode(targetNode: InternalNode, newNode: InternalNode): InternalNode {
+        if(!targetNode || !targetNode.parent) {
+            return null;
+        }
+
         var optimizedTargetNode = targetNode;
         if (newNode.group === InternalNodeGroup.Number
             && optimizedTargetNode.parent.group === InternalNodeGroup.Container) {
