@@ -2,7 +2,7 @@ import { Injectable, Inject } from "@angular/core";
 import MATH_OUTPUT_SERVICE from "../visualization/math-output-service-token";
 import MathOutputService from "../visualization/math-output-service";
 import InternalData from "../visualization/internal-data";
-import { InternalNode } from "../visualization/internal-node";
+import { InternalNode, Group as InternalNodeGroup } from "../visualization/internal-node";
 import UndefinedArgumentException from "../exceptions/undefined-argument-exception";
 
 Injectable()
@@ -24,26 +24,43 @@ export class ExpressionService {
         }
 
         var expression: Object;
+        var targetNode = this.optimizeTargetNode(selectedNode, newNode);
 
-        if (!selectedNode.parent) {
-            let newData = new InternalData(newNode);
-            expression = this.mus.convert(newData);
+        if (!targetNode || !selectedNode.parent) {
+            expression = this.mus.convert(new InternalData(newNode));
         }
         else {
-            let children = selectedNode.parent.children;
-            let selectedNodeIndex = children.indexOf(selectedNode);
-            let splicedNode = children.splice(selectedNodeIndex, 1);
-            children.splice(selectedNodeIndex, 0, newNode);
-            newNode.parent = selectedNode.parent;
+            let children = targetNode.parent.children;
+            let targetNodeIndex = children.indexOf(targetNode);
+            let splicedNode = children.splice(targetNodeIndex, 1);
+            children.splice(targetNodeIndex, 0, newNode);
+            newNode.parent = targetNode.parent;
 
             expression = this.mus.convert(data);
 
             // Reverse changes in the data
-            children.splice(selectedNodeIndex, 1);
-            children.splice(selectedNodeIndex, 0, selectedNode);
+            children.splice(targetNodeIndex, 1);
+            children.splice(targetNodeIndex, 0, selectedNode);
         }
 
         return expression;
+    }
+
+    // Optimize away containers
+    private optimizeTargetNode(targetNode: InternalNode, newNode: InternalNode): InternalNode {
+        var optimizedTargetNode = targetNode;
+        if (newNode.group === InternalNodeGroup.Number
+            && optimizedTargetNode.parent.group === InternalNodeGroup.Container) {
+            while (optimizedTargetNode.parent && optimizedTargetNode.parent.group === InternalNodeGroup.Container) {
+                optimizedTargetNode = optimizedTargetNode.parent;
+
+                if (!optimizedTargetNode.parent) {
+                    return null;
+                }
+            }
+        }
+
+        return optimizedTargetNode;
     }
 }
 
