@@ -22,7 +22,7 @@ module.exports = WebpackMerge(WebpackBase(), {
         ]
     },
     devServer: {
-        contentBase: '/',
+        contentBase: [Path.resolve(__dirname, '../')],
         port: 8080,
         host: 'localhost',
         inline: true,

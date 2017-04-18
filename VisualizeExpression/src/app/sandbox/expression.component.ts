@@ -13,7 +13,7 @@ export let MATH_CONVERTER_SERVICE = new InjectionToken<MathConverterService>("Ma
     selector: 'expression',
     templateUrl: './expression.component.html',
     styleUrls: [`./expression.component.css`],
-    providers: [{ provide: MATH_CONVERTER_SERVICE, useClass: MathTextConverterService, }, ProblemSolvingService, ImportExpressionService]
+    providers: [{ provide: MATH_CONVERTER_SERVICE, useClass: MathTextConverterService, }, ProblemSolvingService]
 })
 
 export class ExpressionComponent {
@@ -55,15 +55,21 @@ export class ExpressionComponent {
     }
     onTimeOutCheck(): void {
         if(this.imp.importedSpecifier == "ps"){
-            var solution = this.pss.checkExpression(this.imp.importedExpression, this.imp.importedCorrectSolution, this.imp.importedWrongSolution);
+            var solution = this.pss.checkExpression(this.input, this.imp.importedCorrectSolution, this.imp.importedWrongSolution);
             if(solution == true) {
                 this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','green');
+                var result = this.input.split('=');
+                var leftside = result[0];
+                var rightside = result[1];
+                if(leftside && rightside == this.imp.importedCorrectSolution.toString()){
+                    this.guideSuccess();
+                }
             }
             else {
                 this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','red');
             }
         }
-    }
+    } 
 
     add(): void{
         this.es.addNew();
@@ -74,5 +80,8 @@ export class ExpressionComponent {
     }
     clone(): void{
         this.es.clone({counter: this.counter, input: this.input});
+    }
+    guideSuccess(): void {
+        this.es.guideSuccess();
     }
 }
