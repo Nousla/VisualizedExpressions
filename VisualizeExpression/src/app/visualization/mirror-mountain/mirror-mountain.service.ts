@@ -14,9 +14,18 @@ export class MirrorMountainService implements VisualizationService {
     private nodeHeight = 40;
 
     private nodeHorizontalSpacing = 10;
-    private nodeVerticalSpacing = 10;
+    private nodeVerticalSpacing = 20;
+    private textHorizontalMargin = 5;
 
     private eventHandler: VisualizationEventHandler;
+
+    constructor() {
+        d3.select("body")
+            .append("svg")
+            .attr("id", "svg-text-measurement")
+            .append("text")
+            .attr("visibility", "hidden");
+    }
 
     configure(config: Object, eventHandler: VisualizationEventHandler): void {
         if (config) {
@@ -53,46 +62,10 @@ export class MirrorMountainService implements VisualizationService {
             return;
         }
 
-        //var processedRootNode = this.preprocessRootNode(internalData.clone().rootNode);
-
         var rootNode = d3.hierarchy(internalData.rootNode);
         rootNode = this.preprocessRootNode(rootNode);
-        d3.cluster().nodeSize([this.nodeWidth + this.nodeHorizontalSpacing, this.nodeHeight + this.nodeVerticalSpacing])(rootNode);
-
-        this.processHierarchy();
-
-        var nodes = rootNode.descendants();
-        var links = rootNode.links();
-
-        var offsetX: number;
-        var offsetY: number;
-        if (rootNode.children && rootNode.children.length > 0) {
-            let topLeftLeafNode = this.findEdgeLeaf(rootNode.children[0], true);
-            offsetX = topLeftLeafNode["x"];
-            offsetY = topLeftLeafNode["y"];
-        }
-
-        nodes.forEach((node: D3Node) => {
-            if (node.data.type === InternalNodeType.Equality) {
-                var leftEdgeLeaf = this.findEdgeLeaf(rootNode.children[0], false);
-                var rightEdgeLeaf = this.findEdgeLeaf(rootNode.children[1], true);
-                if (leftEdgeLeaf && rightEdgeLeaf) {
-                    node["x"] = (leftEdgeLeaf["x"] + rightEdgeLeaf["x"]) / 2;
-                    node["y"] -= leftEdgeLeaf["y"];
-                }
-            }
-            else {
-                node["y"] = -node["y"];
-            }
-
-            if (offsetX && offsetX < 0) {
-                node["x"] -= offsetX;
-            }
-
-            if (offsetY && offsetY > 0) {
-                node["y"] += offsetY;
-            }
-        });
+        this.layoutHierarchy(rootNode);
+        this.postprocessRootNode(rootNode);
 
         var svg = d3.select(elementRef.nativeElement)
             .append("svg");
@@ -100,6 +73,7 @@ export class MirrorMountainService implements VisualizationService {
         var rootGroup = svg.append("g");
         var instance = this;
 
+        var links = rootNode.links();
         rootGroup.selectAll("line")
             .data(links)
             .enter()
@@ -107,6 +81,7 @@ export class MirrorMountainService implements VisualizationService {
                 instance.processLink(link, this);
             });
 
+        var nodes = rootNode.descendants();
         rootGroup.selectAll("g")
             .data(nodes)
             .enter()
@@ -147,6 +122,9 @@ export class MirrorMountainService implements VisualizationService {
     }
 
     private preprocessNode(node: D3Node, nodeStack: D3Node[]): void {
+        var width = this.getTextWidth(node);
+        node["width"] = width > this.nodeWidth ? width : this.nodeWidth;
+
         if (!node.children) {
             return;
         }
@@ -169,10 +147,105 @@ export class MirrorMountainService implements VisualizationService {
         }
     }
 
-    private processHierarchy() {
-        // Determine new x and width based on text length. Push all sibling nodes 
-        // or fill the total width with all sibling nodes.
-        // Custom layout in layers.
+    private layoutHierarchy(rootNode: D3Node): void {
+        rootNode["x"] = (-rootNode["width"] / 2);
+        rootNode["y"] = 0;
+
+        this.layoutAdjacentNodes(rootNode.children, 1, rootNode.height, this.nodeHeight + this.nodeVerticalSpacing);
+    }
+
+    private layoutAdjacentNodes(nodes: D3Node[], currentLevel: number, maxLevel: number, previousHeight: number): void {
+        if (!nodes || nodes.length === 0) {
+            return;
+        }
+
+        var totalWidth = this.calculateTotalWidth(nodes);
+        var accumulatedWidth = 0;
+        var accumulatedChildren: D3Node[] = [];
+
+        for (let i = 0; i < nodes.length; i++) {
+            console.log(nodes[i].data.name);
+            nodes[i]["x"] = (accumulatedWidth - (totalWidth / 2)) + i * this.nodeHorizontalSpacing;
+            nodes[i]["y"] = previousHeight;
+
+            accumulatedWidth += nodes[i]["width"];
+
+            if (nodes[i].children) {
+                accumulatedChildren.push.apply(accumulatedChildren, nodes[i].children);
+            }
+            else {
+                // Re-include nodes that are leaf nodes, but are not at the lowest level. 
+                // This will force all leaf nodes to the same level.
+                if (currentLevel !== maxLevel) {
+                    accumulatedChildren.push(nodes[i]);
+                }
+            }
+        }
+
+        var nextHeight = previousHeight + this.nodeHeight + this.nodeVerticalSpacing;
+
+        this.layoutAdjacentNodes(accumulatedChildren, currentLevel + 1, maxLevel, nextHeight);
+    }
+
+    private calculateTotalWidth(nodes: D3Node[]): number {
+        var totalWidth = 0;
+        for (var i = 0; i < nodes.length; i++) {
+            totalWidth += nodes[i]["width"];
+        }
+
+        return totalWidth;
+    }
+
+    private postprocessRootNode(rootNode: D3Node): void {
+        var offsetX: number;
+        var offsetY: number;
+        if (rootNode.children && rootNode.children.length > 0) {
+            let topLeftLeafNode = this.findEdgeLeaf(rootNode.children[0], true);
+            offsetX = topLeftLeafNode["x"];
+            offsetY = topLeftLeafNode["y"];
+        }
+
+        rootNode.descendants().forEach((node: D3Node) => {
+
+            if (node.data.type === InternalNodeType.Equality) {
+                var leftEdgeLeaf = this.findEdgeLeaf(node.children[0], false);
+                if (leftEdgeLeaf) {
+                    node["x"] = leftEdgeLeaf["x"] + leftEdgeLeaf["width"] + this.nodeHorizontalSpacing;
+                    node["y"] -= leftEdgeLeaf["y"];
+                }
+
+                node.children[1].each((rightTreeNode: D3Node) => {
+                    rightTreeNode["x"] += node["width"] + this.nodeHorizontalSpacing;
+                });
+            }
+            else {
+                node["y"] = -node["y"];
+            }
+
+            if (node.data.group === InternalNodeGroup.Operator && node.data.type !== InternalNodeType.Equality) {
+                var leaves = node.leaves();
+                var treeWidth = this.calculateNodesWidth(leaves);
+                node["x"] = leaves[0]["x"] + (treeWidth / 2);
+            }
+
+            if (offsetX && offsetX < 0) {
+                node["x"] -= offsetX;
+            }
+
+            if (offsetY && offsetY > 0) {
+                node["y"] += offsetY;
+            }
+        });
+    }
+
+    private calculateNodesWidth(nodes: D3Node[]): number {
+        if (!nodes) {
+            return 0;
+        }
+
+        var leftNode = nodes[0];
+        var rightNode = nodes[nodes.length - 1];
+        return (rightNode["x"] + rightNode["width"]) - leftNode["x"];
     }
 
     private processNode(node: D3Node, element: d3.EnterElement): void {
@@ -206,16 +279,14 @@ export class MirrorMountainService implements VisualizationService {
         newNodeSelection.append("rect")
             .attr("x", "0")
             .attr("y", "0")
-            .attr("width", this.nodeWidth)
+            .attr("width", (node: D3Node) => { return node["width"] })
             .attr("height", this.nodeHeight)
             .attr("class", this.getRectClassName)
             .on("click", this.onClick.bind(this));
 
         newNodeSelection.append("svg")
-            .attr("width", this.nodeWidth)
+            .attr("width", (node: D3Node) => { return node["width"] })
             .attr("height", this.nodeHeight)
-            .attr("viewBox", "0 0 60 60")
-            .attr("preserveAspectRatio", "xMidYMid meet")
             .append("text")
             .attr("font-size", this.getFontSize())
             .attr("x", "50%")
@@ -233,10 +304,10 @@ export class MirrorMountainService implements VisualizationService {
         var source = link.source;
 
         d3.select(element).append("line")
-            .attr("x1", () => { return source["x"] + (this.nodeWidth / 2) })
-            .attr("y1", () => { return source["y"] + (this.nodeHeight / 2) })
-            .attr("x2", () => { return link.target["x"] + (this.nodeWidth / 2) })
-            .attr("y2", () => { return link.target["y"] + (this.nodeHeight / 2) })
+            .attr("x1", () => { return source["x"] + (source["width"] / 2) })
+            .attr("y1", () => { return source["y"] })
+            .attr("x2", () => { return link.target["x"] + (link.target["width"] / 2) })
+            .attr("y2", () => { return link.target["y"] + this.nodeHeight })
             .attr("class", "mirror-mountain-line")
     }
 
@@ -258,13 +329,23 @@ export class MirrorMountainService implements VisualizationService {
     private getTextClassName(node: D3Node): string {
         switch (node.data.group) {
             case InternalNodeGroup.Number: return "mirror-mountain-text mirror-mountain-text-number";
-            case InternalNodeGroup.Operator: /*return (node.data["type"] === "multiplication") ? 
-                "mirror-mountain-text mirror-mountain-text-operator-multiplication" :*/
+            case InternalNodeGroup.Operator: //return (node.data.type === InternalNodeType.Multiplication) ? 
+                //"mirror-mountain-text mirror-mountain-text-operator-multiplication" :
                 return "mirror-mountain-text mirror-mountain-text-operator";
             //case "extended": return "mirror-mountain-text mirror-mountain-text-variable";
             default: ""
                 break;
         }
+    }
+
+    private getTextWidth(node: D3Node): number {
+        var textNode = <SVGTextElement>d3.select("#svg-text-measurement text")
+            .text(() => { return node.data.name })
+            .attr("class", () => { return this.getTextClassName(node) })
+            .attr("font-size", this.getFontSize())
+            .node();
+
+        return textNode ? textNode.getComputedTextLength() + this.textHorizontalMargin : 0;
     }
 
     private findEdgeLeaf(node: D3Node, left: boolean): D3Node {
@@ -277,7 +358,7 @@ export class MirrorMountainService implements VisualizationService {
     }
 
     private getFontSize(): number {
-        return this.nodeHeight;
+        return this.nodeHeight * 0.75;
     }
 }
 
