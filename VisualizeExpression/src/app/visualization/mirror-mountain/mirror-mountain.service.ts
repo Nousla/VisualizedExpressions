@@ -20,11 +20,15 @@ export class MirrorMountainService implements VisualizationService {
     private eventHandler: VisualizationEventHandler;
 
     constructor() {
-        d3.select("body")
+        var svg = d3.select("body")
             .append("svg")
-            .attr("id", "svg-text-measurement")
-            .append("text")
+            .attr("id", "svg-hidden")
             .attr("visibility", "hidden");
+
+        svg.append("text");
+
+        svg.append("rect")
+            .attr("class", "mirror-mountain-rect");
     }
 
     configure(config: Object, eventHandler: VisualizationEventHandler): void {
@@ -70,7 +74,16 @@ export class MirrorMountainService implements VisualizationService {
         var svg = d3.select(elementRef.nativeElement)
             .append("svg");
 
-        var rootGroup = svg.append("g");
+        var rectNode = <SVGRectElement>d3.select("#svg-hidden rect").node();
+        var computedStyle = window.getComputedStyle(rectNode);
+        var rectStrokeWidth = parseInt(computedStyle.strokeWidth);
+        
+        if (!rectStrokeWidth) {
+            rectStrokeWidth = 0;
+        }
+
+        var rootGroup = svg.append("g")
+            .attr("transform", "translate(" + rectStrokeWidth + "," + rectStrokeWidth + ")");;
         var instance = this;
 
         var links = rootNode.links();
@@ -92,10 +105,11 @@ export class MirrorMountainService implements VisualizationService {
         var gNode = <SVGGElement>rootGroup.node();
         if (gNode) {
             var boundingBox = gNode.getBBox();
-            svg.attr("width", boundingBox.width)
-                .attr("height", boundingBox.height)
-                .attr("viewBox", "0 0 " + boundingBox.width + " " + boundingBox.height);
+            svg.attr("width", boundingBox.width + rectStrokeWidth * 2)
+                .attr("height", boundingBox.height + rectStrokeWidth * 2);
         }
+
+        //rootGroup.attr("transform", "translate(" + rectStrokeWidth + "," + rectStrokeWidth + ")");
     }
 
     private clearNodes(elementRef: ElementRef): void {
@@ -218,9 +232,12 @@ export class MirrorMountainService implements VisualizationService {
             offsetX = topLeftLeafNode["x"];
             offsetY = topLeftLeafNode["y"];
         }
+        else {
+            offsetX = -rootNode["width"] / 2;
+            offsetY = 0;
+        }
 
         rootNode.descendants().forEach((node: D3Node) => {
-
             if (node.data.type === InternalNodeType.Equality) {
                 var leftEdgeLeaf = this.findEdgeLeaf(node.children[0], false);
                 if (leftEdgeLeaf) {
@@ -306,7 +323,7 @@ export class MirrorMountainService implements VisualizationService {
             .attr("font-size", this.getFontSize())
             .attr("x", "50%")
             .attr("y", "50%")
-            .text((node: D3Node) => { return node.data.name })
+            .text((node: D3Node) => { return node.data.text })
             .attr("class", this.getTextClassName)
             .on("click", this.onClick.bind(this));
     }
@@ -349,7 +366,7 @@ export class MirrorMountainService implements VisualizationService {
 
     private getRectClassName(node: D3Node): string {
         if (node.data.type === InternalNodeType.Equality) {
-            return "mirror-mountain-rect-equality";
+            return "mirror-mountain-rect mirror-mountain-rect-equality";
         }
         else {
             return "mirror-mountain-rect";
@@ -369,8 +386,8 @@ export class MirrorMountainService implements VisualizationService {
     }
 
     private getTextWidth(node: D3Node): number {
-        var textNode = <SVGTextElement>d3.select("#svg-text-measurement text")
-            .text(() => { return node.data.name })
+        var textNode = <SVGTextElement>d3.select("#svg-hidden text")
+            .text(() => { return node.data.text })
             .attr("class", () => { return this.getTextClassName(node) })
             .attr("font-size", this.getFontSize())
             .node();

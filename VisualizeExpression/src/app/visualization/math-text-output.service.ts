@@ -47,7 +47,7 @@ export class MathTextOutputService implements MathOutputService {
     }
 
     processNumberGroupNode(node: InternalNode, mathBuilder: string[]): void {
-        mathBuilder.push(node.name);
+        mathBuilder.push(node.text);
     }
 
     processOperatorGroupNode(node: InternalNode, mathBuilder: string[]): void {
@@ -56,12 +56,12 @@ export class MathTextOutputService implements MathOutputService {
         }
 
         this.processNode(node.children[0], mathBuilder);
-        mathBuilder.push(node.name);
+        mathBuilder.push(node.text);
         this.processNode(node.children[1], mathBuilder);
     }
 
     processUnknownGroupNode(node: InternalNode, mathBuilder: string[]): void {
-        mathBuilder.push(node.name);
+        mathBuilder.push(node.text);
     }
 }
 

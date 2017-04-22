@@ -39,7 +39,7 @@ export class InternalData {
 
     private cloneNode(node: InternalNode): InternalNode {
         var clonedNode = new InternalNode();
-        clonedNode.name = node.name;
+        clonedNode.text = node.text;
         clonedNode.type = node.type;
         clonedNode.group = node.group;
         clonedNode.parent = undefined;

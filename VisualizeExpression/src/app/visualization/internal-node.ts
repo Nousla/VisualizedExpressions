@@ -1,5 +1,5 @@
 export class InternalNode {
-    public name: string;
+    public text: string;
     public type: Type;
     public group: Group;
     public parent: InternalNode;
