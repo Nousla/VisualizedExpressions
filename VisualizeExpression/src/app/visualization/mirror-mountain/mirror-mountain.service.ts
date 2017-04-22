@@ -151,7 +151,22 @@ export class MirrorMountainService implements VisualizationService {
         rootNode["x"] = (-rootNode["width"] / 2);
         rootNode["y"] = 0;
 
-        this.layoutAdjacentNodes(rootNode.children, 1, rootNode.height, this.nodeHeight + this.nodeVerticalSpacing);
+        var treeHeight = this.calculateHeight(rootNode);
+
+        this.layoutAdjacentNodes(rootNode.children, 1, treeHeight, this.nodeHeight + this.nodeVerticalSpacing);
+    }
+
+    private calculateHeight(node: D3Node): number {
+        if (!node.children) {
+            return 0;
+        }
+
+        var maxHeight = 0;
+        for (var i = 0; i < node.children.length; i++) {
+            maxHeight = Math.max(maxHeight, this.calculateHeight(node.children[i]));
+        }
+
+        return maxHeight + 1;
     }
 
     private layoutAdjacentNodes(nodes: D3Node[], currentLevel: number, maxLevel: number, previousHeight: number): void {
@@ -164,7 +179,6 @@ export class MirrorMountainService implements VisualizationService {
         var accumulatedChildren: D3Node[] = [];
 
         for (let i = 0; i < nodes.length; i++) {
-            console.log(nodes[i].data.name);
             nodes[i]["x"] = (accumulatedWidth - (totalWidth / 2)) + i * this.nodeHorizontalSpacing;
             nodes[i]["y"] = previousHeight;
 
@@ -255,6 +269,7 @@ export class MirrorMountainService implements VisualizationService {
             case InternalNodeGroup.Operator: this.processOperatorNode(node, element);
                 break;
             case InternalNodeGroup.Container: this.processContainerNode(node, element);
+                break;
             default: this.processStandardNode(node, element);
                 break;
         }
@@ -269,7 +284,7 @@ export class MirrorMountainService implements VisualizationService {
     }
 
     private processContainerNode(node: D3Node, element: d3.EnterElement): void {
-        this.processStandardNode(node, element);
+        return;
     }
 
     private processStandardNode(node: D3Node, element: d3.EnterElement): void {
@@ -301,13 +316,28 @@ export class MirrorMountainService implements VisualizationService {
             return;
         }
 
-        var source = link.source;
+        var path: string[] = [];
 
-        d3.select(element).append("line")
-            .attr("x1", () => { return source["x"] + (source["width"] / 2) })
-            .attr("y1", () => { return source["y"] })
-            .attr("x2", () => { return link.target["x"] + (link.target["width"] / 2) })
-            .attr("y2", () => { return link.target["y"] + this.nodeHeight })
+        // Move to start position (parent node)
+        path.push("M");
+        path.push(link.source["x"] + (link.source["width"] / 2));
+        path.push(link.source["y"]);
+
+        // First line (vertical)
+        path.push("V");
+        path.push((link.source["y"] - (this.nodeVerticalSpacing / 2)).toString());
+
+        // Second line (horizontal)
+        path.push("H");
+        path.push(link.target["x"] + (link.target["width"] / 2));
+
+        // Third line (vertical)
+        path.push("V");
+        path.push(link.target["y"] + this.nodeHeight);
+
+        d3.select(element).append("path")
+            .attr("d", () => { return path.join(" "); })
+            .attr("fill", "transparent")
             .attr("class", "mirror-mountain-line")
     }
 
