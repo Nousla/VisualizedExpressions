@@ -9,8 +9,10 @@ export class InternalNode {
 export const enum Type {
     Addition,
     Decimal,
+    Division,
     Equality,
     Integer,
+    Multiplication,
     Parentheses,
     Subtraction,
     Unknown

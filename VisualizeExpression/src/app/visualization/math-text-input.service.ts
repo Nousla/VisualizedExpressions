@@ -93,9 +93,10 @@ export class MathTextInputService implements MathInputService {
             case "+": return InternalNodeType.Addition;
             case "-": return InternalNodeType.Subtraction;
             case "=": return InternalNodeType.Equality;
+            case "*": return InternalNodeType.Multiplication;
+            case "/": return InternalNodeType.Division;
+            default: return InternalNodeType.Unknown;
         }
-
-        return undefined;
     }
 }
 

@@ -77,7 +77,7 @@ export class MirrorMountainService implements VisualizationService {
         var rectNode = <SVGRectElement>d3.select("#svg-hidden rect").node();
         var computedStyle = window.getComputedStyle(rectNode);
         var rectStrokeWidth = parseInt(computedStyle.strokeWidth);
-        
+
         if (!rectStrokeWidth) {
             rectStrokeWidth = 0;
         }
@@ -108,8 +108,6 @@ export class MirrorMountainService implements VisualizationService {
             svg.attr("width", boundingBox.width + rectStrokeWidth * 2)
                 .attr("height", boundingBox.height + rectStrokeWidth * 2);
         }
-
-        //rootGroup.attr("transform", "translate(" + rectStrokeWidth + "," + rectStrokeWidth + ")");
     }
 
     private clearNodes(elementRef: ElementRef): void {
@@ -323,8 +321,9 @@ export class MirrorMountainService implements VisualizationService {
             .attr("font-size", this.getFontSize())
             .attr("x", "50%")
             .attr("y", "50%")
-            .text((node: D3Node) => { return node.data.text })
             .attr("class", this.getTextClassName)
+            .attr("dy", this.getTextDY)
+            .text((node: D3Node) => { return node.data.text })
             .on("click", this.onClick.bind(this));
     }
 
@@ -373,16 +372,21 @@ export class MirrorMountainService implements VisualizationService {
         }
     }
 
-    private getTextClassName(node: D3Node): string {
-        switch (node.data.group) {
-            case InternalNodeGroup.Number: return "mirror-mountain-text mirror-mountain-text-number";
-            case InternalNodeGroup.Operator: //return (node.data.type === InternalNodeType.Multiplication) ? 
-                //"mirror-mountain-text mirror-mountain-text-operator-multiplication" :
-                return "mirror-mountain-text mirror-mountain-text-operator";
-            //case "extended": return "mirror-mountain-text mirror-mountain-text-variable";
-            default: ""
-                break;
+    private getTextDY(node: D3Node): string {
+        if (node.data.type === InternalNodeType.Multiplication) {
+            return "0.5em";
         }
+        else if (node.data.type === InternalNodeType.Division
+            || node.data.type === InternalNodeType.Subtraction) {
+            return "0.25em";
+        }
+        else {
+            return "0.3em";
+        }
+    }
+
+    private getTextClassName(node: D3Node): string {
+        return "mirror-mountain-text";
     }
 
     private getTextWidth(node: D3Node): number {
