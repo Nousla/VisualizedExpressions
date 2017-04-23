@@ -68,8 +68,8 @@ export class MirrorMountainService implements VisualizationService {
 
         var rootNode = d3.hierarchy(internalData.rootNode);
         rootNode = this.preprocessRootNode(rootNode);
-        this.layoutHierarchy(rootNode);
-        this.postprocessRootNode(rootNode);
+        var layoutOutput = this.layoutHierarchy(rootNode);
+        this.postprocessRootNode(rootNode, layoutOutput);
 
         var svg = d3.select(elementRef.nativeElement)
             .append("svg");
@@ -159,13 +159,79 @@ export class MirrorMountainService implements VisualizationService {
         }
     }
 
-    private layoutHierarchy(rootNode: D3Node): void {
-        rootNode["x"] = (-rootNode["width"] / 2);
+    private layoutHierarchy(rootNode: D3Node): LayoutOutput {
+        rootNode["x"] = -(rootNode["width"] / 2);
         rootNode["y"] = 0;
 
         var treeHeight = this.calculateHeight(rootNode);
 
-        this.layoutAdjacentNodes(rootNode.children, 1, treeHeight, this.nodeHeight + this.nodeVerticalSpacing);
+        if (rootNode.children) {
+            for (let i = 0; i < rootNode.children.length; i++) {
+                let childHeight = this.calculateHeight(rootNode.children[i]);
+                let heightDifference = treeHeight - childHeight;
+                if (heightDifference !== 1) {
+                    rootNode.children[i]["offsetHeight"] = heightDifference - 1;
+                }
+            }
+        }
+
+        var layoutState = new LayoutState(treeHeight);
+        layoutState.currentLevel = 1;
+
+        var layoutOutput = new LayoutOutput();
+        layoutOutput.maxWidth = rootNode["width"];
+
+        this.layoutAdjacentNodes(rootNode.children, layoutState, layoutOutput);
+
+        return layoutOutput;
+    }
+
+    private layoutAdjacentNodes(nodes: D3Node[], layoutState: LayoutState, layoutOutput: LayoutOutput): void {
+        if (!nodes || nodes.length === 0) {
+            return;
+        }
+
+        var totalWidth = this.calculateTotalWidth(nodes) + (nodes.length - 1) * this.nodeHorizontalSpacing;
+        layoutOutput.maxWidth = Math.max(layoutOutput.maxWidth, totalWidth);
+
+        var accumulatedWidth = 0;
+        var accumulatedChildren: D3Node[] = [];
+
+        for (let i = 0; i < nodes.length; i++) {
+            nodes[i]["x"] = (-(totalWidth / 2) + accumulatedWidth) + i * this.nodeHorizontalSpacing;
+            nodes[i]["y"] = layoutState.currentLevel * (this.nodeHeight + this.nodeVerticalSpacing);
+
+            accumulatedWidth += nodes[i]["width"];
+
+            if (nodes[i].children) {
+                let offsetHeight: number = nodes[i]["offsetHeight"];
+                if (offsetHeight) {
+                    accumulatedChildren.push(nodes[i]);
+
+                    offsetHeight -= 1;
+                    if (offsetHeight <= 0) {
+                        delete nodes[i]["offsetHeight"];
+                    }
+                    else {
+                        nodes[i]["offsetHeight"] = offsetHeight;
+                    }
+                }
+                else {
+                    accumulatedChildren.push.apply(accumulatedChildren, nodes[i].children);
+                }
+            }
+            else {
+                // Re-include nodes that are leaf nodes, but are not at the lowest level. 
+                // This will force all leaf nodes to the same level.
+                if (layoutState.currentLevel !== layoutState.maxLevel) {
+                    accumulatedChildren.push(nodes[i]);
+                }
+            }
+        }
+
+        layoutState.currentLevel += 1;
+
+        this.layoutAdjacentNodes(accumulatedChildren, layoutState, layoutOutput);
     }
 
     private calculateHeight(node: D3Node): number {
@@ -181,38 +247,6 @@ export class MirrorMountainService implements VisualizationService {
         return maxHeight + 1;
     }
 
-    private layoutAdjacentNodes(nodes: D3Node[], currentLevel: number, maxLevel: number, previousHeight: number): void {
-        if (!nodes || nodes.length === 0) {
-            return;
-        }
-
-        var totalWidth = this.calculateTotalWidth(nodes);
-        var accumulatedWidth = 0;
-        var accumulatedChildren: D3Node[] = [];
-
-        for (let i = 0; i < nodes.length; i++) {
-            nodes[i]["x"] = (accumulatedWidth - (totalWidth / 2)) + i * this.nodeHorizontalSpacing;
-            nodes[i]["y"] = previousHeight;
-
-            accumulatedWidth += nodes[i]["width"];
-
-            if (nodes[i].children) {
-                accumulatedChildren.push.apply(accumulatedChildren, nodes[i].children);
-            }
-            else {
-                // Re-include nodes that are leaf nodes, but are not at the lowest level. 
-                // This will force all leaf nodes to the same level.
-                if (currentLevel !== maxLevel) {
-                    accumulatedChildren.push(nodes[i]);
-                }
-            }
-        }
-
-        var nextHeight = previousHeight + this.nodeHeight + this.nodeVerticalSpacing;
-
-        this.layoutAdjacentNodes(accumulatedChildren, currentLevel + 1, maxLevel, nextHeight);
-    }
-
     private calculateTotalWidth(nodes: D3Node[]): number {
         var totalWidth = 0;
         for (var i = 0; i < nodes.length; i++) {
@@ -222,7 +256,7 @@ export class MirrorMountainService implements VisualizationService {
         return totalWidth;
     }
 
-    private postprocessRootNode(rootNode: D3Node): void {
+    private postprocessRootNode(rootNode: D3Node, layoutOutput: LayoutOutput): void {
         var offsetX: number;
         var offsetY: number;
         if (rootNode.children && rootNode.children.length > 0) {
@@ -251,15 +285,14 @@ export class MirrorMountainService implements VisualizationService {
                 node["y"] = -node["y"];
             }
 
-            if (node.data.group === InternalNodeGroup.Operator && node.data.type !== InternalNodeType.Equality) {
+            if (node.data.group === InternalNodeGroup.Operator 
+                && node.data.type !== InternalNodeType.Equality) {
                 var leaves = node.leaves();
                 var treeWidth = this.calculateNodesWidth(leaves);
-                node["x"] = leaves[0]["x"] + (treeWidth / 2);
+                node["x"] = leaves[0]["x"] + (treeWidth / 2) - (node["width"]/2);
             }
 
-            if (offsetX && offsetX < 0) {
-                node["x"] -= offsetX;
-            }
+            node["x"] += layoutOutput.maxWidth / 2;
 
             if (offsetY && offsetY > 0) {
                 node["y"] += offsetY;
@@ -410,6 +443,39 @@ export class MirrorMountainService implements VisualizationService {
 
     private getFontSize(): number {
         return this.nodeHeight * 0.75;
+    }
+}
+
+class LayoutState {
+    private _currentLevel: number;
+    private _maxLevel: number;
+
+    constructor(maxLevel: number) {
+        this._maxLevel = maxLevel;
+    }
+
+    get currentLevel(): number {
+        return this._currentLevel;
+    }
+
+    get maxLevel(): number {
+        return this._maxLevel;
+    }
+
+    set currentLevel(currentLevel: number) {
+        this._currentLevel = currentLevel;
+    }
+}
+
+class LayoutOutput {
+    private _maxWidth: number;
+
+    get maxWidth(): number {
+        return this._maxWidth;
+    }
+
+    set maxWidth(maxWidth: number) {
+        this._maxWidth = maxWidth;
     }
 }
 
