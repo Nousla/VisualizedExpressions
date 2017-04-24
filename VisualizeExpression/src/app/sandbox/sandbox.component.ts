@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewContainerRef, ComponentFactoryResolver, ComponentFactory, ComponentRef } from '@angular/core';
 import { ExpressionComponent } from './expression.component';
-import { ExpressionEventService, ExpressionChangeState } from './expression-event.service';
+import { ExpressionEventService } from './expression-event.service';
 import { Subscription } from 'rxjs/Subscription';
 import { InternalData } from "../visualization/internal-data";
 import MATH_INPUT_SERVICE from "../visualization/math-input-service-token";
