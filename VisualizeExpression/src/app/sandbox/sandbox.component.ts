@@ -1,9 +1,11 @@
-import { Component, ComponentFactoryResolver, ComponentFactory } from '@angular/core';
+import { Component, ComponentFactoryResolver, ComponentFactory, ViewChild } from '@angular/core';
 import { ExpressionComponent } from './expression.component';
 import { ExpressionEventService } from './expression-event.service';
 import { Subscription } from 'rxjs/Subscription';
 import { InternalData } from "../visualization/internal-data";
 import { StandardService } from "./standard.service"
+import { ImportExpressionService} from "./importexpression.service"
+import { ModalSuccessComponent } from "./modal-success.component";
 import MATH_INPUT_SERVICE from "../visualization/math-input-service-token";
 import MATH_OUTPUT_SERVICE from "../visualization/math-output-service-token";
 import MathTextInputService from "../visualization/math-text-input.service";
@@ -17,26 +19,35 @@ import MathTextOutputService from "../visualization/math-text-output.service";
     ExpressionEventService,
     { provide: MATH_INPUT_SERVICE, useClass: MathTextInputService },
     { provide: MATH_OUTPUT_SERVICE, useClass: MathTextOutputService },
-    StandardService
+    StandardService, ImportExpressionService
   ]
 })
 
 export class SandboxComponent {
   subscription: Subscription;
   listOfExpressions:string[];
+  @ViewChild(ModalSuccessComponent)
+  mod: ModalSuccessComponent;
 
-
-  constructor(private resolver: ComponentFactoryResolver, private ees: ExpressionEventService, private standardService: StandardService) {
+  constructor(private resolver: ComponentFactoryResolver, private ees: ExpressionEventService, private standardService: StandardService,
+              private imp: ImportExpressionService) {
     this.subscription = ees.expressionAddNew$.subscribe(this.onAddNewExpression.bind(this));
     this.subscription = ees.expressionAdd$.subscribe(this.onAddNewExpression.bind(this));
     this.subscription = ees.expresionRemove$.subscribe(this.onRemoveExpression.bind(this));
     this.subscription = ees.expressionClone$.subscribe(this.onCloneExpression.bind(this));
+    this.subscription = ees.expressionGuideSuccess$.subscribe(this.onGuideSuccess.bind(this));
     this.listOfExpressions = [];
   }
 
   ngOnInit() {
-    this.standardService.addEmptyExpression();
-    this.listOfExpressions = this.standardService.listOfExpressions;
+    if(this.imp.importedExpression){
+      this.standardService.addNewExpression(this.imp.importedExpression);
+      this.listOfExpressions = this.standardService.listOfExpressions;
+    }
+    else{
+      this.standardService.addEmptyExpression();
+      this.listOfExpressions = this.standardService.listOfExpressions;
+    }
   }
 
   onAddNewExpression() {
@@ -48,13 +59,16 @@ export class SandboxComponent {
   onRemoveExpression(index: number) {
     this.standardService.removeExpression(index);
     this.listOfExpressions = this.standardService.listOfExpressions;
-    console.log(this.listOfExpressions);
 
   }
    
   onCloneExpression( expression: Object) {
     this.standardService.cloneExpression(expression);
     this.listOfExpressions = this.standardService.listOfExpressions;
+  }
+
+  onGuideSuccess(){
+    this.mod.showDialog();
   }
 
 

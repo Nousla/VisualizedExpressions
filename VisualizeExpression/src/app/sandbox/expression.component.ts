@@ -7,8 +7,9 @@ import OperationState from './operation-state';
 import { InternalNode } from "../visualization/internal-node";
 import MATH_INPUT_SERVICE from "../visualization/math-input-service-token";
 import MathInputService from "../visualization/math-input-service";
-import ExpressionService from "./expression.service";
+import { ExpressionService } from "./expression.service";
 import { ProblemSolvingService } from "./problemsolving.service"
+import { ImportExpressionService } from "./importexpression.service";
 
 @Component({
     selector: 'expression',
@@ -45,7 +46,8 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
         @Inject(MATH_INPUT_SERVICE) private mis: MathInputService,
         private es: ExpressionService,
         private eventHandler: ExpressionEventHandler,
-        private pss: ProblemSolvingService, private renderer: Renderer) {
+        private pss: ProblemSolvingService, private renderer: Renderer,
+        private imp: ImportExpressionService) {
             this.input = "";
             this.operationState = OperationState.Closed;
     }
@@ -61,9 +63,10 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         var inputChanges = changes["input"];
-        if (inputChanges) {
+        if (inputChanges && inputChanges.currentValue !== "") {
             this.startInputTimeout();
         }
+        console.log("Hest");
     }
 
     onInputChange(event: Event): void {
@@ -84,14 +87,22 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     onTimeOutCheck(): void {
-        var solution = this.pss.checkExpression(this.input, this.testInputCorrectSol, this.testInputWrongSol);
-        if(solution == true) {
-            this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','green');
+        if(this.imp.importedSpecifier == "ps"){
+            var solution = this.pss.checkExpression(this.input, this.imp.importedCorrectSolution, this.imp.importedWrongSolution);
+            if(solution == true) {
+                this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','green');
+                var result = this.input.split('=');
+                var leftside = result[0];
+                var rightside = result[1];
+                if(leftside && rightside == this.imp.importedCorrectSolution.toString()){
+                    this.guideSuccess();
+                }
+            }
+            else {
+                this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','red');
+            }
         }
-        else {
-            this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','red');
-        }
-    }
+    } 
 
     addExpression(): void {
         this.ees.addNew();
@@ -103,6 +114,10 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
 
     cloneExpression(): void {
         this.ees.clone({ counter: this.counter, input: this.input });
+    }
+
+    guideSuccess(): void {
+        this.ees.guideSuccess();
     }
 
     onNodeSelected(node: InternalNode): void {
