@@ -1,25 +1,71 @@
-import {Injectable} from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { Injectable, Inject } from "@angular/core";
+import MATH_OUTPUT_SERVICE from "../visualization/math-output-service-token";
+import MathOutputService from "../visualization/math-output-service";
+import InternalData from "../visualization/internal-data";
+import { InternalNode, Group as InternalNodeGroup } from "../visualization/internal-node";
+import UndefinedArgumentException from "../exceptions/undefined-argument-exception";
 
-@Injectable()
+Injectable()
 export class ExpressionService {
-
-    private expressionNewSource = new Subject();
-    private expressionRemoveSource = new Subject<number>();
-    private expressionCloneSource = new Subject<Object>();
-
-    expressionNew$ = this.expressionNewSource.asObservable();
-    expresionRemove$ = this.expressionRemoveSource.asObservable();
-    expressionClone$ = this.expressionCloneSource.asObservable();
-
-    addNew() {
-        this.expressionNewSource.next();
+    constructor( @Inject(MATH_OUTPUT_SERVICE) private mus: MathOutputService) {
     }
 
-    remove(counter: number){
-        this.expressionRemoveSource.next(counter);
+    applyChange(data: InternalData, selectedNode: InternalNode, newNode: InternalNode): Object {
+        if (!data) {
+            throw new UndefinedArgumentException("data is undefined!");
+        }
+
+        if (!selectedNode) {
+            throw new UndefinedArgumentException("selectedNode is undefined!");
+        }
+
+        if (!newNode) {
+            throw new UndefinedArgumentException("newNode is undefined!");
+        }
+
+        var expression: Object;
+        var targetNode = this.optimizeTargetNode(selectedNode, newNode);
+
+        if (!targetNode) {
+            expression = this.mus.convert(new InternalData(newNode));
+        }
+        else {
+            let children = targetNode.parent.children;
+            let targetNodeIndex = children.indexOf(targetNode);
+            let splicedNode = children.splice(targetNodeIndex, 1);
+            children.splice(targetNodeIndex, 0, newNode);
+            newNode.parent = targetNode.parent;
+
+            expression = this.mus.convert(data);
+
+            // Reverse changes in the data
+            children.splice(targetNodeIndex, 1);
+            children.splice(targetNodeIndex, 0, selectedNode);
+        }
+
+        return expression;
     }
-    clone(expression: Object){
-        this.expressionCloneSource.next(expression);
+
+    // Optimize away containers
+    private optimizeTargetNode(targetNode: InternalNode, newNode: InternalNode): InternalNode {
+        if(!targetNode || !targetNode.parent) {
+            return null;
+        }
+
+        var optimizedTargetNode = targetNode;
+        if (newNode.group === InternalNodeGroup.Number
+            && optimizedTargetNode.parent.group === InternalNodeGroup.Container) {
+            while (optimizedTargetNode.parent && optimizedTargetNode.parent.group === InternalNodeGroup.Container) {
+                optimizedTargetNode = optimizedTargetNode.parent;
+
+                if (!optimizedTargetNode.parent) {
+                    return null;
+                }
+            }
+        }
+
+        return optimizedTargetNode;
     }
 }
+
+export default ExpressionService;

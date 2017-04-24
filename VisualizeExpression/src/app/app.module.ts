@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { SandboxComponent } from './sandbox/sandbox.component';
 import { ExpressionComponent } from './sandbox/expression.component';
+import { ExpressionOperationComponent } from './sandbox/expression-operation.component';
 import { VisualizationComponent } from './visualization/visualization.component';
 import { MirrorMountainComponent } from "./visualization/mirror-mountain/mirror-mountain.component";
 
@@ -17,7 +18,14 @@ import { MirrorMountainComponent } from "./visualization/mirror-mountain/mirror-
         component: SandboxComponent
       }
     ])],
-  declarations: [AppComponent, SandboxComponent, ExpressionComponent, VisualizationComponent, MirrorMountainComponent],
+  declarations: [
+    AppComponent, 
+    SandboxComponent, 
+    ExpressionComponent, 
+    ExpressionOperationComponent,
+    VisualizationComponent, 
+    MirrorMountainComponent
+    ],
   bootstrap: [AppComponent],
   entryComponents: [ExpressionComponent]
 })

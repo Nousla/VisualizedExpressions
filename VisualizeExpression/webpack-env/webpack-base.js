@@ -17,8 +17,8 @@ module.exports = function () {
 
         output: {
             filename: '[name].js',
-            publicPath: '',
-            path: Path.resolve(__dirname, '../dist')
+            publicPath: '/',
+            path: Path.resolve(__dirname, '../dist/')
         },
 
         module: {
@@ -39,6 +39,14 @@ module.exports = function () {
                 {
                     test: /\.html$/,
                     loader: 'html-loader',
+                },
+                {
+                    test: /\.(png|jpg|svg)$/,
+                    //include: Path.resolve(__dirname, './..src/assets/'),
+                    loader: 'file-loader',
+                    options: {
+                        name: './assets/images/[name].[ext]'
+                    }
                 }
             ]
         },

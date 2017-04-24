@@ -1,0 +1,43 @@
+<div class="expression_operation_box" [ngSwitch]="operationState">
+    <div *ngSwitchDefault class="expression_operation expression_operation_closed">
+        <div class="expression_operation_info_box">
+            <img src="/assets/images/icon-information-white-32x32.png" />
+            <p>{{infoText}}</p>
+        </div>
+    </div>
+    <div *ngSwitchCase="1" class="expression_operation expression_operation_waiting">
+        <div class="expression_operation_info_box">
+            <img src="/assets/images/icon-information-white-32x32.png" />
+            <p>{{infoText}}</p>
+        </div>
+    </div>
+    <div *ngSwitchCase="2" class="expression_operation expression_operation_added">
+        <div class="expression_operation_info_box">
+            <img src="/assets/images/icon-information-white-32x32.png" />
+            <p>{{infoText}}</p>
+        </div>
+        <div class="expression_operation_line-divider"></div>
+        <div class="expression_operation_comparison">
+            <div class="expression_operation_current">
+                <p>Current expression</p>
+                <visualization [data]="currentData" class="expression_operation_visualization"></visualization>
+            </div>
+            <div class="expression_operation_arrow">
+                <img src="/assets/images/icon-arrow-white-32x24.png" />
+            </div>
+            <div class="expression_operation_new">
+                <div class="expression_operation_edit">
+                    <label for="replace">Replacement expression</label>
+                    <textarea rows="1" (ngModelChange)="onInputChange($event)" [(ngModel)]="input" id="replace"></textarea> 
+                </div>
+                <div class="expression_operation_visualization">
+                    <visualization [data]="newData" class="expression_operation_visualization"></visualization>
+                </div>
+                <div class="expression_operation_actions">
+                    <button (click)="applyOperation()" [disabled]="isApplyBtnDisabled()">Apply Operation</button>
+                    <button (click)="cancelOperation()">Cancel Operation</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
