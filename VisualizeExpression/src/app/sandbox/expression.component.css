@@ -16,6 +16,22 @@
     margin-bottom: 5px;
 }
 
+.expression_actions_correct {
+    display: block;
+    padding: 5px;
+    background-color: green;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.expression_actions_wrong {
+    display: block;
+    padding: 5px;
+    background-color: red;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
 .expression_actions > button {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 8pt;

@@ -1,0 +1,8 @@
+<p-dialog header="Sucess!" [(visible)]="display" modal="modal" responsive="true" closeOnEscape="true" [draggable]="false" dismissableMask="false">
+    <p>Congratulations!! you found the correct answer!</p>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                <button type="button" pButton icon="fa-close" (click)="display=false" label="Close"></button>
+            </div>
+        </p-footer>
+</p-dialog>

@@ -1,8 +1,11 @@
-import { Component, ViewChild, ViewContainerRef, ComponentFactoryResolver, ComponentFactory, ComponentRef } from '@angular/core';
+import { Component, ComponentFactoryResolver, ComponentFactory, ViewChild, ViewContainerRef, ComponentRef } from '@angular/core';
 import { ExpressionComponent } from './expression.component';
 import { ExpressionEventService } from './expression-event.service';
 import { Subscription } from 'rxjs/Subscription';
 import { InternalData } from "../visualization/internal-data";
+import { StandardService } from "./standard.service"
+import { ImportExpressionService} from "./importexpression.service"
+import { ModalSuccessComponent } from "./modal-success.component";
 import MATH_INPUT_SERVICE from "../visualization/math-input-service-token";
 import MATH_OUTPUT_SERVICE from "../visualization/math-output-service-token";
 import MathTextInputService from "../visualization/math-text-input.service";
@@ -15,7 +18,8 @@ import MathTextOutputService from "../visualization/math-text-output.service";
   providers: [
     ExpressionEventService,
     { provide: MATH_INPUT_SERVICE, useClass: MathTextInputService },
-    { provide: MATH_OUTPUT_SERVICE, useClass: MathTextOutputService }
+    { provide: MATH_OUTPUT_SERVICE, useClass: MathTextOutputService },
+    StandardService, ImportExpressionService
   ]
 })
 
@@ -26,9 +30,13 @@ export class SandboxComponent {
   private expressionComponents: ComponentRef<ExpressionComponent>[];
   private subscription: Subscription;
 
-  constructor(private resolver: ComponentFactoryResolver, private ees: ExpressionEventService) {
+  @ViewChild(ModalSuccessComponent)
+  mod: ModalSuccessComponent;
+
+  constructor(private resolver: ComponentFactoryResolver, private ees: ExpressionEventService, private standardService: StandardService,
+              private imp: ImportExpressionService) {
     this.subscription = ees.expressionAddNew$.subscribe(this.onAddNewExpression.bind(this));
-    this.subscription = ees.expressionAdd$.subscribe(this.onAddExpression.bind(this));
+    this.subscription = ees.expressionAdd$.subscribe(this.onAddNewExpression.bind(this));
     this.subscription = ees.expresionRemove$.subscribe(this.onRemoveExpression.bind(this));
     this.subscription = ees.expressionClone$.subscribe(this.onCloneExpression.bind(this));
     this.subscription = ees.expressionMoveUp.subscribe(this.onMoveUpExpression.bind(this));
@@ -129,4 +137,9 @@ export class SandboxComponent {
   private getExpressionInstance(componentRef: ComponentRef<ExpressionComponent>): ExpressionComponent {
     return (<ExpressionComponent>componentRef.instance);
   }
+
+  onGuideSuccess(){
+    this.mod.showDialog();
+  }
+
 }

@@ -10,6 +10,7 @@ export class ExpressionEventService {
     private expressionCloneSource = new Subject<string>();
     private expressionMoveUpSource = new Subject<number>();
     private expressionMoveDownSource = new Subject<number>();
+    private expressionGuideSuccessSource = new Subject();
 
     expressionAddNew$ = this.expressionAddNewSource.asObservable();
     expressionAdd$ = this.expressionAddSource.asObservable();
@@ -17,6 +18,7 @@ export class ExpressionEventService {
     expressionClone$ = this.expressionCloneSource.asObservable();
     expressionMoveUp = this.expressionMoveUpSource.asObservable();
     expressionMoveDown = this.expressionMoveDownSource.asObservable();
+    expressionGuideSuccess$ = this.expressionGuideSuccessSource.asObservable();
 
     addNewExpression(): void {
         this.expressionAddNewSource.next();
@@ -40,5 +42,9 @@ export class ExpressionEventService {
 
     moveExpressionDown(index: number): void {
         this.expressionMoveDownSource.next(index);
+    }
+    
+    guideSuccess(){
+        this.expressionGuideSuccessSource.next();
     }
 }

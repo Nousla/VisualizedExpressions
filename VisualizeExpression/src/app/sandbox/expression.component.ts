@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, SimpleChanges, InjectionToken, Inject, Output, OnChanges, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, SimpleChanges, InjectionToken, Inject, Output, OnChanges, OnInit, OnDestroy, ViewChild, ElementRef, Renderer } from '@angular/core';
 import { ExpressionEventService } from './expression-event.service';
 import { Subscription } from 'rxjs/Subscription';
 import InternalData from "../visualization/internal-data";
@@ -7,13 +7,15 @@ import OperationState from './operation-state';
 import { InternalNode } from "../visualization/internal-node";
 import MATH_INPUT_SERVICE from "../visualization/math-input-service-token";
 import MathInputService from "../visualization/math-input-service";
-import ExpressionService from "./expression.service";
+import { ExpressionService } from "./expression.service";
+import { ProblemSolvingService } from "./problemsolving.service"
+import { ImportExpressionService } from "./importexpression.service";
 
 @Component({
     selector: 'expression',
     templateUrl: './expression.component.html',
     styleUrls: [`./expression.component.css`],
-    providers: [ExpressionEventHandler, ExpressionService]
+    providers: [ExpressionEventHandler, ExpressionService, ProblemSolvingService]
 })
 
 export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
@@ -26,19 +28,28 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
 
     private data: InternalData;
     private config: Object;
+    @ViewChild('banner')     
+    banner: ElementRef;
+    private testInputExpression = "4z+5=9";
+    private testInputCorrectSol = 1;
+    private testInputWrongSol = 2;
 
     private selectedNode: InternalNode;
     private operationState: OperationState;
 
     private timeout: number;
+    private timeoutCheck: number;
     private readonly TIMEOUT_LIMIT_MS: Number = 200;
+    private readonly TIMEOUT_LIMIT_MS_CHECK: Number = 1000;
 
     constructor(private ees: ExpressionEventService,
         @Inject(MATH_INPUT_SERVICE) private mis: MathInputService,
         private es: ExpressionService,
-        private eventHandler: ExpressionEventHandler) {
-        this.input = "";
-        this.operationState = OperationState.Closed;
+        private eventHandler: ExpressionEventHandler,
+        private pss: ProblemSolvingService, private renderer: Renderer,
+        private imp: ImportExpressionService) {
+            this.input = "";
+            this.operationState = OperationState.Closed;
     }
 
     ngOnInit(): void {
@@ -52,10 +63,11 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         var inputChanges = changes["input"];
-        if (inputChanges) {
+        if (inputChanges && inputChanges.currentValue !== "") {
             this.startInputTimeout();
             this.selectedNode = null;
         }
+        console.log("Hest");
     }
 
     onInputChange(event: Event): void {
@@ -65,13 +77,33 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
 
     startInputTimeout(): void {
         clearTimeout(this.timeout);
+        clearTimeout(this.timeoutCheck);
         this.timeout = setTimeout(this.onTimeOut.bind(this), this.TIMEOUT_LIMIT_MS);
+        this.timeoutCheck = setTimeout(this.onTimeOutCheck.bind(this), this.TIMEOUT_LIMIT_MS_CHECK);
     }
 
     onTimeOut(): void {
         this.data = this.mis.convert(this.input);
         this.updateOperationState();
     }
+
+    onTimeOutCheck(): void {
+        if(this.imp.importedSpecifier == "ps"){
+            var solution = this.pss.checkExpression(this.input, this.imp.importedCorrectSolution, this.imp.importedWrongSolution);
+            if(solution == true) {
+                this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','green');
+                var result = this.input.split('=');
+                var leftside = result[0];
+                var rightside = result[1];
+                if(leftside && rightside == this.imp.importedCorrectSolution.toString()){
+                    this.guideSuccess();
+                }
+            }
+            else {
+                this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','red');
+            }
+        }
+    } 
 
     addExpression(): void {
         this.ees.addNewExpression();
@@ -91,6 +123,10 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
 
     moveExpressionDown(): void {
         this.ees.moveExpressionDown(this.counter - 1);
+    }
+
+    guideSuccess(): void {
+        this.ees.guideSuccess();
     }
 
     onNodeSelected(node: InternalNode): void {

@@ -12,16 +12,29 @@ module.exports = WebpackMerge(WebpackBase(), {
         sourceMapFilename: '[name].map'
     },
 
+    module: {
+        rules: [
+            {
+                test: /\.ts$/,
+                loader: 'ts-loader!angular2-template-loader',
+                exclude: [/\.(spec|e2e)\.ts$/]
+            }
+        ]
+    },
     devServer: {
         port: 8080,
         host: 'localhost',
         inline: true,
         noInfo: false,
         historyApiFallback: true,
-        contentBase: [Path.resolve(__dirname, '../src')]
+        contentBase: [Path.resolve(__dirname, '../')]
     },
 
     plugins: [
+        new Webpack.optimize.CommonsChunkPlugin({
+            name: ['app', 'vendor', 'polyfills']
+        }),
+
         new HtmlWebpackPlugin({
             template: './src/index.ejs',
 			baseUrl: '/'
