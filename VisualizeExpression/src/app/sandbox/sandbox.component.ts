@@ -7,7 +7,6 @@ import MATH_INPUT_SERVICE from "../visualization/math-input-service-token";
 import MATH_OUTPUT_SERVICE from "../visualization/math-output-service-token";
 import MathTextInputService from "../visualization/math-text-input.service";
 import MathTextOutputService from "../visualization/math-text-output.service";
-import { StandardService } from "./standard.service";
 
 @Component({
   selector: 'sandbox',
@@ -15,7 +14,6 @@ import { StandardService } from "./standard.service";
   styleUrls: ['./sandbox.component.css'],
   providers: [
     ExpressionEventService,
-    StandardService,
     { provide: MATH_INPUT_SERVICE, useClass: MathTextInputService },
     { provide: MATH_OUTPUT_SERVICE, useClass: MathTextOutputService }
   ]
@@ -28,8 +26,7 @@ export class SandboxComponent {
   private expressionComponents: ComponentRef<ExpressionComponent>[];
   private subscription: Subscription;
 
-  constructor(private resolver: ComponentFactoryResolver, private ees: ExpressionEventService,
-    private standardService: StandardService) {
+  constructor(private resolver: ComponentFactoryResolver, private ees: ExpressionEventService) {
     this.subscription = ees.expressionAddNew$.subscribe(this.onAddNewExpression.bind(this));
     this.subscription = ees.expressionAdd$.subscribe(this.onAddExpression.bind(this));
     this.subscription = ees.expresionRemove$.subscribe(this.onRemoveExpression.bind(this));
