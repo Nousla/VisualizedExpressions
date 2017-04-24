@@ -4,12 +4,13 @@ import { ExpressionEventService } from './expression-event.service';
 import { Subscription } from 'rxjs/Subscription';
 import { InternalData } from "../visualization/internal-data";
 import { StandardService } from "./standard.service"
-import { ImportExpressionService } from "./importexpression.service"
+import { ImportExpressionService } from "./import-expression.service"
 import { ModalSuccessComponent } from "./modal-success.component";
 import MATH_INPUT_SERVICE from "../visualization/math-input-service-token";
 import MATH_OUTPUT_SERVICE from "../visualization/math-output-service-token";
 import MathTextInputService from "../visualization/math-text-input.service";
 import MathTextOutputService from "../visualization/math-text-output.service";
+import { GuideTreeService } from "./guide-tree.service";
 
 @Component({
   selector: 'sandbox',
@@ -19,7 +20,7 @@ import MathTextOutputService from "../visualization/math-text-output.service";
     ExpressionEventService,
     { provide: MATH_INPUT_SERVICE, useClass: MathTextInputService },
     { provide: MATH_OUTPUT_SERVICE, useClass: MathTextOutputService },
-    StandardService, ImportExpressionService
+    StandardService, ImportExpressionService, GuideTreeService
   ]
 })
 
