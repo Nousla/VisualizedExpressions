@@ -8,6 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { SandboxComponent } from './sandbox/sandbox.component';
 import { ExpressionComponent } from './sandbox/expression.component';
+import { ExpressionOperationComponent } from './sandbox/expression-operation.component';
 import { VisualizationComponent } from './visualization/visualization.component';
 import { MirrorMountainComponent } from "./visualization/mirror-mountain/mirror-mountain.component";
 import { ModalSuccessComponent } from './sandbox/modal-success.component';
@@ -20,7 +21,15 @@ import { ModalSuccessComponent } from './sandbox/modal-success.component';
         component: SandboxComponent
       }
     ]), DialogModule, ButtonModule, BrowserAnimationsModule],
-  declarations: [AppComponent, SandboxComponent, ExpressionComponent, VisualizationComponent, MirrorMountainComponent, ModalSuccessComponent],
+  declarations: [
+    AppComponent, 
+    SandboxComponent, 
+    ExpressionComponent, 
+    ExpressionOperationComponent,
+    VisualizationComponent, 
+    MirrorMountainComponent,
+    ModalSuccessComponent
+    ],
   bootstrap: [AppComponent],
   entryComponents: [ExpressionComponent]
 })

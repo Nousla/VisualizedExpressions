@@ -8,7 +8,7 @@ module.exports = WebpackMerge(WebpackBase(), {
     devtool: 'cheap-module-source-map',
 
     output: {
-        publicPath: 'http://localhost:8080',
+        publicPath: 'http://localhost:8080/',
         sourceMapFilename: '[name].map'
     },
 
@@ -22,12 +22,12 @@ module.exports = WebpackMerge(WebpackBase(), {
         ]
     },
     devServer: {
-        contentBase: [Path.resolve(__dirname, '../')],
         port: 8080,
         host: 'localhost',
         inline: true,
         noInfo: false,
-        historyApiFallback: true
+        historyApiFallback: true,
+        contentBase: [Path.resolve(__dirname, '../')]
     },
 
     plugins: [
