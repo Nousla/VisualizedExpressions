@@ -6,6 +6,8 @@ import { MathConverterService } from "../visualization/math-converter-service";
 import { MathTextConverterService } from "../visualization/math-text-converter.service";
 import { ProblemSolvingService } from "./problemsolving.service";
 import { ImportExpressionService } from "./importexpression.service";
+import { GuideProgressService } from "./guideprogress.service";
+import { GuideTree, GuideNode } from "./guide-tree";
 
 export let MATH_CONVERTER_SERVICE = new InjectionToken<MathConverterService>("MathConverterServiceToken");
 
@@ -13,7 +15,8 @@ export let MATH_CONVERTER_SERVICE = new InjectionToken<MathConverterService>("Ma
     selector: 'expression',
     templateUrl: './expression.component.html',
     styleUrls: [`./expression.component.css`],
-    providers: [{ provide: MATH_CONVERTER_SERVICE, useClass: MathTextConverterService, }, ProblemSolvingService]
+    providers: [{ provide: MATH_CONVERTER_SERVICE, useClass: MathTextConverterService, }, ProblemSolvingService,
+    GuideProgressService]
 })
 
 export class ExpressionComponent {
@@ -27,10 +30,18 @@ export class ExpressionComponent {
     private timeoutCheck: number;
     @ViewChild('banner')     
     banner: ElementRef;
+    tree: GuideTree;
   
 
     constructor(private es: ExpressionService, @Inject(MATH_CONVERTER_SERVICE) private mcs: MathConverterService, 
-                private pss: ProblemSolvingService, private renderer: Renderer, private imp: ImportExpressionService) {
+                private pss: ProblemSolvingService, private renderer: Renderer, private imp: ImportExpressionService,
+                private gps: GuideProgressService) {
+        this.tree = new GuideTree();
+        var node = this.tree.rootNode = new GuideNode();
+        node.expression = "4x+5=9";
+        this.tree.path = [node];
+        this.tree.activePath = -1;
+
       
         this.config = {
             width: 600,
@@ -55,8 +66,8 @@ export class ExpressionComponent {
     }
     onTimeOutCheck(): void {
         if(this.imp.importedSpecifier == "ps"){
-            var solution = this.pss.checkExpression(this.input, this.imp.importedCorrectSolution, this.imp.importedWrongSolution);
-            if(solution == true) {
+            var psSolution = this.pss.checkExpression(this.input, this.imp.importedCorrectSolution, this.imp.importedWrongSolution);
+            if(psSolution == true) {
                 this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','green');
                 var result = this.input.split('=');
                 var leftside = result[0];
@@ -64,6 +75,14 @@ export class ExpressionComponent {
                 if(leftside && rightside == this.imp.importedCorrectSolution.toString()){
                     this.guideSuccess();
                 }
+            }
+            else {
+                this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','red');
+            }
+        }else if(this.imp.importedSpecifier == "gd"){
+            var gdSolution = this.gps.checkGuide(this.input, this.tree);
+            if(gdSolution == true) {
+                this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','green');
             }
             else {
                 this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','red');
