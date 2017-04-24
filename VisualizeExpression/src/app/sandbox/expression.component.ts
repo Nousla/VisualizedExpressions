@@ -37,8 +37,8 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
         @Inject(MATH_INPUT_SERVICE) private mis: MathInputService,
         private es: ExpressionService,
         private eventHandler: ExpressionEventHandler) {
-            this.input = "";
-            this.operationState = OperationState.Closed;
+        this.input = "";
+        this.operationState = OperationState.Closed;
     }
 
     ngOnInit(): void {
@@ -54,6 +54,7 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
         var inputChanges = changes["input"];
         if (inputChanges) {
             this.startInputTimeout();
+            this.selectedNode = null;
         }
     }
 
@@ -73,15 +74,23 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     addExpression(): void {
-        this.ees.addNew();
+        this.ees.addNewExpression();
     }
 
     removeExpression(): void {
-        this.ees.remove(this.counter);
+        this.ees.removeExpression(this.counter - 1);
     }
 
     cloneExpression(): void {
-        this.ees.clone({ counter: this.counter, input: this.input });
+        this.ees.cloneExpression(this.input);
+    }
+
+    moveExpressionUp(): void {
+        this.ees.moveExpressionUp(this.counter - 1);
+    }
+
+    moveExpressionDown(): void {
+        this.ees.moveExpressionDown(this.counter - 1);
     }
 
     onNodeSelected(node: InternalNode): void {
@@ -91,7 +100,7 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
 
     onOperationApplied(newNode: InternalNode): void {
         var expression = this.es.applyChange(this.data, this.selectedNode, newNode);
-        this.ees.add(<string>expression);
+        this.ees.addExpression(<string>expression);
         this.onOperationCanceled();
     }
 

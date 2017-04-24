@@ -5,28 +5,58 @@ import { Subject } from 'rxjs/Subject';
 export class ExpressionEventService {
 
     private expressionAddNewSource = new Subject();
-    private expressionAddSource = new Subject<string>();    
+    private expressionAddSource = new Subject<string>();
     private expressionRemoveSource = new Subject<number>();
-    private expressionCloneSource = new Subject<Object>();
+    private expressionCloneSource = new Subject<string>();
+    private expressionMoveUpSource = new Subject<number>();
+    private expressionMoveDownSource = new Subject<number>();
 
     expressionAddNew$ = this.expressionAddNewSource.asObservable();
     expressionAdd$ = this.expressionAddSource.asObservable();
     expresionRemove$ = this.expressionRemoveSource.asObservable();
     expressionClone$ = this.expressionCloneSource.asObservable();
+    expressionMoveUp = this.expressionMoveUpSource.asObservable();
+    expressionMoveDown = this.expressionMoveDownSource.asObservable();
 
-    addNew(): void {
+    addNewExpression(): void {
         this.expressionAddNewSource.next();
     }
 
-    add(input: string) {
+    addExpression(input: string) {
         this.expressionAddSource.next(input);
     }
 
-    remove(counter: number): void {
-        this.expressionRemoveSource.next(counter);
+    removeExpression(index: number): void {
+        this.expressionRemoveSource.next(index);
     }
 
-    clone(expression: Object): void {
-        this.expressionCloneSource.next(expression);
+    cloneExpression(input: string): void {
+        this.expressionCloneSource.next(input);
+    }
+
+    moveExpressionUp(index: number): void {
+        this.expressionMoveUpSource.next(index);
+    }
+
+    moveExpressionDown(index: number): void {
+        this.expressionMoveDownSource.next(index);
+    }
+}
+
+export class ExpressionChangeState {
+    private _index: number;
+    private _value: string;
+
+    constructor(index: number, value: string) {
+        this._index = index;
+        this._value = value;
+    }
+
+    get index(): number {
+        return this._index;
+    }
+
+    get value(): string {
+        return this._value;
     }
 }
