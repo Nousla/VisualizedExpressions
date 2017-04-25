@@ -318,6 +318,8 @@ export class MirrorMountainService implements VisualizationService {
                 break;
             case InternalNodeGroup.Container: this.processContainerNode(node, element);
                 break;
+            case InternalNodeGroup.Symbol: this.processSymbolNode(node, element);
+                break;
             default: this.processStandardNode(node, element);
                 break;
         }
@@ -333,6 +335,10 @@ export class MirrorMountainService implements VisualizationService {
 
     private processContainerNode(node: D3Node, element: d3.EnterElement): void {
         return;
+    }
+
+    private processSymbolNode(node: D3Node, element: d3.EnterElement): void {
+        this.processStandardNode(node, element);
     }
 
     private processStandardNode(node: D3Node, element: d3.EnterElement): void {

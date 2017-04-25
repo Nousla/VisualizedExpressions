@@ -15,6 +15,7 @@ export const enum Type {
     Multiplication,
     Parentheses,
     Subtraction,
+    Variable,
     Unknown
 }
 
@@ -22,5 +23,6 @@ export const enum Group {
     Number,
     Operator,
     Container,
+    Symbol,
     Unknown
 }

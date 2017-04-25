@@ -78,6 +78,11 @@ export class MathTextInputService implements MathInputService {
                 internalNode.type = InternalNodeType.Parentheses;
                 internalNode.group = InternalNodeGroup.Container;
                 break;
+            case "SymbolNode":
+                internalNode.text = node.name;
+                internalNode.type = InternalNodeType.Variable;
+                internalNode.group = InternalNodeGroup.Symbol;
+                break;
             default:
                 internalNode.text = "?";
                 internalNode.type = InternalNodeType.Unknown;
