@@ -12,13 +12,13 @@ export class GuideProgressService {
         var splitExpressions = inputExpression.split("=");
         var leftsideToCheck = splitExpressions[0];
         var rightsideToCheck = splitExpressions[1];
-        if (this.traverseNodes(tree.activeNode, leftsideToCheck, rightsideToCheck) == true) {
+        if (this.traverseNodes(tree.paths[tree.activePath], leftsideToCheck, rightsideToCheck) == true) {
             return true;
         } else {
-            if (!tree.path || tree.path.length === 0) { return false }
-            for (var i = 0; i < tree.path.length; i++) {
+            if (!tree.paths || tree.paths.length === 0) { return false }
+            for (var i = 0; i < tree.paths.length; i++) {
                 if (i != tree.activePath) {
-                    var check = this.traverseNodes(tree.path[i], leftsideToCheck, rightsideToCheck);
+                    var check = this.traverseNodes(tree.paths[i], leftsideToCheck, rightsideToCheck);
                     if(check){ return true }
                 }
             }
