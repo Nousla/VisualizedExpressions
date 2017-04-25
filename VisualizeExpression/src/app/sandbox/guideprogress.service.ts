@@ -11,22 +11,20 @@ export class GuideProgressService {
 
         var inputExpression = ex.replace(" ", "");
         var splitExpressions = inputExpression.split("=");
-        var leftsideToCheck = splitExpressions[0];
-        var rightsideToCheck = splitExpressions[1];
 
         if (!tree.paths || tree.paths.length === 0) { return false }
 
-        var rootCheck = this.checkNode(tree.rootNode, leftsideToCheck, rightsideToCheck);
-        if(rootCheck) {
+        var rootCheck = this.checkNode(tree.rootNode, splitExpressions);
+        if (rootCheck) {
             return true;
         }
 
-        if (tree.activePath && tree.activePath >= 0 && this.traverseNodes(tree.paths[tree.activePath], leftsideToCheck, rightsideToCheck) == true) {
+        if (tree.activePath && tree.activePath >= 0 && this.traverseNodes(tree.paths[tree.activePath], splitExpressions, tree.activePath, tree)) {
             return true;
         } else {
             for (var i = 0; i < tree.paths.length; i++) {
                 if (!tree.activePath || i != tree.activePath) {
-                    var check = this.traverseNodes(tree.paths[i], leftsideToCheck, rightsideToCheck);
+                    var check = this.traverseNodes(tree.paths[i], splitExpressions, i, tree);
                     if (check) { return true }
                 }
             }
@@ -34,13 +32,14 @@ export class GuideProgressService {
         return false;
     }
 
-    private traverseNodes(node: GuideNode, leftsideToCheck: string, rightsideToCheck: string): boolean {
+    private traverseNodes(node: GuideNode, splitExpressions: string[], currentPath: number, tree: GuideTree): boolean {
         if (!node) {
             return false;
         }
 
-        var check = this.checkNode(node, leftsideToCheck, rightsideToCheck);
+        var check = this.checkNode(node, splitExpressions);
         if (check) {
+            tree.paths[currentPath] = node;
             return true;
         }
 
@@ -49,22 +48,22 @@ export class GuideProgressService {
         }
 
         for (let i = 0; i < node.children.length; i++) {
-            let check = this.traverseNodes(node.children[i], leftsideToCheck, rightsideToCheck);
+            let check = this.traverseNodes(node.children[i], splitExpressions, currentPath, tree);
             if (check) {
                 return true
             }
         }
     }
 
-    private checkNode(node: GuideNode, leftsideToCheck: string, rightsideToCheck: string): boolean {
+    private checkNode(node: GuideNode, splitExpressions: string[]): boolean {
         var nodeExpression = node.expression.replace(" ", "");
         var splitNodeExpressions = nodeExpression.split("=");
-        var leftsideNode = splitNodeExpressions[0];
-        var rightsideNode = splitNodeExpressions[1];
 
-        if (leftsideToCheck === leftsideNode && rightsideToCheck === rightsideNode) {
+        if (splitExpressions[0] === splitNodeExpressions[0] && !splitExpressions[1] && !splitNodeExpressions[1]) {
             return true;
-        } else if (leftsideToCheck === rightsideNode && rightsideToCheck === leftsideNode) {
+        } else if (splitExpressions[0] === splitNodeExpressions[0] && splitExpressions[1] === splitNodeExpressions[1]) {
+            return true;
+        } else if (splitExpressions[0] === splitNodeExpressions[1] && splitExpressions[1] === splitNodeExpressions[0]) {
             return true;
         }
 
