@@ -14,7 +14,7 @@ export class ProblemSolvingService {
             var node = math.parse(ex.replace('=', '=='));
             node.traverse(function (node, path, parent) {
                 if (node.isSymbolNode) {
-                    if (symbol) {
+                    if (symbol && symbol !== node.name) {
                         symbol = undefined;
                         return;
                     }
