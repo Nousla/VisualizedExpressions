@@ -2,6 +2,7 @@ export class InternalNode {
     public name: string;
     public type: Type;
     public group: Group;
+    public parent: InternalNode;
     public children: InternalNode[];
 }
 
@@ -10,10 +11,14 @@ export const enum Type {
     Decimal,
     Equality,
     Integer,
-    Subtraction
+    Parentheses,
+    Subtraction,
+    Unknown
 }
 
 export const enum Group {
     Number,
-    Operator
+    Operator,
+    Container,
+    Unknown
 }
