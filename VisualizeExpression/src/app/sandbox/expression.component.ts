@@ -117,7 +117,7 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
                 this.renderer.setElementStyle(this.banner.nativeElement, 'backgroundColor', 'green');
             }
             else {
-                this.renderer.setElementStyle(this.banner.nativeElement, 'backgroundColor', 'red');
+                this.renderer.setElementStyle(this.banner.nativeElement, 'backgroundColor', 'lightblue');
             }
         }
     }
