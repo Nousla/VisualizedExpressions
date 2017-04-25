@@ -46,7 +46,11 @@ export class SandboxComponent {
   }
 
   ngOnInit(): void {
-    this.addEmptyExpression();
+    if(this.imp.importedExpression){
+      this.addExpression(this.imp.importedExpression);
+    }else{
+      this.addEmptyExpression();
+    }
   }
 
   onAddNewExpression(): void {

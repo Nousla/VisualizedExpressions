@@ -1,11 +1,13 @@
 import { Injectable } from "@angular/core";
 import { GuideTree, GuideNode } from "./guide-tree";
+import { UndefinedArgumentException } from "../exceptions/undefined-argument-exception";
 
 
 @Injectable()
 export class GuideProgressService {
 
     checkGuide(ex: string, tree: GuideTree): boolean {
+        if(!tree){ throw new UndefinedArgumentException("tree is undefined") }
         var inputExpression = ex.replace(" ", "");
         var splitExpressions = inputExpression.split("=");
         var leftsideToCheck = splitExpressions[0];

@@ -103,7 +103,11 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
                 this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','red');
             }
         }else if(this.imp.importedSpecifier == "gd"){
-            var gdSolution = this.gps.checkGuide(this.input, this.tree);
+            var gdSolution = false;
+            try{ gdSolution = this.gps.checkGuide(this.input, this.tree); }
+            catch(ex){
+                //Do nothing
+            }
             if(gdSolution == true) {
                 this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','green');
             }
