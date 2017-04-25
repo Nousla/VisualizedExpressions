@@ -26,10 +26,7 @@ module.exports = function () {
                 {
                     test: /\.css$/,
                     exclude: Path.resolve(__dirname, '../src/app/'),
-                    loader: ExtractTextWebpackPlugin.extract({
-                        fallback: "style-loader",
-                        use: "css-loader"
-                    })
+                    loader: ['to-string-loader', 'css-loader']
                 },
                 {
                     test: /\.css$/,
@@ -41,12 +38,16 @@ module.exports = function () {
                     loader: 'html-loader',
                 },
                 {
-                    test: /\.(png|jpg|svg)$/,
+                    test: /\.(png|jpg|svg|gif)$/,
                     //include: Path.resolve(__dirname, './..src/assets/'),
                     loader: 'file-loader',
                     options: {
                         name: './assets/images/[name].[ext]'
                     }
+                },
+                {
+                    test: /\.(eot|woff2?|svg|ttf)$/,
+                    use: 'file-loader'
                 }
             ]
         },
