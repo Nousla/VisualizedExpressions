@@ -100,7 +100,7 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
                 var result = this.input.split('=');
                 var leftside = result[0];
                 var rightside = result[1];
-                if (leftside && rightside == this.imp.importedCorrectSolution.toString()) {
+                if (leftside == this.imp.importedCorrectSolution.toString()  || rightside == this.imp.importedCorrectSolution.toString()) {
                     this.guideSuccess();
                 }
             }
