@@ -1,18 +1,3 @@
-/*:host /deep/ .chart div {
-    font: 10px sans-serif;
-    background-color: steelblue;
-    text-align: right;
-    padding: 3px;
-    margin: 1px;
-    color: white;
-}
-
-:host >>> .chart text {
-  fill: white;
-  font: 10px sans-serif;
-  text-anchor: end;
-}*/
-
 .mirror-mountain-box {
   overflow: auto;
 }
@@ -20,15 +5,13 @@
 .mirror-mountain-rect {
   fill: lightskyblue;
   stroke: black;
-  stroke-width: 3;
+  stroke-width: 2;
   user-select: none;
   cursor: pointer;
 }
 
 .mirror-mountain-rect-equality {
   fill: lawngreen;
-  stroke: black;
-  stroke-width: 3;
 }
 
 .mirror-mountain-text {
@@ -37,22 +20,6 @@
   fill: black;
   user-select: none;
   cursor: pointer;
-}
-
-.mirror-mountain-text-number {
-  dominant-baseline: central;
-}
-
-.mirror-mountain-text-operator {
-  dominant-baseline: middle;
-}
-
-.mirror-mountain-text-operator-multiplication {
-  dominant-baseline: mathematical;
-}
-
-.mirror-mountain-text-variable {
-  dominant-baseline: middle;
 }
 
 .mirror-mountain-line {

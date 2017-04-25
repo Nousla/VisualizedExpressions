@@ -57,6 +57,9 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
     ngOnInit(): void {
         this.subscription = this.eh.visualizationSelectNode$.subscribe(this.onNodeSelected.bind(this));
         this.updateOperationState();
+        if (this.input) {
+            this.startInputTimeout();
+        }
     }
 
     ngOnDestroy(): void {

@@ -62,24 +62,29 @@ export class MathTextInputService implements MathInputService {
 
         switch (node.type) {
             case "ConstantNode":
-                internalNode.name = node.value;
+                internalNode.text = node.value;
                 internalNode.type = Number.isInteger(+node.value)
                     ? InternalNodeType.Integer
                     : InternalNodeType.Decimal;
                 internalNode.group = InternalNodeGroup.Number;
                 break;
             case "OperatorNode":
-                internalNode.name = (node.op = this.postprocessOperator(node.op));
+                internalNode.text = (node.op = this.postprocessOperator(node.op));
                 internalNode.type = this.getOperatorType(node);
                 internalNode.group = InternalNodeGroup.Operator;
                 break;
             case "ParenthesisNode":
-                internalNode.name = "()";
+                internalNode.text = "()";
                 internalNode.type = InternalNodeType.Parentheses;
                 internalNode.group = InternalNodeGroup.Container;
                 break;
+            case "SymbolNode":
+                internalNode.text = node.name;
+                internalNode.type = InternalNodeType.Variable;
+                internalNode.group = InternalNodeGroup.Symbol;
+                break;
             default:
-                internalNode.name = "?";
+                internalNode.text = "?";
                 internalNode.type = InternalNodeType.Unknown;
                 internalNode.group = InternalNodeGroup.Unknown;
                 break;
@@ -93,9 +98,10 @@ export class MathTextInputService implements MathInputService {
             case "+": return InternalNodeType.Addition;
             case "-": return InternalNodeType.Subtraction;
             case "=": return InternalNodeType.Equality;
+            case "*": return InternalNodeType.Multiplication;
+            case "/": return InternalNodeType.Division;
+            default: return InternalNodeType.Unknown;
         }
-
-        return undefined;
     }
 }
 

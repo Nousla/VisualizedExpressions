@@ -24,6 +24,9 @@ export class MathTextOutputService implements MathOutputService {
             case InternalNodeGroup.Operator:
                 this.processOperatorGroupNode(node, mathBuilder);
                 break;
+            case InternalNodeGroup.Symbol:
+                this.processSymbolGroupNode(node, mathBuilder);
+                break;
             default:
                 this.processUnknownGroupNode(node, mathBuilder);
                 break;
@@ -47,7 +50,7 @@ export class MathTextOutputService implements MathOutputService {
     }
 
     processNumberGroupNode(node: InternalNode, mathBuilder: string[]): void {
-        mathBuilder.push(node.name);
+        mathBuilder.push(node.text);
     }
 
     processOperatorGroupNode(node: InternalNode, mathBuilder: string[]): void {
@@ -56,12 +59,16 @@ export class MathTextOutputService implements MathOutputService {
         }
 
         this.processNode(node.children[0], mathBuilder);
-        mathBuilder.push(node.name);
+        mathBuilder.push(node.text);
         this.processNode(node.children[1], mathBuilder);
     }
 
+    processSymbolGroupNode(node: InternalNode, mathBuilder: string[]) {
+        mathBuilder.push(node.text);
+    }
+
     processUnknownGroupNode(node: InternalNode, mathBuilder: string[]): void {
-        mathBuilder.push(node.name);
+        mathBuilder.push(node.text);
     }
 }
 

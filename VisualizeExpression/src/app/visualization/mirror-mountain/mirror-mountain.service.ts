@@ -14,9 +14,22 @@ export class MirrorMountainService implements VisualizationService {
     private nodeHeight = 40;
 
     private nodeHorizontalSpacing = 10;
-    private nodeVerticalSpacing = 10;
+    private nodeVerticalSpacing = 20;
+    private textHorizontalMargin = 5;
 
     private eventHandler: VisualizationEventHandler;
+
+    constructor() {
+        var svg = d3.select("body")
+            .append("svg")
+            .attr("id", "svg-hidden")
+            .attr("visibility", "hidden");
+
+        svg.append("text");
+
+        svg.append("rect")
+            .attr("class", "mirror-mountain-rect");
+    }
 
     configure(config: Object, eventHandler: VisualizationEventHandler): void {
         if (config) {
@@ -53,53 +66,27 @@ export class MirrorMountainService implements VisualizationService {
             return;
         }
 
-        //var processedRootNode = this.preprocessRootNode(internalData.clone().rootNode);
-
         var rootNode = d3.hierarchy(internalData.rootNode);
         rootNode = this.preprocessRootNode(rootNode);
-        d3.cluster().nodeSize([this.nodeWidth + this.nodeHorizontalSpacing, this.nodeHeight + this.nodeVerticalSpacing])(rootNode);
-
-        this.processHierarchy();
-
-        var nodes = rootNode.descendants();
-        var links = rootNode.links();
-
-        var offsetX: number;
-        var offsetY: number;
-        if (rootNode.children && rootNode.children.length > 0) {
-            let topLeftLeafNode = this.findEdgeLeaf(rootNode.children[0], true);
-            offsetX = topLeftLeafNode["x"];
-            offsetY = topLeftLeafNode["y"];
-        }
-
-        nodes.forEach((node: D3Node) => {
-            if (node.data.type === InternalNodeType.Equality) {
-                var leftEdgeLeaf = this.findEdgeLeaf(rootNode.children[0], false);
-                var rightEdgeLeaf = this.findEdgeLeaf(rootNode.children[1], true);
-                if (leftEdgeLeaf && rightEdgeLeaf) {
-                    node["x"] = (leftEdgeLeaf["x"] + rightEdgeLeaf["x"]) / 2;
-                    node["y"] -= leftEdgeLeaf["y"];
-                }
-            }
-            else {
-                node["y"] = -node["y"];
-            }
-
-            if (offsetX && offsetX < 0) {
-                node["x"] -= offsetX;
-            }
-
-            if (offsetY && offsetY > 0) {
-                node["y"] += offsetY;
-            }
-        });
+        var layoutOutput = this.layoutHierarchy(rootNode);
+        this.postprocessRootNode(rootNode, layoutOutput);
 
         var svg = d3.select(elementRef.nativeElement)
             .append("svg");
 
-        var rootGroup = svg.append("g");
+        var rectNode = <SVGRectElement>d3.select("#svg-hidden rect").node();
+        var computedStyle = window.getComputedStyle(rectNode);
+        var rectStrokeWidth = parseInt(computedStyle.strokeWidth);
+
+        if (!rectStrokeWidth) {
+            rectStrokeWidth = 0;
+        }
+
+        var rootGroup = svg.append("g")
+            .attr("transform", "translate(" + rectStrokeWidth + "," + rectStrokeWidth + ")");;
         var instance = this;
 
+        var links = rootNode.links();
         rootGroup.selectAll("line")
             .data(links)
             .enter()
@@ -107,6 +94,7 @@ export class MirrorMountainService implements VisualizationService {
                 instance.processLink(link, this);
             });
 
+        var nodes = rootNode.descendants();
         rootGroup.selectAll("g")
             .data(nodes)
             .enter()
@@ -117,9 +105,8 @@ export class MirrorMountainService implements VisualizationService {
         var gNode = <SVGGElement>rootGroup.node();
         if (gNode) {
             var boundingBox = gNode.getBBox();
-            svg.attr("width", boundingBox.width)
-                .attr("height", boundingBox.height)
-                .attr("viewBox", "0 0 " + boundingBox.width + " " + boundingBox.height);
+            svg.attr("width", boundingBox.width + rectStrokeWidth * 2)
+                .attr("height", boundingBox.height + rectStrokeWidth * 2);
         }
     }
 
@@ -147,6 +134,9 @@ export class MirrorMountainService implements VisualizationService {
     }
 
     private preprocessNode(node: D3Node, nodeStack: D3Node[]): void {
+        var width = this.getTextWidth(node);
+        node["width"] = width > this.nodeWidth ? width : this.nodeWidth;
+
         if (!node.children) {
             return;
         }
@@ -169,10 +159,155 @@ export class MirrorMountainService implements VisualizationService {
         }
     }
 
-    private processHierarchy() {
-        // Determine new x and width based on text length. Push all sibling nodes 
-        // or fill the total width with all sibling nodes.
-        // Custom layout in layers.
+    private layoutHierarchy(rootNode: D3Node): LayoutOutput {
+        rootNode["x"] = -(rootNode["width"] / 2);
+        rootNode["y"] = 0;
+
+        var treeHeight = this.calculateHeight(rootNode);
+
+        if (rootNode.children) {
+            for (let i = 0; i < rootNode.children.length; i++) {
+                let childHeight = this.calculateHeight(rootNode.children[i]);
+                let heightDifference = treeHeight - childHeight;
+                if (heightDifference !== 1) {
+                    rootNode.children[i]["offsetHeight"] = heightDifference - 1;
+                }
+            }
+        }
+
+        var layoutState = new LayoutState(treeHeight);
+        layoutState.currentLevel = 1;
+
+        var layoutOutput = new LayoutOutput();
+        layoutOutput.maxWidth = rootNode["width"];
+
+        this.layoutAdjacentNodes(rootNode.children, layoutState, layoutOutput);
+
+        return layoutOutput;
+    }
+
+    private layoutAdjacentNodes(nodes: D3Node[], layoutState: LayoutState, layoutOutput: LayoutOutput): void {
+        if (!nodes || nodes.length === 0) {
+            return;
+        }
+
+        var totalWidth = this.calculateTotalWidth(nodes) + (nodes.length - 1) * this.nodeHorizontalSpacing;
+        layoutOutput.maxWidth = Math.max(layoutOutput.maxWidth, totalWidth);
+
+        var accumulatedWidth = 0;
+        var accumulatedChildren: D3Node[] = [];
+
+        for (let i = 0; i < nodes.length; i++) {
+            nodes[i]["x"] = (-(totalWidth / 2) + accumulatedWidth) + i * this.nodeHorizontalSpacing;
+            nodes[i]["y"] = layoutState.currentLevel * (this.nodeHeight + this.nodeVerticalSpacing);
+
+            accumulatedWidth += nodes[i]["width"];
+
+            if (nodes[i].children) {
+                let offsetHeight: number = nodes[i]["offsetHeight"];
+                if (offsetHeight) {
+                    accumulatedChildren.push(nodes[i]);
+
+                    offsetHeight -= 1;
+                    if (offsetHeight <= 0) {
+                        delete nodes[i]["offsetHeight"];
+                    }
+                    else {
+                        nodes[i]["offsetHeight"] = offsetHeight;
+                    }
+                }
+                else {
+                    accumulatedChildren.push.apply(accumulatedChildren, nodes[i].children);
+                }
+            }
+            else {
+                // Re-include nodes that are leaf nodes, but are not at the lowest level. 
+                // This will force all leaf nodes to the same level.
+                if (layoutState.currentLevel !== layoutState.maxLevel) {
+                    accumulatedChildren.push(nodes[i]);
+                }
+            }
+        }
+
+        layoutState.currentLevel += 1;
+
+        this.layoutAdjacentNodes(accumulatedChildren, layoutState, layoutOutput);
+    }
+
+    private calculateHeight(node: D3Node): number {
+        if (!node.children) {
+            return 0;
+        }
+
+        var maxHeight = 0;
+        for (var i = 0; i < node.children.length; i++) {
+            maxHeight = Math.max(maxHeight, this.calculateHeight(node.children[i]));
+        }
+
+        return maxHeight + 1;
+    }
+
+    private calculateTotalWidth(nodes: D3Node[]): number {
+        var totalWidth = 0;
+        for (var i = 0; i < nodes.length; i++) {
+            totalWidth += nodes[i]["width"];
+        }
+
+        return totalWidth;
+    }
+
+    private postprocessRootNode(rootNode: D3Node, layoutOutput: LayoutOutput): void {
+        var offsetX: number;
+        var offsetY: number;
+        if (rootNode.children && rootNode.children.length > 0) {
+            let topLeftLeafNode = this.findEdgeLeaf(rootNode.children[0], true);
+            offsetX = topLeftLeafNode["x"];
+            offsetY = topLeftLeafNode["y"];
+        }
+        else {
+            offsetX = -rootNode["width"] / 2;
+            offsetY = 0;
+        }
+
+        rootNode.descendants().forEach((node: D3Node) => {
+            if (node.data.type === InternalNodeType.Equality) {
+                var leftEdgeLeaf = this.findEdgeLeaf(node.children[0], false);
+                if (leftEdgeLeaf) {
+                    node["x"] = leftEdgeLeaf["x"] + leftEdgeLeaf["width"] + this.nodeHorizontalSpacing;
+                    node["y"] -= leftEdgeLeaf["y"];
+                }
+
+                node.children[1].each((rightTreeNode: D3Node) => {
+                    rightTreeNode["x"] += node["width"] + this.nodeHorizontalSpacing;
+                });
+            }
+            else {
+                node["y"] = -node["y"];
+            }
+
+            if (node.data.group === InternalNodeGroup.Operator 
+                && node.data.type !== InternalNodeType.Equality) {
+                var leaves = node.leaves();
+                var treeWidth = this.calculateNodesWidth(leaves);
+                node["x"] = leaves[0]["x"] + (treeWidth / 2) - (node["width"]/2);
+            }
+
+            node["x"] += layoutOutput.maxWidth / 2;
+
+            if (offsetY && offsetY > 0) {
+                node["y"] += offsetY;
+            }
+        });
+    }
+
+    private calculateNodesWidth(nodes: D3Node[]): number {
+        if (!nodes) {
+            return 0;
+        }
+
+        var leftNode = nodes[0];
+        var rightNode = nodes[nodes.length - 1];
+        return (rightNode["x"] + rightNode["width"]) - leftNode["x"];
     }
 
     private processNode(node: D3Node, element: d3.EnterElement): void {
@@ -182,6 +317,9 @@ export class MirrorMountainService implements VisualizationService {
             case InternalNodeGroup.Operator: this.processOperatorNode(node, element);
                 break;
             case InternalNodeGroup.Container: this.processContainerNode(node, element);
+                break;
+            case InternalNodeGroup.Symbol: this.processSymbolNode(node, element);
+                break;
             default: this.processStandardNode(node, element);
                 break;
         }
@@ -196,6 +334,10 @@ export class MirrorMountainService implements VisualizationService {
     }
 
     private processContainerNode(node: D3Node, element: d3.EnterElement): void {
+        return;
+    }
+
+    private processSymbolNode(node: D3Node, element: d3.EnterElement): void {
         this.processStandardNode(node, element);
     }
 
@@ -206,22 +348,21 @@ export class MirrorMountainService implements VisualizationService {
         newNodeSelection.append("rect")
             .attr("x", "0")
             .attr("y", "0")
-            .attr("width", this.nodeWidth)
+            .attr("width", (node: D3Node) => { return node["width"] })
             .attr("height", this.nodeHeight)
             .attr("class", this.getRectClassName)
             .on("click", this.onClick.bind(this));
 
         newNodeSelection.append("svg")
-            .attr("width", this.nodeWidth)
+            .attr("width", (node: D3Node) => { return node["width"] })
             .attr("height", this.nodeHeight)
-            .attr("viewBox", "0 0 60 60")
-            .attr("preserveAspectRatio", "xMidYMid meet")
             .append("text")
             .attr("font-size", this.getFontSize())
             .attr("x", "50%")
             .attr("y", "50%")
-            .text((node: D3Node) => { return node.data.name })
             .attr("class", this.getTextClassName)
+            .attr("dy", this.getTextDY)
+            .text((node: D3Node) => { return node.data.text })
             .on("click", this.onClick.bind(this));
     }
 
@@ -230,13 +371,28 @@ export class MirrorMountainService implements VisualizationService {
             return;
         }
 
-        var source = link.source;
+        var path: string[] = [];
 
-        d3.select(element).append("line")
-            .attr("x1", () => { return source["x"] + (this.nodeWidth / 2) })
-            .attr("y1", () => { return source["y"] + (this.nodeHeight / 2) })
-            .attr("x2", () => { return link.target["x"] + (this.nodeWidth / 2) })
-            .attr("y2", () => { return link.target["y"] + (this.nodeHeight / 2) })
+        // Move to start position (parent node)
+        path.push("M");
+        path.push(link.source["x"] + (link.source["width"] / 2));
+        path.push(link.source["y"]);
+
+        // First line (vertical)
+        path.push("V");
+        path.push((link.source["y"] - (this.nodeVerticalSpacing / 2)).toString());
+
+        // Second line (horizontal)
+        path.push("H");
+        path.push(link.target["x"] + (link.target["width"] / 2));
+
+        // Third line (vertical)
+        path.push("V");
+        path.push(link.target["y"] + this.nodeHeight);
+
+        d3.select(element).append("path")
+            .attr("d", () => { return path.join(" "); })
+            .attr("fill", "transparent")
             .attr("class", "mirror-mountain-line")
     }
 
@@ -248,23 +404,38 @@ export class MirrorMountainService implements VisualizationService {
 
     private getRectClassName(node: D3Node): string {
         if (node.data.type === InternalNodeType.Equality) {
-            return "mirror-mountain-rect-equality";
+            return "mirror-mountain-rect mirror-mountain-rect-equality";
         }
         else {
             return "mirror-mountain-rect";
         }
     }
 
-    private getTextClassName(node: D3Node): string {
-        switch (node.data.group) {
-            case InternalNodeGroup.Number: return "mirror-mountain-text mirror-mountain-text-number";
-            case InternalNodeGroup.Operator: /*return (node.data["type"] === "multiplication") ? 
-                "mirror-mountain-text mirror-mountain-text-operator-multiplication" :*/
-                return "mirror-mountain-text mirror-mountain-text-operator";
-            //case "extended": return "mirror-mountain-text mirror-mountain-text-variable";
-            default: ""
-                break;
+    private getTextDY(node: D3Node): string {
+        if (node.data.type === InternalNodeType.Multiplication) {
+            return "0.5em";
         }
+        else if (node.data.type === InternalNodeType.Division
+            || node.data.type === InternalNodeType.Subtraction) {
+            return "0.25em";
+        }
+        else {
+            return "0.3em";
+        }
+    }
+
+    private getTextClassName(node: D3Node): string {
+        return "mirror-mountain-text";
+    }
+
+    private getTextWidth(node: D3Node): number {
+        var textNode = <SVGTextElement>d3.select("#svg-hidden text")
+            .text(() => { return node.data.text })
+            .attr("class", () => { return this.getTextClassName(node) })
+            .attr("font-size", this.getFontSize())
+            .node();
+
+        return textNode ? textNode.getComputedTextLength() + this.textHorizontalMargin : 0;
     }
 
     private findEdgeLeaf(node: D3Node, left: boolean): D3Node {
@@ -277,7 +448,40 @@ export class MirrorMountainService implements VisualizationService {
     }
 
     private getFontSize(): number {
-        return this.nodeHeight;
+        return this.nodeHeight * 0.75;
+    }
+}
+
+class LayoutState {
+    private _currentLevel: number;
+    private _maxLevel: number;
+
+    constructor(maxLevel: number) {
+        this._maxLevel = maxLevel;
+    }
+
+    get currentLevel(): number {
+        return this._currentLevel;
+    }
+
+    get maxLevel(): number {
+        return this._maxLevel;
+    }
+
+    set currentLevel(currentLevel: number) {
+        this._currentLevel = currentLevel;
+    }
+}
+
+class LayoutOutput {
+    private _maxWidth: number;
+
+    get maxWidth(): number {
+        return this._maxWidth;
+    }
+
+    set maxWidth(maxWidth: number) {
+        this._maxWidth = maxWidth;
     }
 }
 

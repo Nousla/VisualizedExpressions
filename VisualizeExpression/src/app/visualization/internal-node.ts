@@ -1,5 +1,5 @@
 export class InternalNode {
-    public name: string;
+    public text: string;
     public type: Type;
     public group: Group;
     public parent: InternalNode;
@@ -9,10 +9,13 @@ export class InternalNode {
 export const enum Type {
     Addition,
     Decimal,
+    Division,
     Equality,
     Integer,
+    Multiplication,
     Parentheses,
     Subtraction,
+    Variable,
     Unknown
 }
 
@@ -20,5 +23,6 @@ export const enum Group {
     Number,
     Operator,
     Container,
+    Symbol,
     Unknown
 }
