@@ -24,17 +24,9 @@ module.exports = function () {
         module: {
             rules: [
                 {
-                    test: /\.ts$/,
-                    loader: 'ts-loader!angular2-template-loader',
-                    exclude: [/\.(spec|e2e)\.ts$/]
-                },
-                {
                     test: /\.css$/,
                     exclude: Path.resolve(__dirname, '../src/app/'),
-                    loader: ExtractTextWebpackPlugin.extract({
-                        fallback: "style-loader",
-                        use: "css-loader"
-                    })
+                    loader: ['to-string-loader', 'css-loader']
                 },
                 {
                     test: /\.css$/,
@@ -46,12 +38,16 @@ module.exports = function () {
                     loader: 'html-loader',
                 },
                 {
-                    test: /\.(png|jpg|svg)$/,
+                    test: /\.(png|jpg|svg|gif)$/,
                     //include: Path.resolve(__dirname, './..src/assets/'),
                     loader: 'file-loader',
                     options: {
                         name: './assets/images/[name].[ext]'
                     }
+                },
+                {
+                    test: /\.(eot|woff2?|svg|ttf)$/,
+                    use: 'file-loader'
                 }
             ]
         },
@@ -63,12 +59,7 @@ module.exports = function () {
                 /angular(\\|\/)core(\\|\/)@angular/,
                 Path.resolve(__dirname, '../src')
             ),
-
-            new Webpack.optimize.CommonsChunkPlugin({
-                name: ['app', 'vendor', 'polyfills']
-            }),
-
-            new ExtractTextWebpackPlugin('styles.css'),
+            new ExtractTextWebpackPlugin('styles.css')
         ]
     }
 }

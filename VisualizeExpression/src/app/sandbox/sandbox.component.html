@@ -11,4 +11,8 @@
         
     </div>
 </div>
-<div id="submitted_expressions_box" #submitted_expression_box></div>
+<div id="submitted_expressions_box" #submitted_expression_box>
+    <expression *ngFor="let expression of listOfExpressions; let counter= index" [input]= expression [counter]= "counter +1"></expression>
+</div>
+
+<modal-success></modal-success>
