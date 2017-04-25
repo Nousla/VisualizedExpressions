@@ -108,7 +108,6 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
             var gdSolution = false;
             try { gdSolution = this.gps.checkGuide(this.input, this.imp.importedGuideTree); }
             catch (ex) {
-                console.log(ex);
                 //Do nothing
             }
             if (gdSolution == true) {
