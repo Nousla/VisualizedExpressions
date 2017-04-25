@@ -41,6 +41,7 @@ export class SandboxComponent {
     this.subscription = ees.expressionClone$.subscribe(this.onCloneExpression.bind(this));
     this.subscription = ees.expressionMoveUp.subscribe(this.onMoveUpExpression.bind(this));
     this.subscription = ees.expressionMoveDown.subscribe(this.onMoveDownExpression.bind(this));
+    this.subscription = ees.expressionGuideSuccess$.subscribe(this.onGuideSuccess.bind(this));
     this.expressionComponents = [];
   }
 

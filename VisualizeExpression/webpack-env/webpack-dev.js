@@ -27,7 +27,7 @@ module.exports = WebpackMerge(WebpackBase(), {
         inline: true,
         noInfo: false,
         historyApiFallback: true,
-        contentBase: [Path.resolve(__dirname, '../')]
+        contentBase: [Path.resolve(__dirname, '../src')]
     },
 
     plugins: [
