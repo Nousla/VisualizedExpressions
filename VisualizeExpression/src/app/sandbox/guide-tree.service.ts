@@ -57,6 +57,13 @@ export class GuideTreeService {
             }
         }
 
+        guideTree.paths = [];
+        if(guideTree.rootNode && guideTree.rootNode.children) {
+            for(var i=0; i < guideTree.rootNode.children.length; i++) {
+                guideTree.paths.push(guideTree.rootNode.children[i]);
+            }
+        }
+
         console.log(guideTree);
 
         return guideTree;

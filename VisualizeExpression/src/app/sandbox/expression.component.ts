@@ -32,7 +32,6 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
     private config: Object;
     @ViewChild('banner')
     banner: ElementRef;
-    tree: GuideTree;
 
     private selectedNode: InternalNode;
     private operationState: OperationState;
@@ -46,11 +45,11 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
         @Inject(MATH_INPUT_SERVICE) private mis: MathInputService,
         private es: ExpressionService,
         private eh: ExpressionEventHandler,
-        private pss: ProblemSolvingService, 
+        private pss: ProblemSolvingService,
         private renderer: Renderer,
-        private imp: ImportExpressionService, 
+        private imp: ImportExpressionService,
         private gps: GuideProgressService
-        ) {
+    ) {
         this.input = "";
         this.operationState = OperationState.Closed;
     }
@@ -90,10 +89,10 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     onTimeOutCheck(): void {
-        if(this.imp.importedSpecifier == "ps"){
+        if (this.imp.importedSpecifier == "ps") {
             var psSolution = this.pss.checkExpression(this.input, this.imp.importedCorrectSolution, this.imp.importedWrongSolution);
-            if(psSolution == true) {
-                this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','green');
+            if (psSolution == true) {
+                this.renderer.setElementStyle(this.banner.nativeElement, 'backgroundColor', 'green');
 
                 var result = this.input.split('=');
                 var leftside = result[0];
@@ -105,17 +104,18 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
             else {
                 this.renderer.setElementStyle(this.banner.nativeElement, 'backgroundColor', 'red');
             }
-        }else if(this.imp.importedSpecifier == "gd"){
+        } else if (this.imp.importedSpecifier == "gd") {
             var gdSolution = false;
-            try{ gdSolution = this.gps.checkGuide(this.input, this.tree); }
-            catch(ex){
+            try { gdSolution = this.gps.checkGuide(this.input, this.imp.importedGuideTree); }
+            catch (ex) {
+                console.log(ex);
                 //Do nothing
             }
-            if(gdSolution == true) {
-                this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','green');
+            if (gdSolution == true) {
+                this.renderer.setElementStyle(this.banner.nativeElement, 'backgroundColor', 'green');
             }
             else {
-                this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','red');
+                this.renderer.setElementStyle(this.banner.nativeElement, 'backgroundColor', 'red');
             }
         }
     }
