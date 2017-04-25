@@ -1,9 +1,7 @@
-
 export class GuideTree {
     rootNode: GuideNode;
-    path: GuideNode[];
+    paths: GuideNode[];
     activePath: number;
-    activeNode: GuideNode;
 }
 
 export class GuideNode {

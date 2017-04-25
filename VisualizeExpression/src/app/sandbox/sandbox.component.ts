@@ -4,12 +4,13 @@ import { ExpressionEventService } from './expression-event.service';
 import { Subscription } from 'rxjs/Subscription';
 import { InternalData } from "../visualization/internal-data";
 import { StandardService } from "./standard.service"
-import { ImportExpressionService} from "./importexpression.service"
+import { ImportExpressionService } from "./import-expression.service"
 import { ModalSuccessComponent } from "./modal-success.component";
 import MATH_INPUT_SERVICE from "../visualization/math-input-service-token";
 import MATH_OUTPUT_SERVICE from "../visualization/math-output-service-token";
 import MathTextInputService from "../visualization/math-text-input.service";
 import MathTextOutputService from "../visualization/math-text-output.service";
+import { GuideTreeService } from "./guide-tree.service";
 
 @Component({
   selector: 'sandbox',
@@ -19,11 +20,12 @@ import MathTextOutputService from "../visualization/math-text-output.service";
     ExpressionEventService,
     { provide: MATH_INPUT_SERVICE, useClass: MathTextInputService },
     { provide: MATH_OUTPUT_SERVICE, useClass: MathTextOutputService },
-    StandardService, ImportExpressionService
+    StandardService, ImportExpressionService, GuideTreeService
   ]
 })
 
 export class SandboxComponent {
+
   @ViewChild("submitted_expression_box", { read: ViewContainerRef })
   private container: ViewContainerRef;
 
@@ -34,7 +36,7 @@ export class SandboxComponent {
   mod: ModalSuccessComponent;
 
   constructor(private resolver: ComponentFactoryResolver, private ees: ExpressionEventService, private standardService: StandardService,
-              private imp: ImportExpressionService) {
+    private imp: ImportExpressionService) {
     this.subscription = ees.expressionAddNew$.subscribe(this.onAddNewExpression.bind(this));
     this.subscription = ees.expressionAdd$.subscribe(this.onAddNewExpression.bind(this));
     this.subscription = ees.expresionRemove$.subscribe(this.onRemoveExpression.bind(this));
@@ -143,8 +145,7 @@ export class SandboxComponent {
     return (<ExpressionComponent>componentRef.instance);
   }
 
-  onGuideSuccess(){
+  onGuideSuccess() {
     this.mod.showDialog();
   }
-
 }
