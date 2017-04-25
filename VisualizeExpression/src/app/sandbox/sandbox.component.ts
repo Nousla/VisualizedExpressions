@@ -38,7 +38,7 @@ export class SandboxComponent {
   constructor(private resolver: ComponentFactoryResolver, private ees: ExpressionEventService, private standardService: StandardService,
     private imp: ImportExpressionService) {
     this.subscription = ees.expressionAddNew$.subscribe(this.onAddNewExpression.bind(this));
-    this.subscription = ees.expressionAdd$.subscribe(this.onAddNewExpression.bind(this));
+    this.subscription = ees.expressionAdd$.subscribe(this.onAddExpression.bind(this));
     this.subscription = ees.expresionRemove$.subscribe(this.onRemoveExpression.bind(this));
     this.subscription = ees.expressionClone$.subscribe(this.onCloneExpression.bind(this));
     this.subscription = ees.expressionMoveUp.subscribe(this.onMoveUpExpression.bind(this));
@@ -48,9 +48,9 @@ export class SandboxComponent {
   }
 
   ngOnInit(): void {
-    if(this.imp.importedExpression){
+    if (this.imp.importedExpression) {
       this.addExpression(this.imp.importedExpression);
-    }else{
+    } else {
       this.addEmptyExpression();
     }
   }
