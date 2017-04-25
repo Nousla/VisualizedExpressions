@@ -5,13 +5,6 @@ import { GuideTree, GuideNode } from "./guide-tree";
 export class GuideTreeService {
     public generateGuideTree(externalGuideTreeJSON: string): GuideTree {
 
-        //var testTree = "{\"tree\":[{\"ex\":\"2+5=10-3\"},{\"tid\":\"0\",\"ex\":\"7=10-3\"},{\"tid\":\"0\",\"ex\":\"2+5=7\"},{\"tid\":\"1/2\",\"ex\":\"7=7\"}]}";
-
-        // %7B%22tree%22%3A%5B%7B%22ex%22%3A%222%2B5%3D10-3%22%7D%2C%7B%22tid%22%3A%220%22%2C%22ex%22%3A%227%3D10-3%22%7D%2C%7B%22tid%22%3A%220%22%2C%22ex%22%3A%222%2B5%3D7%22%7D%2C%7B%22tid%22%3A%221%2F2%22%2C%22ex%22%3A%227%3D7%22%7D%5D%7D
-        //var a = encodeURIComponent(testTree);
-        //console.log(a);
-
-
         var externalGuideTree: ExternalGuideTree;
         try {
             externalGuideTree = JSON.parse(externalGuideTreeJSON);
@@ -63,8 +56,6 @@ export class GuideTreeService {
                 guideTree.paths.push(guideTree.rootNode.children[i]);
             }
         }
-
-        console.log(guideTree);
 
         return guideTree;
     }
