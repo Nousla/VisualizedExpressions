@@ -10,12 +10,14 @@ import MathInputService from "../visualization/math-input-service";
 import { ExpressionService } from "./expression.service";
 import { ProblemSolvingService } from "./problemsolving.service"
 import { ImportExpressionService } from "./importexpression.service";
+import { GuideProgressService } from "./guideprogress.service";
+import { GuideTree, GuideNode } from "./guide-tree";
 
 @Component({
     selector: 'expression',
     templateUrl: './expression.component.html',
     styleUrls: [`./expression.component.css`],
-    providers: [ExpressionEventHandler, ExpressionService, ProblemSolvingService]
+    providers: [ExpressionEventHandler, ExpressionService, ProblemSolvingService, GuideProgressService]
 })
 
 export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
@@ -30,9 +32,7 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
     private config: Object;
     @ViewChild('banner')     
     banner: ElementRef;
-    private testInputExpression = "4z+5=9";
-    private testInputCorrectSol = 1;
-    private testInputWrongSol = 2;
+    tree: GuideTree;
 
     private selectedNode: InternalNode;
     private operationState: OperationState;
@@ -47,7 +47,7 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
         private es: ExpressionService,
         private eventHandler: ExpressionEventHandler,
         private pss: ProblemSolvingService, private renderer: Renderer,
-        private imp: ImportExpressionService) {
+        private imp: ImportExpressionService, private gps: GuideProgressService) {
             this.input = "";
             this.operationState = OperationState.Closed;
     }
@@ -89,8 +89,8 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
 
     onTimeOutCheck(): void {
         if(this.imp.importedSpecifier == "ps"){
-            var solution = this.pss.checkExpression(this.input, this.imp.importedCorrectSolution, this.imp.importedWrongSolution);
-            if(solution == true) {
+            var psSolution = this.pss.checkExpression(this.input, this.imp.importedCorrectSolution, this.imp.importedWrongSolution);
+            if(psSolution == true) {
                 this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','green');
                 var result = this.input.split('=');
                 var leftside = result[0];
@@ -98,6 +98,18 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
                 if(leftside && rightside == this.imp.importedCorrectSolution.toString()){
                     this.guideSuccess();
                 }
+            }
+            else {
+                this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','red');
+            }
+        }else if(this.imp.importedSpecifier == "gd"){
+            var gdSolution = false;
+            try{ gdSolution = this.gps.checkGuide(this.input, this.tree); }
+            catch(ex){
+                //Do nothing
+            }
+            if(gdSolution == true) {
+                this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','green');
             }
             else {
                 this.renderer.setElementStyle(this.banner.nativeElement,'backgroundColor','red');
