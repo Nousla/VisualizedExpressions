@@ -12,13 +12,13 @@ export class GuideProgressService {
         var splitExpressions = inputExpression.split("=");
         var leftsideToCheck = splitExpressions[0];
         var rightsideToCheck = splitExpressions[1];
-        if (this.traverseNodes(tree.activeNode, leftsideToCheck, rightsideToCheck) == true) {
+        if (this.traverseNodes(tree.path[tree.activePath], leftsideToCheck, rightsideToCheck, tree.activePath, tree) == true) {
             return true;
         } else {
             if (!tree.path || tree.path.length === 0) { return false }
             for (var i = 0; i < tree.path.length; i++) {
                 if (i != tree.activePath) {
-                    var check = this.traverseNodes(tree.path[i], leftsideToCheck, rightsideToCheck);
+                    var check = this.traverseNodes(tree.path[i], leftsideToCheck, rightsideToCheck, i, tree);
                     if(check){ return true }
                 }
             }
@@ -26,7 +26,7 @@ export class GuideProgressService {
         return false;
     }
 
-    private traverseNodes(node: GuideNode, leftsideToCheck: string, rightsideToCheck: string): boolean {
+    private traverseNodes(node: GuideNode, leftsideToCheck: string, rightsideToCheck: string, currentpath: number, tree: GuideTree): boolean {
         if (!node) {
             return false;
         }
@@ -37,8 +37,10 @@ export class GuideProgressService {
 
 
         if (leftsideToCheck === leftsideNode && rightsideToCheck === rightsideNode) {
+            tree.path[currentpath] = node;
             return true;
         } else if (leftsideToCheck === rightsideNode && rightsideToCheck === leftsideNode) {
+            tree.path[currentpath] = node;
             return true;
         } else {
             if (!node.children) {
@@ -46,7 +48,7 @@ export class GuideProgressService {
             }
 
             for (var i = 0; i < node.children.length; i++) {
-                this.traverseNodes(node.children[i], leftsideToCheck, rightsideToCheck);
+                this.traverseNodes(node.children[i], leftsideToCheck, rightsideToCheck, i, tree);
             }
         }
     }
