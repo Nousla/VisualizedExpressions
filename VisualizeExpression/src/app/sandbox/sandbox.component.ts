@@ -50,6 +50,8 @@ export class SandboxComponent {
   ngOnInit(): void {
     if (this.imp.importedExpression) {
       this.addExpression(this.imp.importedExpression);
+    } else if(this.imp.importedGuideTree){
+      this.addExpression(this.imp.importedGuideTree.rootNode.expression);
     } else {
       this.addEmptyExpression();
     }
