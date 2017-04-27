@@ -441,7 +441,7 @@ export class MirrorMountainService implements VisualizationService {
     private findEdgeLeaf(node: D3Node, left: boolean): D3Node {
         var currentNode = node;
         while (currentNode && currentNode.children) {
-            currentNode = left ? currentNode.children[0] : currentNode.children[1];
+            currentNode = left || currentNode.children.length == 1 ? currentNode.children[0] : currentNode.children[1];
         }
 
         return currentNode;
