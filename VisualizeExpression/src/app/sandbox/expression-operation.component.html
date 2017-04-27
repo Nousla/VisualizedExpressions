@@ -22,7 +22,7 @@
             <div class="expression_operation_new">
                 <div class="expression_operation_edit">
                     <label for="replace">Replacement expression</label>
-                    <textarea rows="1" (ngModelChange)="onInputChange($event)" [(ngModel)]="input" id="replace"></textarea> 
+                    <input type="text" (ngModelChange)="onInputChange($event)" [(ngModel)]="input" id="replace"> 
                 </div>
                 <div class="expression_operation_visualization">
                     <visualization [data]="newData" class="expression_operation_visualization"></visualization>
