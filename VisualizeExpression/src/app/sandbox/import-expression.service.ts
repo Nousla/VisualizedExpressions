@@ -13,6 +13,8 @@ export class ImportExpressionService {
         if (this.importedSpecifier === 'gd' && this.importedTree) {
             this._importedGuideTree = this.gts.generateGuideTree(this.importedTree);
         }
+
+        console.log(this.route.snapshot.toString());
     }
 
     get importedSpecifier(): string { return this.route.snapshot.params['sp'] };
@@ -20,6 +22,7 @@ export class ImportExpressionService {
     get importedTree(): string { return this.route.snapshot.params['tree'] };
     get importedCorrectSolution(): number { return this.route.snapshot.params['x'] };
     get importedWrongSolution(): number { return this.route.snapshot.params['y'] };
+    get importedDescription(): string { return this.route.snapshot.params['desc'] };
     get importedGuideTree(): GuideTree { return this._importedGuideTree };
 }
 

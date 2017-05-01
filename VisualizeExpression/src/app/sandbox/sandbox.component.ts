@@ -1,9 +1,8 @@
-import { Component, ComponentFactoryResolver, ComponentFactory, ViewChild, ViewContainerRef, ComponentRef } from '@angular/core';
+import { Component, ComponentFactoryResolver, ComponentFactory, ViewChild, ViewContainerRef, ComponentRef, Inject } from '@angular/core';
 import { ExpressionComponent } from './expression.component';
 import { ExpressionEventService } from './expression-event.service';
 import { Subscription } from 'rxjs/Subscription';
 import { InternalData } from "../visualization/internal-data";
-import { StandardService } from "./standard.service"
 import { ImportExpressionService } from "./import-expression.service"
 import { ModalSuccessComponent } from "./modal-success.component";
 import MATH_INPUT_SERVICE from "../visualization/math-input-service-token";
@@ -11,6 +10,8 @@ import MATH_OUTPUT_SERVICE from "../visualization/math-output-service-token";
 import MathTextInputService from "../visualization/math-text-input.service";
 import MathTextOutputService from "../visualization/math-text-output.service";
 import { GuideTreeService } from "./guide-tree.service";
+import { MathInputService } from "../visualization/math-input-service";
+import SandboxMode from "./sandbox-mode";
 
 @Component({
   selector: 'sandbox',
@@ -20,23 +21,26 @@ import { GuideTreeService } from "./guide-tree.service";
     ExpressionEventService,
     { provide: MATH_INPUT_SERVICE, useClass: MathTextInputService },
     { provide: MATH_OUTPUT_SERVICE, useClass: MathTextOutputService },
-    StandardService, ImportExpressionService, GuideTreeService
+    ImportExpressionService, GuideTreeService
   ]
 })
 
 export class SandboxComponent {
 
-  @ViewChild("submitted_expression_box", { read: ViewContainerRef })
+  @ViewChild("expression_box", { read: ViewContainerRef })
   private container: ViewContainerRef;
+  @ViewChild(ModalSuccessComponent)
+  private successModal: ModalSuccessComponent;
 
   private expressionComponents: ComponentRef<ExpressionComponent>[];
   private subscription: Subscription;
+  
+  private mode: SandboxMode;
 
-  @ViewChild(ModalSuccessComponent)
-  mod: ModalSuccessComponent;
-
-  constructor(private resolver: ComponentFactoryResolver, private ees: ExpressionEventService, private standardService: StandardService,
-    private imp: ImportExpressionService) {
+  constructor(private resolver: ComponentFactoryResolver,
+    private ees: ExpressionEventService,
+    private imp: ImportExpressionService,
+    @Inject(MATH_INPUT_SERVICE) private mis: MathInputService) {
     this.subscription = ees.expressionAddNew$.subscribe(this.onAddNewExpression.bind(this));
     this.subscription = ees.expressionAdd$.subscribe(this.onAddExpression.bind(this));
     this.subscription = ees.expresionRemove$.subscribe(this.onRemoveExpression.bind(this));
@@ -45,44 +49,60 @@ export class SandboxComponent {
     this.subscription = ees.expressionMoveDown.subscribe(this.onMoveDownExpression.bind(this));
     this.subscription = ees.expressionGuideSuccess$.subscribe(this.onGuideSuccess.bind(this));
     this.expressionComponents = [];
+
+    this.mode = SandboxMode.Standard;
   }
 
   ngOnInit(): void {
     if (this.imp.importedExpression) {
       this.addExpression(this.imp.importedExpression);
-    } else if(this.imp.importedGuideTree){
+    } else if (this.imp.importedGuideTree) {
       this.addExpression(this.imp.importedGuideTree.rootNode.expression);
     } else {
       this.addEmptyExpression();
     }
+
+    if(this.imp.importedSpecifier === "ps") {
+      this.mode = SandboxMode.ProblemSolving;
+    }
+    else if (this.imp.importedSpecifier === "gd") {
+      this.mode = SandboxMode.Guide;
+    }
+    else {
+      this.mode = SandboxMode.Standard;
+    }
   }
 
-  onAddNewExpression(): void {
+  private onAddNewExpression(): void {
     this.addEmptyExpression();
   }
 
-  onAddExpression(input: string): void {
+  private onAddExpression(input: string): void {
     this.addExpression(input);
   }
 
-  onRemoveExpression(index: number): void {
+  private onRemoveExpression(index: number): void {
     this.removeExpression(index);
   }
 
-  onCloneExpression(input: string): void {
+  private onCloneExpression(input: string): void {
     this.addExpression(input);
   }
 
-  onMoveUpExpression(index: number): void {
+  private onMoveUpExpression(index: number): void {
     if (index > 0) {
       this.swapExpressions(index, index - 1);
     }
   }
 
-  onMoveDownExpression(index: number): void {
+  private onMoveDownExpression(index: number): void {
     if (index < this.expressionComponents.length - 1) {
       this.swapExpressions(index, index + 1);
     }
+  }
+
+  private onGuideSuccess() {
+    this.successModal.showDialog();
   }
 
   private addEmptyExpression(): void {
@@ -147,7 +167,29 @@ export class SandboxComponent {
     return (<ExpressionComponent>componentRef.instance);
   }
 
-  onGuideSuccess() {
-    this.mod.showDialog();
+  private getImportedExpression(): string {
+    return this.imp.importedExpression;
+  }
+
+  private getImportedExpressionData(): InternalData {
+    if(!this.imp.importedExpression || this.imp.importedExpression === "") {
+      return null;
+    }
+
+    return this.mis.convert(this.imp.importedExpression);
+  }
+
+  private getModeTitle(): string {
+    switch(this.mode) {
+      case SandboxMode.Guide: return "Guide Mode";
+      case SandboxMode.ProblemSolving: return "Problem Solving Mode";
+      case SandboxMode.Standard : return "Standard Mode";
+      default: return "Mode not found";
+    }
+  }
+
+  private getDescription(): string {
+    return this.imp.importedDescription;
   }
 }
+

@@ -1,4 +1,67 @@
-#original_expression_box {
+#sandbox_box {
+    /*background-image: -webkit-linear-gradient(red, #f06d06);
+    background-image: -moz-linear-gradient(red, #f06d06);
+    background-image: -o-linear-gradient(red, #f06d06);
+    background-image: linear-gradient(red, #f06d06);*/
+}
+
+#sandbox_header_box {
+    border: 1px;
+    margin-bottom: 10px;
+}
+
+#sandbox_header_title_box {
+    display: flex;
+    align-items: baseline;
+}
+
+#sandbox_header_title_box > p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.sandbox_header_description {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12pt;
+    font-style: italic;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.sandbox_header_text {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 11pt;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.sandbox_header_problem {
+    font-weight: bold;
+}
+
+.sandbox_header_guide {
+    margin-top:5px;
+    font-weight: bold;
+}
+
+#sandbox_header_title {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 20pt;
+}
+
+.sandbox_header_title_separator {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.sandbox_header_subtitle {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 16pt;
+}
+
+#imported_expression_box {
     border: 2px solid black;
     border-radius: 10px;
     margin-bottom: 5px;
@@ -6,155 +69,14 @@
     overflow: hidden;
 }
 
-#left {
-    display: block;
-    float: left;
-}
-
-#right {
-    float: right;
-}
-
-#left p {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: bold;
-    font-size: 15pt;
-}
-
-#left > * {
-    margin: 0;
-}
-
-#left #original_expression {
-    margin-top: 5px;
-}
-
-.visualization_render_original {
+#imported_expression_visualization {
     display: inline-flex;
     border-left: 2px dashed lightblue;
     padding: 5px;
 }
-#submitted_expressions_box {
+
+#expressions_box {
     display: block;
     margin-bottom: 5px;
     padding: 5px 5px 5px 5px;
-}
-
-#submitted_expressions_box > p {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: bold;
-    font-size: 15pt;
-    margin-bottom: 5px;
-    margin-top: 0;
-}
-
-#submitted_expressions_box .expression_box {
-    position: relative;
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
-    border-radius: 10px;
-    padding: 5px;
-    overflow: hidden;
-    margin-bottom: 10px;
-}
-
-#expressions_header {
-    margin-bottom: 10px;
-}
-
-#expressions_header > p {
-    display: block;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 11pt;
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-#visualization_type > * {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 11pt;
-    display: inline-block;
-}
-
-#expressions_header #expressions_header_title {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: bold;
-    font-size: 20pt;
-}
-
-.expression_actions {
-    display: block;
-    padding: 5px;
-    background-color: lightblue;
-    border-radius: 5px;
-    margin-bottom: 5px;
-}
-
-.expression_actions > button {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 8pt;
-    border-radius: 5px;
-    border: 1px solid black;
-}
-
-.expression_actions > button:active {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 8pt;
-    border-radius: 5px;
-    background-color: grey;
-}
-
-.expression_actions > p {
-    display: inline-flex;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 10pt;
-    font-weight: bold;
-    border-radius: 10px;
-    padding-left: 6px;
-    padding-right: 5px;
-    padding-top: 1px;
-    margin: 0px;
-    width: 10px;
-    height: 20px;
-    background-color: cadetblue;
-    color: white;
-}
-
-.expression_edit {
-    display: inline-flex;
-    float: left;
-    width: 50%;
-}  
-
-.expression_edit > textarea {
-    display: inline-flex;
-    font-family: monospace;
-    font-size: 15pt;
-    border: 1px solid grey;
-    padding-left: 5px;
-    padding-right: 5px;
-    margin-left: 5px;
-    width: 100%;
-    resize: none;
-    overflow: hidden;
-}
-
-.visualization_render {
-    display: inline-flex;
-    border-left: 1px dashed lightblue;
-    float: right;
-    padding: 5px;
-}
-
-.visualization_render > img {
-    display: block;
-    zoom: 75%;
-    margin: 0 auto;
-}
-
-.expression {
-    position: absolute;
-    zoom: 200%;
-    bottom: 5px;
-    left: 5px;
 }

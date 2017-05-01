@@ -175,4 +175,8 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
             this.operationState = OperationState.Closed;
         }
     }
+
+    private getExpressionEventHandler(): ExpressionEventHandler {
+        return this.eh;
+    }
 }

@@ -1,18 +1,57 @@
-<div id="expressions_header">
-    <p id="expressions_header_title">Expression Sandbox</p>
-    <p>Input expressions to visualize them.</p>
-</div>
-<div id="original_expression_box">
-    <div id="left">
-        <p>Original Expression </p>
-        <div id="original_expression" #original_expression></div>
+<div id="sandbox_box">
+    <div id="sandbox_header_box">
+        <div id="sandbox_header_title_box">
+            <p id="sandbox_header_title">Sandbox</p>
+            <p class="sandbox_header_subtitle sandbox_header_title_separator">&gt;&gt;</p>
+            <p class="sandbox_header_subtitle">{{getModeTitle()}}</p>
+        </div>
+        <div [ngSwitch]="mode">
+            <div *ngSwitchDefault>
+                <p class="sandbox_header_description">
+                    The standard sandbox mode allows you to visualize any expression at your own leisure.
+                </p>
+                <p class="sandbox_header_text">
+                    An empty expression has already been added to get you started. 
+                    Try typing '1+2=3' in the input field of the expression to visualize the expression.
+                </p>
+            </div>
+            <div *ngSwitchCase="1">
+                <p class="sandbox_header_description">
+                    The problem solving mode allows you to solve problems through visualized expressions.
+                </p>
+                <p class="sandbox_header_text sandbox_header_problem">
+                    Imported problem: solving x
+                </p>
+                <p class="sandbox_header_text">
+                    The initial expression of the problem has been inserted as the first expression to get you started. 
+                    Input new expressions to solve the problem step by step as you see fit. Hint: operations help you break
+                    down the problem into more manageable pieces.
+                </p>
+            </div>
+            <div *ngSwitchCase="2">
+                <p class="sandbox_header_description">
+                    The guide mode allows you to follow the trail The problem solving mode allows you to solve problems through 
+                    visualized expressions.
+                </p>
+                <p class="sandbox_header_text">
+                    The initial expression of the guide has been inserted as the first expression to get you started. 
+                    Input new expressions to follow the guide step by step as you see fit. Hint: operations help you break
+                    down the problem into more manageable pieces.
+                </p>
+                <p *ngIf="getDescription()" class="sandbox_header_text sandbox_header_guide">
+                    Goal of this guide: {{getDescription()}}
+                </p>
+            </div>
+        </div>
+        <div id="imported_expression_box" *ngIf="getImportedExpression()">
+            <p class="sandbox_header_text">Imported expression</p>
+            <visualization [data]="getImportedExpressionData()"></visualization>
+        </div>
     </div>
-    <div id="right">
-        
+
+    <div id="expressions_box" #expression_box>
+        <expression *ngFor="let expression of listOfExpressions; let counter= index" [input]=e xpression [counter]="counter +1"></expression>
     </div>
-</div>
-<div id="submitted_expressions_box" #submitted_expression_box>
-    <expression *ngFor="let expression of listOfExpressions; let counter= index" [input]= expression [counter]= "counter +1"></expression>
 </div>
 
 <modal-success></modal-success>
