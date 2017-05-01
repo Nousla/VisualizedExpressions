@@ -1,0 +1,24 @@
+<div id="root_box">
+    <div id="frontpage_inputbox">
+        <div class="expression_box" [ngSwitch]="chosenType">
+            <label id="expression_des">Write the expression and choose the type of tool you want to use </label>
+            <p-dropdown [options]="types" [(ngModel)]="type" (onChange)="onDropdownChange($event.originalEvent, $event.value)"></p-dropdown>
+            <button pButton type="button" (click)="onGenerateURL()" label="Generate"></button>
+            
+            <div *ngSwitchDefault class="SandboxType">
+                <input type="text" pInputText [(ngModel)]="expression_field" placeholder="Expression">
+            </div>
+            <div *ngSwitchCase="2" class="ProblemSolvingType">
+                <input type="text" pInputText [(ngModel)]="expression_field" placeholder="Expression">
+                <input type="text" pInputText [(ngModel)]="correct_solution_field" placeholder="Correct Solution">
+                <input type="text" pInputText [(ngModel)]="wrong_solution_field" placeholder="Wrong Solution">
+            </div>
+            <div *ngSwitchCase="3" class="GuideType">
+                <textarea  [rows]="5" [cols]="30" pInputTextarea [(ngModel)]="tree_area" placeholder="Tree"></textarea>
+                <textarea  [rows]="5" [cols]="30" pInputTextarea [(ngModel)]="description_area" placeholder="Guide Description"></textarea>
+            </div>
+        </div>
+    </div>
+    <textarea [rows]="20" [cols]="90" pInputTextarea [(ngModel)]="url_output_field" placeholder="URL output"></textarea>
+    <button pButton type="button" (click)="onCopyURL()" label="Copy Link"></button>
+</div>
