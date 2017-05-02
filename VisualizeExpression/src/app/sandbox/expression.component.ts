@@ -41,6 +41,8 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
     private readonly TIMEOUT_LIMIT_MS: Number = 200;
     private readonly TIMEOUT_LIMIT_MS_CHECK: Number = 1000;
 
+    private expressionEventHandler: ExpressionEventHandler;
+
     constructor(private ees: ExpressionEventService,
         @Inject(MATH_INPUT_SERVICE) private mis: MathInputService,
         private es: ExpressionService,
@@ -52,6 +54,7 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
     ) {
         this.input = "";
         this.operationState = OperationState.Closed;
+        this.expressionEventHandler = eh;
     }
 
     ngOnInit(): void {
@@ -174,9 +177,5 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
         else {
             this.operationState = OperationState.Closed;
         }
-    }
-
-    private getExpressionEventHandler(): ExpressionEventHandler {
-        return this.eh;
     }
 }

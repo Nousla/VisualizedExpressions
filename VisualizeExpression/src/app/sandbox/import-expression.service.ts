@@ -13,8 +13,6 @@ export class ImportExpressionService {
         if (this.importedSpecifier === 'gd' && this.importedTree) {
             this._importedGuideTree = this.gts.generateGuideTree(this.importedTree);
         }
-
-        console.log(this.route.snapshot.toString());
     }
 
     get importedSpecifier(): string { return this.route.snapshot.params['sp'] };

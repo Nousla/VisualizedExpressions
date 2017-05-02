@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, ComponentFactory, ViewChild, ViewContainerRef, ComponentRef, Inject } from '@angular/core';
+import { Component, ComponentFactoryResolver, ComponentFactory, ViewChild, ViewContainerRef, ComponentRef, Inject, InjectionToken } from '@angular/core';
 import { ExpressionComponent } from './expression.component';
 import { ExpressionEventService } from './expression-event.service';
 import { Subscription } from 'rxjs/Subscription';
@@ -12,6 +12,9 @@ import MathTextOutputService from "../visualization/math-text-output.service";
 import { GuideTreeService } from "./guide-tree.service";
 import { MathInputService } from "../visualization/math-input-service";
 import SandboxMode from "./sandbox-mode";
+import { MirrorMountainService } from "../visualization/mirror-mountain/mirror-mountain.service";
+import VisualizationService from '../visualization/visualization-service';
+import { VISUALIZATION_SERVICE } from "../visualization/visualization_injection_token";
 
 @Component({
   selector: 'sandbox',
@@ -21,7 +24,8 @@ import SandboxMode from "./sandbox-mode";
     ExpressionEventService,
     { provide: MATH_INPUT_SERVICE, useClass: MathTextInputService },
     { provide: MATH_OUTPUT_SERVICE, useClass: MathTextOutputService },
-    ImportExpressionService, GuideTreeService
+    ImportExpressionService, GuideTreeService, 
+    { provide: VISUALIZATION_SERVICE, useClass: MirrorMountainService }
   ]
 })
 
@@ -34,8 +38,9 @@ export class SandboxComponent {
 
   private expressionComponents: ComponentRef<ExpressionComponent>[];
   private subscription: Subscription;
-  
+
   private mode: SandboxMode;
+  private importedExpressionData: InternalData;
 
   constructor(private resolver: ComponentFactoryResolver,
     private ees: ExpressionEventService,
@@ -51,6 +56,7 @@ export class SandboxComponent {
     this.expressionComponents = [];
 
     this.mode = SandboxMode.Standard;
+    this.importedExpressionData = this.getImportedExpressionData();    
   }
 
   ngOnInit(): void {
@@ -62,7 +68,7 @@ export class SandboxComponent {
       this.addEmptyExpression();
     }
 
-    if(this.imp.importedSpecifier === "ps") {
+    if (this.imp.importedSpecifier === "ps") {
       this.mode = SandboxMode.ProblemSolving;
     }
     else if (this.imp.importedSpecifier === "gd") {
@@ -172,7 +178,7 @@ export class SandboxComponent {
   }
 
   private getImportedExpressionData(): InternalData {
-    if(!this.imp.importedExpression || this.imp.importedExpression === "") {
+    if (!this.imp.importedExpression || this.imp.importedExpression === "") {
       return null;
     }
 
@@ -180,10 +186,10 @@ export class SandboxComponent {
   }
 
   private getModeTitle(): string {
-    switch(this.mode) {
+    switch (this.mode) {
       case SandboxMode.Guide: return "Guide Mode";
       case SandboxMode.ProblemSolving: return "Problem Solving Mode";
-      case SandboxMode.Standard : return "Standard Mode";
+      case SandboxMode.Standard: return "Standard Mode";
       default: return "Mode not found";
     }
   }

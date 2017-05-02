@@ -11,7 +11,7 @@
         <input type="text" (ngModelChange)="onInputChange($event)" [(ngModel)]="input">
     </div>
     <div class="visualization_render">
-        <visualization [data]="data" [config]="config" [eventHandler]="getExpressionEventHandler()"></visualization>
+        <visualization [data]="data" [config]="config" [eventHandler]="expressionEventHandler"></visualization>
     </div>
 </div>
 
