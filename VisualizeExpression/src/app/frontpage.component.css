@@ -1,53 +1,54 @@
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+}
 #root_box {
-    display: block;
-    align-content: center;
-    text-align: center;
+    height: 100%;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
     zoom: 150%;
 }
-#frontpageinput_box {
+#frontpage_inputbox {
     font-family: Georgia;
-    display: inline-block;
+    display: block;
     margin-top: 15%;
-    width: 500px;
+    height: 25%;
 }
 .expression_box {
     text-align: center;
     display: block;
     border: solid;
     border-radius: 10px;
+    padding: 5px;
     
 }
+#dropdown_generatebtn_div {
+    display:flex;
+    align-items:flex-start;
+    justify-content: center;
+    padding-top: 3px; 
+}
 #expression_field {
-    display: inline-block;
+    display: block;
     text-align: center;
     margin-left: 60px;
 }
 .generatebtn {
     display: inline-block;
+    margin-left: 2px;
 }
-.dropdown {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 2px;
+#dropdownmenu {
+    display: inline-block;
+    padding-bottom: 10px;
 }
-
-#sandbox_div {
-    text-align: center;
+#expression_des {
     display: block;
-    margin-top: 2px;
-    border: solid;
-    border-radius: 10px;
 }
-#sandbox_des {
-    text-align: center;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-.sandboxbtn {
-    text-align: center;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+#output_area {
+    margin-top: 5px;
+    height: 25vh;
+    flex
 }
