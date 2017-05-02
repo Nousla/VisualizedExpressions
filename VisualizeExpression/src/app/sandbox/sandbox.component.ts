@@ -11,6 +11,7 @@ import MATH_OUTPUT_SERVICE from "../visualization/math-output-service-token";
 import MathTextInputService from "../visualization/math-text-input.service";
 import MathTextOutputService from "../visualization/math-text-output.service";
 import { GuideTreeService } from "./guide-tree.service";
+import { EncodeService } from "../encode.service";
 
 @Component({
   selector: 'sandbox',
@@ -20,7 +21,7 @@ import { GuideTreeService } from "./guide-tree.service";
     ExpressionEventService,
     { provide: MATH_INPUT_SERVICE, useClass: MathTextInputService },
     { provide: MATH_OUTPUT_SERVICE, useClass: MathTextOutputService },
-    StandardService, ImportExpressionService, GuideTreeService
+    StandardService, ImportExpressionService, GuideTreeService, EncodeService
   ]
 })
 
