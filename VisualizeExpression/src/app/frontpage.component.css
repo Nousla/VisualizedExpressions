@@ -1,12 +1,4 @@
-html {
-    height: 100%;
-}
-body {
-    height: 100%;
-}
 #root_box {
-    height: 100%;
-    justify-content: center;
     display: flex;
     flex-direction: column;
     zoom: 150%;
@@ -14,8 +6,8 @@ body {
 #frontpage_inputbox {
     font-family: Georgia;
     display: block;
-    margin-top: 15%;
-    height: 25%;
+    text-align: center;
+    margin-top: 1%;
 }
 .expression_box {
     text-align: center;
@@ -25,7 +17,7 @@ body {
     padding: 5px;
     
 }
-#dropdown_generatebtn_div {
+#dropdown_generatebtn_box {
     display:flex;
     align-items:flex-start;
     justify-content: center;
@@ -51,3 +43,11 @@ body {
     margin-top: 5px;
     height: 25vh;
 }
+.sandboxbtn_box {
+    text-align: center;
+    display: grid;
+    border: solid;
+    border-radius: 10px;
+    padding: 5px;
+}
+

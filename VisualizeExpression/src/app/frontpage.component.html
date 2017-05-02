@@ -1,8 +1,11 @@
 <div id="root_box">
+    <div class="sandboxbtn_box">
+        <button class="sandboxbtn" pButton type="button" (click)="onGoToSandbox()" label="Go to Sandbox"></button>
+    </div>
     <div id="frontpage_inputbox">
         <div class="expression_box" [ngSwitch]="chosenType">
             <label id="expression_des">Choose the type of tool you want to use and then fill out the necessary boxes </label>
-            <div id="dropdown_generatebtn_div">
+            <div id="dropdown_generatebtn_box">
                 <p-dropdown id="dropdownmenu" [options]="types" [(ngModel)]="type" (onChange)="onDropdownChange($event.originalEvent, $event.value)"></p-dropdown>
                 <button class="generatebtn" pButton type="button" (click)="onGenerateURL()" label="Generate"></button>
             </div>

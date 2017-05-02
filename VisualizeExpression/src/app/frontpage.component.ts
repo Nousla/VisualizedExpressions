@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 import { EncodeService } from './encode.service';
 
@@ -22,7 +23,7 @@ export class FrontpageComponent {
     description_area: string;
 
 
-    constructor(private encode: EncodeService){
+    constructor(private encode: EncodeService, private router: Router){
         this.types = [];
         this.types.push({label:'Sandbox', value:{id: 1, name: 'Sandbox'}});
         this.types.push({label:'Problem Solving', value:{id: 2, name: 'ProblemSolving'}});
@@ -79,6 +80,10 @@ export class FrontpageComponent {
         var textToCopy =<HTMLTextAreaElement> document.querySelector("#output_area");
         textToCopy.select();
         document.execCommand("copy");
+    }
+
+    onGoToSandbox(){
+        this.router.navigateByUrl('/sandbox');
     }
 
 }
