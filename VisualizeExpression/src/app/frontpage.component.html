@@ -7,7 +7,7 @@
             <label id="expression_des">Choose the type of tool you want to use and then fill out the necessary boxes </label>
             <div id="dropdown_generatebtn_box">
                 <p-dropdown id="dropdownmenu" [options]="types" [(ngModel)]="type" (onChange)="onDropdownChange($event.originalEvent, $event.value)"></p-dropdown>
-                <button class="generatebtn" pButton type="button" (click)="onGenerateURL()" label="Generate"></button>
+                <button class="generatebtn" pButton type="button" (click)="onGenerateURL()" label="Generate URL"></button>
             </div>
             
             <div *ngSwitchDefault class="SandboxType">
