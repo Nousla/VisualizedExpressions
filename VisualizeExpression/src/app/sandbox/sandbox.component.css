@@ -22,7 +22,8 @@
 
 #sandbox_header_title_box {
     display: flex;
-    align-items: baseline; 
+    align-items: baseline;
+    flex-wrap: wrap;
 }
 
 #sandbox_header_title_box p {

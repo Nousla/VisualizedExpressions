@@ -33,6 +33,10 @@
     height: 24px;
 }
 
+.expression_operation_info_icon {
+    flex-shrink: 0;
+}
+
 .expression_operation_line-divider {
     border-top: 1px dashed white;
     margin-top: 5px;
