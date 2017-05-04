@@ -5,38 +5,50 @@
             <p class="sandbox_header_subtitle sandbox_header_title_separator">&gt;&gt;</p>
             <p class="sandbox_header_subtitle">{{getModeTitle()}}</p>
         </div>
-        <p class="sandbox_header_description">{{getModeDescription()}}</p>        
+        <p class="sandbox_header_description">{{getModeDescription()}}</p>
     </div>
 
-    <div class="sandbox_information_box">
-        <img class="sandbox_information_icon" src="/assets/images/icon-information-white-32x32.png" />
-        <div [ngSwitch]="mode">
-            <div *ngSwitchDefault>
-                <p *ngIf="!getImportedExpression()" class="sandbox_header_text">
+
+    <div [ngSwitch]="mode">
+        <div *ngSwitchDefault>
+            <div *ngIf="!getImportedExpression()" class="sandbox_information_box">
+                <img class="sandbox_information_icon" src="/assets/images/icon-information-white-32x32.png" />
+                <p class="sandbox_header_text">
                     {{textService.getStandardEmptyText()}}
                 </p>
             </div>
-            <div *ngSwitchCase="1">
-                <p class="sandbox_header_text sandbox_header_problem">
-                    Imported problem: solving x
-                </p>
-                <p *ngIf="getImportedExpression()" class="sandbox_header_text">
-                    {{textService.getInitialExpressionText()}}
-                </p>
-                <p class="sandbox_header_text">
-                   {{textService.getOperationsHintText()}}
-                </p>
+        </div>
+        <div *ngSwitchCase="1">
+            <div class="sandbox_information_box">
+                <img class="sandbox_information_icon" src="/assets/images/icon-information-white-32x32.png" />
+                <div>
+                    <p class="sandbox_header_text sandbox_header_problem">
+                        Imported problem: solving x
+                    </p>
+                    <p *ngIf="getImportedExpression()" class="sandbox_header_text">
+                        {{textService.getInitialExpressionText()}}
+                    </p>
+                    <p class="sandbox_header_text">
+                        {{textService.getOperationsHintText()}}
+                    </p>
+                </div>
             </div>
-            <div *ngSwitchCase="2">
-                <p *ngIf="getImportedExpression()" class="sandbox_header_text">
-                    {{textService.getInitialExpressionText()}}
-                </p>
-                <p class="sandbox_header_text">
-                    {{textService.getOperationsHintText()}}
-                </p>
+        </div>
+        <div *ngSwitchCase="2">
+            <div class="sandbox_information_box">
+                <img class="sandbox_information_icon" src="/assets/images/icon-information-white-32x32.png" />
+                <div>
+                    <p *ngIf="getImportedExpression()" class="sandbox_header_text">
+                        {{textService.getInitialExpressionText()}}
+                    </p>
+                    <p class="sandbox_header_text">
+                        {{textService.getOperationsHintText()}}
+                    </p>
+                </div>
             </div>
         </div>
     </div>
+
     <div *ngIf="getImportedDescription()" class="sandbox_information_box">
         <img class="sandbox_information_icon" src="/assets/images/icon-information-white-32x32.png" />
         <p class="sandbox_header_text">

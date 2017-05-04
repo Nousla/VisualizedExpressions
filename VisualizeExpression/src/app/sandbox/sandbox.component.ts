@@ -182,15 +182,25 @@ export class SandboxComponent {
   }
 
   private getImportedExpression(): string {
+    var importedTreeExpression = this.getImportedTreeExpression();
+    if(importedTreeExpression) {
+      return importedTreeExpression;
+    }
+    
     return this.imp.importedExpression;
   }
 
   private getImportedExpressionData(): InternalData {
-    if (!this.imp.importedExpression || this.imp.importedExpression === "") {
+    var importedExpression = this.getImportedExpression();
+    if (!importedExpression || importedExpression === "") {
       return null;
     }
 
-    return this.mis.convert(this.imp.importedExpression);
+    return this.mis.convert(importedExpression);
+  }
+
+  private getImportedTreeExpression(): string {
+    return this.imp.importedGuideTree ? this.imp.importedGuideTree.rootNode.expression : null;
   }
 
   private getModeTitle(): string {
