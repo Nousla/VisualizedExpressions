@@ -4,11 +4,14 @@ import * as math from 'mathjs';
 @Injectable()
 export class ProblemSolvingService {
 
-    checkExpression(ex: string, x: number, y: number): boolean {
+    checkExpression(ex: string, x: string, y: string): boolean {
         var expression = ex.split('=');
         var leftside = expression[0];
         var rightside = expression[1];
         var symbol: string;
+
+        x = math.parse(x).eval();
+        y = math.parse(y).eval();
 
         try {
             var node = math.parse(ex.replace('=', '=='));

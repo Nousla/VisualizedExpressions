@@ -1,0 +1,58 @@
+#frontpage_root_box {
+    display: flex;
+    flex-direction: column;
+    zoom: 150%;
+}
+#frontpage_title{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 20pt;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+#frontpage_inputbox {
+    font-family: Georgia;
+    display: block;
+    text-align: center;
+    margin-top: 1%;
+}
+.frontpage_expression_box {
+    text-align: center;
+    display: block;
+    border: solid;
+    border-radius: 10px;
+    padding: 5px;
+    
+}
+#frontpage_dropdown_generatebtn_box {
+    display:flex;
+    align-items:flex-start;
+    justify-content: center;
+    padding-top: 3px; 
+}
+#frontpage_expression_field {
+    display: block;
+    text-align: center;
+    margin-left: 60px;
+}
+.frontpage_generatebtn {
+    display: inline-block;
+    margin-left: 2px;
+}
+#frontpage_dropdownmenu {
+    display: inline-block;
+    padding-bottom: 10px;
+}
+#frontpage_expression_des {
+    display: block;
+}
+#frontpage_output_area {
+    margin-top: 5px;
+    height: 25vh;
+}
+.frontpage_sandboxbtn_box {
+    text-align: center;
+    display: grid;
+    border: solid;
+    border-radius: 10px;
+    padding: 5px;
+}
