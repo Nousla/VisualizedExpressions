@@ -17,6 +17,7 @@ import VisualizationService from '../visualization/visualization-service';
 import { VISUALIZATION_SERVICE } from "../visualization/visualization_injection_token";
 import { SandboxTextService } from "./sandbox-text.service";
 import { ExpressionOperationTextService } from "./expression-operation-text.service";
+import { EncodeService } from "../encode.service";
 
 @Component({
   selector: 'sandbox',
@@ -28,7 +29,7 @@ import { ExpressionOperationTextService } from "./expression-operation-text.serv
     { provide: MATH_OUTPUT_SERVICE, useClass: MathTextOutputService },
     ImportExpressionService, GuideTreeService, SandboxTextService,
     { provide: VISUALIZATION_SERVICE, useClass: MirrorMountainService },
-    ExpressionOperationTextService
+    ExpressionOperationTextService, EncodeService
   ]
 })
 
