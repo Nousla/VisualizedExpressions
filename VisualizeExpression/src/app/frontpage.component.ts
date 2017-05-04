@@ -69,7 +69,7 @@ export class FrontpageComponent {
     }
 
     onCopy(){
-        var textToCopy =<HTMLTextAreaElement> document.querySelector("#output_area");
+        var textToCopy =<HTMLTextAreaElement> document.querySelector("#frontpage_output_area");
         textToCopy.select();
         document.execCommand("copy");
     }

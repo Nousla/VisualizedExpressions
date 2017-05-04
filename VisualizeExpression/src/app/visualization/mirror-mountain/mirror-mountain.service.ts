@@ -17,13 +17,13 @@ export class MirrorMountainService implements VisualizationService {
     private nodeVerticalSpacing = 20;
     private textHorizontalMargin = 5;
 
-    private eventHandler: VisualizationEventHandler;
-
     constructor() {
         var svg = d3.select("body")
             .append("svg")
             .attr("id", "svg-hidden")
-            .attr("visibility", "hidden");
+            .attr("visibility", "hidden")
+            .style("height", "0")
+            .style("display", "none");
 
         svg.append("text");
 
@@ -31,7 +31,7 @@ export class MirrorMountainService implements VisualizationService {
             .attr("class", "mirror-mountain-rect");
     }
 
-    configure(config: Object, eventHandler: VisualizationEventHandler): void {
+    configure(config: Object): void {
         if (config) {
             if (config.hasOwnProperty("width")) {
                 this.width = config["width"];
@@ -49,13 +49,9 @@ export class MirrorMountainService implements VisualizationService {
                 this.width = config["nodeHeight"];
             }
         }
-
-        if (eventHandler) {
-            this.eventHandler = eventHandler;
-        }
     }
 
-    construct(elementRef: ElementRef, internalData: InternalData): void {
+    construct(elementRef: ElementRef, internalData: InternalData, eventHandler: VisualizationEventHandler): void {
         if (!elementRef) {
             return;
         }
@@ -99,7 +95,7 @@ export class MirrorMountainService implements VisualizationService {
             .data(nodes)
             .enter()
             .each(function (node: D3Node) {
-                instance.processNode(node, this);
+                instance.processNode(node, this, eventHandler);
             });
 
         var gNode = <SVGGElement>rootGroup.node();
@@ -285,11 +281,11 @@ export class MirrorMountainService implements VisualizationService {
                 node["y"] = -node["y"];
             }
 
-            if (node.data.group === InternalNodeGroup.Operator 
+            if (node.data.group === InternalNodeGroup.Operator
                 && node.data.type !== InternalNodeType.Equality) {
                 var leaves = node.leaves();
                 var treeWidth = this.calculateNodesWidth(leaves);
-                node["x"] = leaves[0]["x"] + (treeWidth / 2) - (node["width"]/2);
+                node["x"] = leaves[0]["x"] + (treeWidth / 2) - (node["width"] / 2);
             }
 
             node["x"] += layoutOutput.maxWidth / 2;
@@ -310,50 +306,49 @@ export class MirrorMountainService implements VisualizationService {
         return (rightNode["x"] + rightNode["width"]) - leftNode["x"];
     }
 
-    private processNode(node: D3Node, element: d3.EnterElement): void {
+    private processNode(node: D3Node, element: d3.EnterElement, eventHandler: VisualizationEventHandler): void {
         switch (node.data.group) {
-            case InternalNodeGroup.Number: this.processNumberNode(node, element);
+            case InternalNodeGroup.Number: this.processNumberNode(node, element, eventHandler);
                 break;
-            case InternalNodeGroup.Operator: this.processOperatorNode(node, element);
+            case InternalNodeGroup.Operator: this.processOperatorNode(node, element, eventHandler);
                 break;
-            case InternalNodeGroup.Container: this.processContainerNode(node, element);
+            case InternalNodeGroup.Container: this.processContainerNode(node, element, eventHandler);
                 break;
-            case InternalNodeGroup.Symbol: this.processSymbolNode(node, element);
+            case InternalNodeGroup.Symbol: this.processSymbolNode(node, element, eventHandler);
                 break;
-            default: this.processStandardNode(node, element);
+            default: this.processStandardNode(node, element, eventHandler);
                 break;
         }
     }
 
-    private processNumberNode(node: D3Node, element: d3.EnterElement): void {
-        this.processStandardNode(node, element);
+    private processNumberNode(node: D3Node, element: d3.EnterElement, eventHandler: VisualizationEventHandler): void {
+        this.processStandardNode(node, element, eventHandler);
     }
 
-    private processOperatorNode(node: D3Node, element: d3.EnterElement): void {
-        this.processStandardNode(node, element);
+    private processOperatorNode(node: D3Node, element: d3.EnterElement, eventHandler: VisualizationEventHandler): void {
+        this.processStandardNode(node, element, eventHandler);
     }
 
-    private processContainerNode(node: D3Node, element: d3.EnterElement): void {
+    private processContainerNode(node: D3Node, element: d3.EnterElement, eventHandler: VisualizationEventHandler): void {
         return;
     }
 
-    private processSymbolNode(node: D3Node, element: d3.EnterElement): void {
-        this.processStandardNode(node, element);
+    private processSymbolNode(node: D3Node, element: d3.EnterElement, eventHandler: VisualizationEventHandler): void {
+        this.processStandardNode(node, element, eventHandler);
     }
 
-    private processStandardNode(node: D3Node, element: d3.EnterElement): void {
+    private processStandardNode(node: D3Node, element: d3.EnterElement, eventHandler: VisualizationEventHandler): void {
         var newNodeSelection = d3.select(element).append("g")
             .attr("transform", (node: D3Node) => { return "translate(" + node["x"] + "," + node["y"] + ")" })
 
-        newNodeSelection.append("rect")
+        var rect = newNodeSelection.append("rect")
             .attr("x", "0")
             .attr("y", "0")
             .attr("width", (node: D3Node) => { return node["width"] })
             .attr("height", this.nodeHeight)
-            .attr("class", this.getRectClassName)
-            .on("click", this.onClick.bind(this));
+            .attr("class", this.getRectClassName);
 
-        newNodeSelection.append("svg")
+        var text = newNodeSelection.append("svg")
             .attr("width", (node: D3Node) => { return node["width"] })
             .attr("height", this.nodeHeight)
             .append("text")
@@ -363,7 +358,14 @@ export class MirrorMountainService implements VisualizationService {
             .attr("class", this.getTextClassName)
             .attr("dy", this.getTextDY)
             .text((node: D3Node) => { return node.data.text })
-            .on("click", this.onClick.bind(this));
+
+        if (eventHandler) {
+            rect.style("cursor", "pointer")
+                .on("click", (node: D3Node) => { this.onClick(node, eventHandler) });
+
+            text.style("cursor", "pointer")
+                .on("click", (node: D3Node) => { this.onClick(node, eventHandler) })
+        }
     }
 
     private processLink(link: D3Link, element: d3.EnterElement): void {
@@ -396,9 +398,9 @@ export class MirrorMountainService implements VisualizationService {
             .attr("class", "mirror-mountain-line")
     }
 
-    private onClick(node: D3Node): void {
-        if (this.eventHandler) {
-            this.eventHandler.selectNode(node.data)
+    private onClick(node: D3Node, eventHandler: VisualizationEventHandler): void {
+        if (eventHandler) {
+            eventHandler.selectNode(node.data)
         }
     }
 

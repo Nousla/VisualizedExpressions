@@ -1,17 +1,17 @@
 <div class="expression_box">
     <div class="expression_actions" #banner>
         <p>{{counter}}</p>
-        <button (click)="addExpression()">Add New</button>
-        <button (click)="cloneExpression()">Clone</button>
-        <button (click)="removeExpression()">Remove</button>
-        <button (click)="moveExpressionUp()">Move up</button>
-        <button (click)="moveExpressionDown()">Move down</button>
+        <button pButton (click)="addExpression()" label="Add New"></button>
+        <button pButton (click)="cloneExpression()" label="Clone"></button>
+        <button pButton (click)="removeExpression()" label="Remove"></button>
+        <button pButton (click)="moveExpressionUp()" label="Move up"></button>
+        <button pButton (click)="moveExpressionDown()" label="Move down"></button>
     </div>
     <div class="expression_edit">
         <input type="text" (ngModelChange)="onInputChange($event)" [(ngModel)]="input">
     </div>
     <div class="visualization_render">
-        <visualization [data]="data" [config]="config" [eventHandler]="eh"></visualization>
+        <visualization [data]="data" [config]="config" [eventHandler]="expressionEventHandler"></visualization>
     </div>
 </div>
 

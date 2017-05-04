@@ -4,8 +4,7 @@ import VisualizationEventHandler from './visualization-event-handler';
 
 @Component({
   selector: 'visualization',
-  template: '<visualization-mirror-mountain [data]="data" [config]="config" [eventHandler]="eventHandler"></visualization-mirror-mountain>',
-  styleUrls: ['./visualization.component.css']
+  template: '<visualization-mirror-mountain [data]="data" [config]="config" [eventHandler]="eventHandler"></visualization-mirror-mountain>'
 })
 
 export class VisualizationComponent {

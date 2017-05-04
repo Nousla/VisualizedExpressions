@@ -12,6 +12,7 @@ import { ProblemSolvingService } from "./problemsolving.service"
 import { ImportExpressionService } from "./import-expression.service";
 import { GuideProgressService } from "./guideprogress.service";
 import { GuideTree, GuideNode } from "./guide-tree";
+import { ButtonModule } from 'primeng/primeng';
 
 @Component({
     selector: 'expression',
@@ -41,6 +42,8 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
     private readonly TIMEOUT_LIMIT_MS: Number = 200;
     private readonly TIMEOUT_LIMIT_MS_CHECK: Number = 1000;
 
+    private expressionEventHandler: ExpressionEventHandler;
+
     constructor(private ees: ExpressionEventService,
         @Inject(MATH_INPUT_SERVICE) private mis: MathInputService,
         private es: ExpressionService,
@@ -52,6 +55,7 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
     ) {
         this.input = "";
         this.operationState = OperationState.Closed;
+        this.expressionEventHandler = eh;
     }
 
     ngOnInit(): void {
@@ -100,7 +104,7 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
                 var result = this.input.split('=');
                 var leftside = result[0];
                 var rightside = result[1];
-                if (leftside == this.imp.importedCorrectSolution.toString()  || rightside == this.imp.importedCorrectSolution.toString()) {
+                if (leftside == this.imp.importedCorrectSolution.toString() || rightside == this.imp.importedCorrectSolution.toString()) {
                     this.guideSuccess();
                 }
             }
