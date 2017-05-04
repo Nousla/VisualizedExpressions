@@ -5,6 +5,7 @@ import InternalData from "../visualization/internal-data";
 import MathInputService from "../visualization/math-input-service";
 import MATH_INPUT_SERVICE from "../visualization/math-input-service-token";
 import { ExpressionOperationTextService } from "./expression-operation-text.service";
+import { ButtonModule } from 'primeng/primeng';
 
 @Component({
     selector: 'expression-operation',

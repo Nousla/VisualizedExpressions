@@ -28,8 +28,8 @@
                     <visualization [data]="newData" class="expression_operation_visualization"></visualization>
                 </div>
                 <div class="expression_operation_actions">
-                    <button (click)="applyOperation()" [disabled]="isApplyBtnDisabled()">Apply Operation</button>
-                    <button (click)="cancelOperation()">Cancel Operation</button>
+                    <button pButton (click)="applyOperation()" [disabled]="isApplyBtnDisabled()" label="Apply Operation"></button>
+                    <button pButton (click)="cancelOperation()" label="Cancel Operation"></button>
                 </div>
             </div>
         </div>
