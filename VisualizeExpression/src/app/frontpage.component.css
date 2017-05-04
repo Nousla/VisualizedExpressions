@@ -1,7 +1,7 @@
 #frontpage_root_box {
     display: flex;
     flex-direction: column;
-    zoom: 150%;
+    padding: 8px;
 }
 #frontpage_title{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -34,6 +34,7 @@
 #frontpage_dropdown_generatebtn_box {
     display:flex;
     align-items:flex-start;
+    flex-wrap: wrap;
     justify-content: center;
     padding-top: 3px; 
 }
@@ -55,13 +56,15 @@
 }
 #frontpage_output_area {
     margin-top: 5px;
+    margin-bottom: 5px;
     height: 25vh;
 
     width: 98%;
     box-sizing: border-box;
 }
-.frontpage_sandboxbtn_box {
+.frontpage_sandboxbtn {
     text-align: center;
     display: grid;
     padding: 5px;
+    width: 100%;
 }
