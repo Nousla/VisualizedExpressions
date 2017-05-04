@@ -54,13 +54,19 @@ export class MathTextOutputService implements MathOutputService {
     }
 
     processOperatorGroupNode(node: InternalNode, mathBuilder: string[]): void {
-        if (!node.children || node.children.length !== 2) {
+        if (!node.children || node.children.length > 2 || node.children.length === 0) {
             return;
         }
 
-        this.processNode(node.children[0], mathBuilder);
-        mathBuilder.push(node.text);
-        this.processNode(node.children[1], mathBuilder);
+        if (node.children.length === 1) {
+            mathBuilder.push(node.text);
+            this.processNode(node.children[0], mathBuilder);
+        }
+        else {
+            this.processNode(node.children[0], mathBuilder);
+            mathBuilder.push(node.text);
+            this.processNode(node.children[1], mathBuilder);
+        }
     }
 
     processSymbolGroupNode(node: InternalNode, mathBuilder: string[]) {
