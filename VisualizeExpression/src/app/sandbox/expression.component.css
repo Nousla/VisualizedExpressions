@@ -38,17 +38,7 @@
 }
 
 .expression_actions > button {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 8pt;
-    border-radius: 5px;
-    border: 1px solid black;
-}
-
-.expression_actions > button:active {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 8pt;
-    border-radius: 5px;
-    background-color: grey;
+    font-size: 9pt;
 }
 
 .expression_actions > p {
@@ -72,13 +62,14 @@
 }  
 
 .expression_edit > input {
-    display: inline-flex;
     font-family: monospace;
     font-size: 15pt;
     border: 1px solid grey;
-    padding-left: 5px;
-    padding-right: 5px;
-    width: 99%;
+    width: 100%;
+    padding: 1px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box; 
 }
 
 .visualization_render {

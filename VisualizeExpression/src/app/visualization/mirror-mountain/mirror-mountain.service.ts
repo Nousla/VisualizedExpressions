@@ -22,7 +22,7 @@ export class MirrorMountainService implements VisualizationService {
             .append("svg")
             .attr("id", "svg-hidden")
             .attr("visibility", "hidden")
-            .style("height","0")
+            .style("height", "0")
             .style("display", "none");
 
         svg.append("text");
@@ -281,11 +281,11 @@ export class MirrorMountainService implements VisualizationService {
                 node["y"] = -node["y"];
             }
 
-            if (node.data.group === InternalNodeGroup.Operator 
+            if (node.data.group === InternalNodeGroup.Operator
                 && node.data.type !== InternalNodeType.Equality) {
                 var leaves = node.leaves();
                 var treeWidth = this.calculateNodesWidth(leaves);
-                node["x"] = leaves[0]["x"] + (treeWidth / 2) - (node["width"]/2);
+                node["x"] = leaves[0]["x"] + (treeWidth / 2) - (node["width"] / 2);
             }
 
             node["x"] += layoutOutput.maxWidth / 2;
@@ -341,15 +341,14 @@ export class MirrorMountainService implements VisualizationService {
         var newNodeSelection = d3.select(element).append("g")
             .attr("transform", (node: D3Node) => { return "translate(" + node["x"] + "," + node["y"] + ")" })
 
-        newNodeSelection.append("rect")
+        var rect = newNodeSelection.append("rect")
             .attr("x", "0")
             .attr("y", "0")
             .attr("width", (node: D3Node) => { return node["width"] })
             .attr("height", this.nodeHeight)
-            .attr("class", this.getRectClassName)
-            .on("click", this.onClick.bind(this));
+            .attr("class", this.getRectClassName);
 
-        newNodeSelection.append("svg")
+        var text = newNodeSelection.append("svg")
             .attr("width", (node: D3Node) => { return node["width"] })
             .attr("height", this.nodeHeight)
             .append("text")
@@ -359,7 +358,14 @@ export class MirrorMountainService implements VisualizationService {
             .attr("class", this.getTextClassName)
             .attr("dy", this.getTextDY)
             .text((node: D3Node) => { return node.data.text })
-            .on("click", (node: D3Node) => { this.onClick(node, eventHandler) });
+
+        if (eventHandler) {
+            rect.style("cursor", "pointer")
+                .on("click", (node: D3Node) => { this.onClick(node, eventHandler) });
+
+            text.style("cursor", "pointer")
+                .on("click", (node: D3Node) => { this.onClick(node, eventHandler) })
+        }
     }
 
     private processLink(link: D3Link, element: d3.EnterElement): void {

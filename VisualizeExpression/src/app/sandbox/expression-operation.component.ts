@@ -4,11 +4,12 @@ import { InternalNode } from "../visualization/internal-node";
 import InternalData from "../visualization/internal-data";
 import MathInputService from "../visualization/math-input-service";
 import MATH_INPUT_SERVICE from "../visualization/math-input-service-token";
+import { ExpressionOperationTextService } from "./expression-operation-text.service";
 
 @Component({
     selector: 'expression-operation',
     templateUrl: './expression-operation.component.html',
-    styleUrls: ['./expression-operation.component.css'],
+    styleUrls: ['./expression-operation.component.css']
 })
 
 export class ExpressionOperationComponent implements OnInit, OnChanges {
@@ -34,13 +35,8 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
     private readonly TIMEOUT_LIMIT_MS: Number = 200;
     private updated: boolean;
 
-    private readonly TEXT_VISUALIZE_EXPRESSION: string = "Visualize an expression to add operations";
-    private readonly TEXT_SELECT_NODE = "Select a node in the visualization to add an operation";
-    private readonly TEXT_REPLACEMENT_OPERATION = "Replacement operation added to node. "
-    + "Input the replacement expression and click apply, or click cancel to remove the operation";
-    private readonly TEXT_UNEXPECTED_PROBLEM = "An unexpected problem has occurred";
-
-    constructor( @Inject(MATH_INPUT_SERVICE) private mis: MathInputService) {
+    constructor( @Inject(MATH_INPUT_SERVICE) private mis: MathInputService, 
+    private eots: ExpressionOperationTextService) {
         this.operationState = OperationState.Closed;
         this.updated = false;
     }
@@ -107,10 +103,10 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
 
     private getInfoText(): string {
         switch (this.operationState) {
-            case OperationState.Closed: return this.TEXT_VISUALIZE_EXPRESSION;
-            case OperationState.Waiting: return this.TEXT_SELECT_NODE;
-            case OperationState.Added: return this.TEXT_REPLACEMENT_OPERATION;
-            default: return this.TEXT_UNEXPECTED_PROBLEM;
+            case OperationState.Closed: return this.eots.getVisualizeExpressionText();
+            case OperationState.Waiting: return this.eots.getSelectNodeText();
+            case OperationState.Added: return this.eots.getReplacementOperationText();
+            default: return this.eots.getUnexpectedProblemText();
         }
     }
 }

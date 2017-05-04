@@ -15,6 +15,8 @@ import SandboxMode from "./sandbox-mode";
 import { MirrorMountainService } from "../visualization/mirror-mountain/mirror-mountain.service";
 import VisualizationService from '../visualization/visualization-service';
 import { VISUALIZATION_SERVICE } from "../visualization/visualization_injection_token";
+import { SandboxTextService } from "./sandbox-text.service";
+import { ExpressionOperationTextService } from "./expression-operation-text.service";
 
 @Component({
   selector: 'sandbox',
@@ -24,8 +26,9 @@ import { VISUALIZATION_SERVICE } from "../visualization/visualization_injection_
     ExpressionEventService,
     { provide: MATH_INPUT_SERVICE, useClass: MathTextInputService },
     { provide: MATH_OUTPUT_SERVICE, useClass: MathTextOutputService },
-    ImportExpressionService, GuideTreeService, 
-    { provide: VISUALIZATION_SERVICE, useClass: MirrorMountainService }
+    ImportExpressionService, GuideTreeService, SandboxTextService,
+    { provide: VISUALIZATION_SERVICE, useClass: MirrorMountainService },
+    ExpressionOperationTextService
   ]
 })
 
@@ -42,9 +45,12 @@ export class SandboxComponent {
   private mode: SandboxMode;
   private importedExpressionData: InternalData;
 
+  private textService: SandboxTextService;
+
   constructor(private resolver: ComponentFactoryResolver,
     private ees: ExpressionEventService,
     private imp: ImportExpressionService,
+    private sts: SandboxTextService,
     @Inject(MATH_INPUT_SERVICE) private mis: MathInputService) {
     this.subscription = ees.expressionAddNew$.subscribe(this.onAddNewExpression.bind(this));
     this.subscription = ees.expressionAdd$.subscribe(this.onAddExpression.bind(this));
@@ -56,7 +62,8 @@ export class SandboxComponent {
     this.expressionComponents = [];
 
     this.mode = SandboxMode.Standard;
-    this.importedExpressionData = this.getImportedExpressionData();    
+    this.importedExpressionData = this.getImportedExpressionData();
+    this.textService = sts;
   }
 
   ngOnInit(): void {
@@ -187,14 +194,23 @@ export class SandboxComponent {
 
   private getModeTitle(): string {
     switch (this.mode) {
-      case SandboxMode.Guide: return "Guide Mode";
-      case SandboxMode.ProblemSolving: return "Problem Solving Mode";
-      case SandboxMode.Standard: return "Standard Mode";
-      default: return "Mode not found";
+      case SandboxMode.Guide: return this.sts.getModeGuideText();
+      case SandboxMode.ProblemSolving: return this.sts.getModeProblemSolvingText();
+      case SandboxMode.Standard: return this.sts.getModeStandardText();
+      default: return this.sts.getModeNotFoundText();
     }
   }
 
-  private getDescription(): string {
+  private getModeDescription(): string {
+    switch (this.mode) {
+      case SandboxMode.Guide: return this.sts.getGuideDescriptionText();
+      case SandboxMode.ProblemSolving: return this.sts.getProblemSolvingDescriptionText();
+      case SandboxMode.Standard: return this.sts.getStandardDescriptionText();
+      default: return this.sts.getModeNotFoundText();
+    }
+  }
+
+  private getImportedDescription(): string {
     return this.imp.importedDescription;
   }
 }
