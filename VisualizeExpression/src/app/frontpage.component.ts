@@ -15,12 +15,12 @@ export class FrontpageComponent {
     type: string;
     types: SelectItem[];
     chosenType: number;
-    expression_field: string;
-    url_output_field: string;
-    correct_solution_field: string;
-    wrong_solution_field: string;
-    tree_area: string;
-    description_area: string;
+    expression: string;
+    urlOutput: string;
+    correctSolution: string;
+    wrongSolution: string;
+    tree: string;
+    description: string;
 
 
     constructor(private encode: EncodeService, private router: Router){
@@ -37,41 +37,33 @@ export class FrontpageComponent {
 
     onGenerateURL(){
         var URL: string[] = [];
+            URL.push(window.location.protocol);
+            URL.push("//");
+            URL.push(window.location.host);
+            URL.push("/sandbox;");
         switch(this.chosenType){
         case 1:
-            URL.push(window.location.protocol);
-            URL.push("//");
-            URL.push(window.location.host);
-            URL.push("/sandbox;");
             URL.push("ex=");
-            URL.push(this.encode.encodeURL(this.expression_field));
-            this.url_output_field=URL.join("");
+            URL.push(this.encode.encodeURL(this.expression));
+            this.urlOutput=URL.join("");
         break;
         case 2:
-            URL.push(window.location.protocol);
-            URL.push("//");
-            URL.push(window.location.host);
-            URL.push("/sandbox;");
             URL.push("sp=ps;");
             URL.push("ex=");
-            URL.push(this.encode.encodeURL(this.expression_field));
+            URL.push(this.encode.encodeURL(this.expression));
             URL.push(";x=");
-            URL.push(this.encode.encodeURL(this.correct_solution_field));
+            URL.push(this.encode.encodeURL(this.correctSolution));
             URL.push(";y=");
-            URL.push(this.encode.encodeURL(this.wrong_solution_field));
-            this.url_output_field=URL.join("");
+            URL.push(this.encode.encodeURL(this.wrongSolution));
+            this.urlOutput=URL.join("");
         break;
         case 3:
-            URL.push(window.location.protocol);
-            URL.push("//");
-            URL.push(window.location.host);
-            URL.push("/sandbox;");
             URL.push("sp=gd;");
             URL.push("tree=");
-            URL.push(this.encode.encodeURL(this.tree_area));
+            URL.push(this.encode.encodeURL(this.tree));
             URL.push(";desc=");
-            URL.push(this.encode.encodeURL(this.description_area));
-            this.url_output_field=URL.join("");
+            URL.push(this.encode.encodeURL(this.description));
+            this.urlOutput=URL.join("");
             break;
         }
     }

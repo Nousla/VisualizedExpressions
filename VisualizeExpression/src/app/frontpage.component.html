@@ -1,29 +1,30 @@
-<div id="root_box">
-    <div class="sandboxbtn_box">
-        <button class="sandboxbtn" pButton type="button" (click)="onGoToSandbox()" label="Go to Sandbox"></button>
+<div id="frontpage_root_box">
+    <h4 id="frontpage_title">Visualized Mathematical Expressions</h4>
+    <div class="frontpage_sandboxbtn_box">
+        <button class="frontpage_sandboxbtn" pButton type="button" (click)="onGoToSandbox()" label="Go to Sandbox"></button>
     </div>
     <div id="frontpage_inputbox">
-        <div class="expression_box" [ngSwitch]="chosenType">
-            <label id="expression_des">Choose the type of tool you want to use and then fill out the necessary boxes </label>
-            <div id="dropdown_generatebtn_box">
-                <p-dropdown id="dropdownmenu" [options]="types" [(ngModel)]="type" (onChange)="onDropdownChange($event.originalEvent, $event.value)"></p-dropdown>
-                <button class="generatebtn" pButton type="button" (click)="onGenerateURL()" label="Generate URL"></button>
+        <div class="frontpage_expression_box" [ngSwitch]="chosenType">
+            <label id="frontpage_expression_des">Choose the type of tool you want to use and then fill out the necessary boxes </label>
+            <div id="frontpage_dropdown_generatebtn_box">
+                <p-dropdown id="frontpage_dropdownmenu" [options]="types" [(ngModel)]="type" (onChange)="onDropdownChange($event.originalEvent, $event.value)"></p-dropdown>
+                <button class="frontpage_generatebtn" pButton type="button" (click)="onGenerateURL()" label="Generate URL"></button>
             </div>
             
             <div *ngSwitchDefault class="SandboxType">
-                <input type="text" pInputText [(ngModel)]="expression_field" placeholder="Expression">
+                <input type="text" pInputText [(ngModel)]="expression" placeholder="Expression">
             </div>
             <div *ngSwitchCase="2" class="ProblemSolvingType">
-                <input type="text" pInputText [(ngModel)]="expression_field" placeholder="Expression">
-                <input type="text" pInputText [(ngModel)]="correct_solution_field" placeholder="Correct Solution">
-                <input type="text" pInputText [(ngModel)]="wrong_solution_field" placeholder="Wrong Solution">
+                <input type="text" pInputText [(ngModel)]="expression" placeholder="Expression">
+                <input type="text" pInputText [(ngModel)]="correctSolution" placeholder="Correct Solution">
+                <input type="text" pInputText [(ngModel)]="wrongSolution" placeholder="Wrong Solution">
             </div>
             <div *ngSwitchCase="3" class="GuideType">
-                <textarea  [rows]="5" [cols]="30" pInputTextarea [(ngModel)]="tree_area" placeholder="Tree"></textarea>
-                <textarea  [rows]="5" [cols]="30" pInputTextarea [(ngModel)]="description_area" placeholder="Guide Description"></textarea>
+                <textarea  [rows]="5" [cols]="30" pInputTextarea [(ngModel)]="tree" placeholder="Tree"></textarea>
+                <textarea  [rows]="5" [cols]="30" pInputTextarea [(ngModel)]="description" placeholder="Guide Description"></textarea>
             </div>
         </div>
     </div>
-    <textarea id="output_area" [rows]="2" [cols]="80" pInputTextarea [(ngModel)]="url_output_field" placeholder="URL output"></textarea>
-    <button class="copybtn" pButton type="button" (click)="onCopy()" label="Copy Link"></button>
+    <textarea id="frontpage_output_area" [rows]="2" [cols]="80" pInputTextarea [(ngModel)]="urlOutput" placeholder="URL output"></textarea>
+    <button class="frontpage_copybtn" pButton type="button" (click)="onCopy()" label="Copy Link"></button>
 </div>
