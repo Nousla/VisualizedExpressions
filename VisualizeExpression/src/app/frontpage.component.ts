@@ -37,10 +37,8 @@ export class FrontpageComponent {
 
     onGenerateURL(){
         var URL: string[] = [];
-            URL.push(window.location.protocol);
-            URL.push("//");
-            URL.push(window.location.host);
-            URL.push("/sandbox;");
+            URL.push(window.location.href);
+            URL.push("sandbox;");
         switch(this.chosenType){
         case 1:
             URL.push("ex=");
