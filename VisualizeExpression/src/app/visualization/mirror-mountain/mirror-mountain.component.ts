@@ -4,7 +4,7 @@ import VisualizationService from "../visualization-service";
 import VisualizationEventHandler from '../visualization-event-handler';
 import { MirrorMountainService } from "./mirror-mountain.service";
 import { MirrorMountainConfig } from "./mirror-mountain-config";
-import { VISUALIZATION_SERVICE } from "../visualization_injection_token";
+import { VISUALIZATION_SERVICE } from "../visualization-injection-token";
 
 @Component({
   selector: 'visualization-mirror-mountain',

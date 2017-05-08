@@ -14,7 +14,7 @@ import { MathInputService } from "../visualization/math-input-service";
 import SandboxMode from "./sandbox-mode";
 import { MirrorMountainService } from "../visualization/mirror-mountain/mirror-mountain.service";
 import VisualizationService from '../visualization/visualization-service';
-import { VISUALIZATION_SERVICE } from "../visualization/visualization_injection_token";
+import { VISUALIZATION_SERVICE } from "../visualization/visualization-injection-token";
 import { SandboxTextService } from "./sandbox-text.service";
 import { ExpressionOperationTextService } from "./expression-operation-text.service";
 import { EncodeService } from "../encode.service";

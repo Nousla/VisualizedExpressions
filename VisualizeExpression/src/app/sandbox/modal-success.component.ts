@@ -3,7 +3,7 @@ import {DialogModule} from 'primeng/primeng';
 
 @Component({
     selector: 'modal-success',
-    templateUrl: './modal-success.html', 
+    templateUrl: './modal-success.component.html', 
     encapsulation: ViewEncapsulation.None
 })
 

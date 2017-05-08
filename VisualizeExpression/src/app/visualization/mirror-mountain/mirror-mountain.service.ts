@@ -8,8 +8,6 @@ import VisualizationEventHandler from '../visualization-event-handler';
 
 @Injectable()
 export class MirrorMountainService implements VisualizationService {
-    private width = 750;
-    private height = 350;
     private nodeWidth = 40;
     private nodeHeight = 40;
 
@@ -32,21 +30,13 @@ export class MirrorMountainService implements VisualizationService {
     }
 
     configure(config: Object): void {
-        if (config) {
-            if (config.hasOwnProperty("width")) {
-                this.width = config["width"];
-            }
-
-            if (config.hasOwnProperty("height")) {
-                this.width = config["height"];
-            }
-
+        if (config && config instanceof MirrorMountainConfig) {
             if (config.hasOwnProperty("nodeWidth")) {
-                this.width = config["nodeWidth"];
+                this.nodeWidth = config["nodeWidth"];
             }
 
             if (config.hasOwnProperty("nodeHeight")) {
-                this.width = config["nodeHeight"];
+                this.nodeHeight = config["nodeHeight"];
             }
         }
     }
