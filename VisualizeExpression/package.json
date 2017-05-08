@@ -5,7 +5,10 @@
   "scripts": {
     "build": "rimraf dist && webpack --config webpack-env/webpack-prod.js --progress --profile --bail",
     "start": "webpack-dev-server --progress",
-    "test": "karma start"
+    "test": "concurrent \"npm run test-karma\" \"npm run test-protractor\"",
+    "test-karma": "karma start",
+    "test-protractor-server": "webdriver-manager update && webdriver-manager start",
+    "test-protractor": "protractor protractor.conf.js"
   },
   "keywords": [],
   "author": "Klaus Reche Riisom, Martin Slusarczyk Hubel",
@@ -34,6 +37,7 @@
     "@types/mathjs": "0.0.34",
     "@types/node": "^7.0.12",
     "angular2-template-loader": "^0.6.2",
+    "concurrently": "^3.4.0",
     "css-loader": "^0.28.0",
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.11.1",
@@ -46,11 +50,13 @@
     "karma-jasmine": "^1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
     "karma-webpack": "^2.0.3",
+    "protractor": "^5.1.1",
     "raw-loader": "^0.5.1",
     "rimraf": "^2.6.1",
     "style-loader": "^0.16.1",
     "to-string-loader": "^1.1.5",
     "ts-loader": "^2.0.3",
+    "ts-node": "^3.0.4",
     "typescript": "~2.1.0",
     "webpack": "^2.3.3",
     "webpack-dev-server": "^2.4.2",

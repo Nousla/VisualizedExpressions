@@ -62,7 +62,7 @@
     width: 98%;
     box-sizing: border-box;
 }
-.frontpage_sandboxbtn {
+#frontpage_sandboxbtn {
     text-align: center;
     display: grid;
     padding: 5px;
