@@ -57,8 +57,10 @@ export class MirrorMountainService implements VisualizationService {
         var layoutOutput = this.layoutHierarchy(rootNode);
         this.postprocessRootNode(rootNode, layoutOutput);
 
-        var svg = d3.select(elementRef.nativeElement)
-            .append("svg");
+        var svg = d3.select(elementRef.nativeElement).select("svg");
+        if (svg.empty()) {
+            svg = d3.select(elementRef.nativeElement).append("svg");
+        }
 
         var rectNode = <SVGRectElement>d3.select("#svg-hidden rect").node();
         var computedStyle = window.getComputedStyle(rectNode);
@@ -68,10 +70,15 @@ export class MirrorMountainService implements VisualizationService {
             rectStrokeWidth = 0;
         }
 
-        var rootGroup = svg.append("g")
-            .attr("transform", "translate(" + rectStrokeWidth + "," + rectStrokeWidth + ")");;
+        var rootGroup = svg.select("g");
+        if (rootGroup.empty()) {
+            rootGroup = svg.append("g");
+        }
+        rootGroup.attr("transform", "translate(" + rectStrokeWidth + "," + rectStrokeWidth + ")");
+
         var instance = this;
 
+        var nodes = rootNode.descendants();
         var links = rootNode.links();
         rootGroup.selectAll("line")
             .data(links)
