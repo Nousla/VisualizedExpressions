@@ -8,12 +8,11 @@ import { Injectable } from "@angular/core";
 export class MathTextInputService implements MathInputService {
 
     convert(input: string): InternalData {
-        var processedInput = this.preprocess(input);
         if (input === "") {
             return null;
         }
 
-        var nodeMap = new Map<mathjs.MathNode, InternalNode>();
+        var processedInput = this.preprocess(input);
         var rootNode: mathjs.MathNode;
 
         try {
@@ -23,6 +22,7 @@ export class MathTextInputService implements MathInputService {
             return null;
         }
 
+        var nodeMap = new Map<mathjs.MathNode, InternalNode>();
         var rootInternalNode = this.createNode(rootNode);
         nodeMap.set(rootNode, rootInternalNode);
         var internalData = new InternalData(rootInternalNode);
@@ -50,7 +50,7 @@ export class MathTextInputService implements MathInputService {
     }
 
     private preprocess(input: string): string {
-        return input.replace('=', '==').replace('/(\r\n|\r|\n)/g', '');
+        return input.replace('=', '==');
     }
 
     private postprocessOperator(input: string): string {
