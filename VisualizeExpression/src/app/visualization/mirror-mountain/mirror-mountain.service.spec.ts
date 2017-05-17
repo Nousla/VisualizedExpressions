@@ -19,7 +19,7 @@ describe('Mirror Mountain Service suite', () => {
         var hiddenSVG = document.querySelector("#svg-hidden");
         hiddenSVG.remove();
 
-        if(addedDocumentElement) {
+        if (addedDocumentElement) {
             addedDocumentElement.remove();
         }
     });
@@ -218,8 +218,8 @@ describe('Mirror Mountain Service suite', () => {
 
     it('#visualize should put leaf nodes at same level', () => {
         let nativeElement = document.createElement("div");
-        document.body.appendChild(nativeElement);      
-        addedDocumentElement = nativeElement;  
+        document.body.appendChild(nativeElement);
+        addedDocumentElement = nativeElement;
 
         let elementRef: ElementRef = new ElementRef(nativeElement);
 
@@ -266,11 +266,11 @@ describe('Mirror Mountain Service suite', () => {
         var rectStrokeWidth = parseInt(computedStyle.strokeWidth);
 
         let leafCheck = 0;
-        for(var i=0; i < nodeElements.length; i++) {
+        for (var i = 0; i < nodeElements.length; i++) {
             // For more information on SVG matrices: 
             // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform
             let nodeMatrix = nodeElements[i].getCTM();
-            if(nodeMatrix.f === rectStrokeWidth) {
+            if (nodeMatrix.f === rectStrokeWidth) {
                 leafCheck++;
             }
         }
@@ -280,8 +280,8 @@ describe('Mirror Mountain Service suite', () => {
 
     it('#visualize should put equality nodes at same level as leaf nodes', () => {
         let nativeElement = document.createElement("div");
-        document.body.appendChild(nativeElement);      
-        addedDocumentElement = nativeElement;  
+        document.body.appendChild(nativeElement);
+        addedDocumentElement = nativeElement;
 
         let elementRef: ElementRef = new ElementRef(nativeElement);
 
@@ -328,16 +328,52 @@ describe('Mirror Mountain Service suite', () => {
         var rectStrokeWidth = parseInt(computedStyle.strokeWidth);
 
         let leafCheck = 0;
-        for(var i=0; i < nodeElements.length; i++) {
+        for (var i = 0; i < nodeElements.length; i++) {
             // For more information on SVG matrices: 
             // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform
             let nodeMatrix = nodeElements[i].getCTM();
-            if(nodeMatrix.f === rectStrokeWidth) {
+            if (nodeMatrix.f === rectStrokeWidth) {
                 leafCheck++;
             }
         }
 
         expect(leafCheck).toBe(4);
+    });
+
+    it('#visualize should call back when node element clicked', (done: DoneFn) => {
+        let nativeElement = document.createElement("div");
+
+        let elementRef: ElementRef = new ElementRef(nativeElement);
+
+        let internalNode: InternalNode = new InternalNode();
+        internalNode.text = "x";
+        internalNode.children = [];
+        internalNode.type = InternalNodeType.Variable;
+        internalNode.group = InternalNodeGroup.Symbol;
+
+        let internalData: InternalData = new InternalData(internalNode);
+        let selectedNode: InternalNode;
+
+        let mockEventHandler: MockEmptyVisualizationHandler = {
+            selectNode(data: InternalNode) {
+                selectedNode = data;
+            }
+        };
+
+        service.visualize(elementRef, internalData, mockEventHandler);
+
+        let svgElement = nativeElement.firstElementChild;
+        let nodeElement = svgElement.querySelector("g");
+        let rectElement = nodeElement.querySelector("rect");
+
+        var event = document.createEvent("SVGEvents");
+        event.initEvent("click", false, false);
+        rectElement.dispatchEvent(event);
+
+        setTimeout(() => {
+            expect(selectedNode).toBeDefined();
+            done();
+        }, 50);
     });
 });
 
