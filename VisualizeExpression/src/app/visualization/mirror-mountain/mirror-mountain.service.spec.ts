@@ -36,15 +36,20 @@ describe('Mirror Mountain Service suite', () => {
     });
 
     it('#visualize should clear existing content', () => {
-        let mockElementRef: ElementRef = new ElementRef({});
+        let nativeElement = document.createElement("div");
+        let nativeElementChild = document.createElement("svg");
+        nativeElement.appendChild(nativeElementChild);
+
+        let mockElementRef: ElementRef = new ElementRef(nativeElement);
+        let mockInternalData: InternalData = new InternalData(new InternalNode());
         let mockEventHandler: MockEmptyVisualizationHandler = new MockEmptyVisualizationHandler();
 
-        let visualizeFunction = () => {
-            service.visualize(mockElementRef, undefined, mockEventHandler);
-        }
+        service.visualize(mockElementRef, mockInternalData, mockEventHandler);
 
-        expect(visualizeFunction).toThrowError(UndefinedArgumentException);
+        expect(nativeElement.childElementCount).toEqual(0);
     });
+
+
 });
 
 class MockEmptyVisualizationHandler implements VisualizationEventHandler {
