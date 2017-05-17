@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { GuideTree, GuideNode } from "./guide-tree";
 import { UndefinedArgumentException } from "../exceptions/undefined-argument-exception";
+import { UndefinedException } from "../exceptions/undefined-exception";
 
 
 @Injectable()
@@ -8,6 +9,7 @@ export class GuideProgressService {
 
     checkGuide(ex: string, tree: GuideTree): boolean {
         if (!tree) { throw new UndefinedArgumentException("tree") }
+        if(!ex) { throw new UndefinedArgumentException("expression") }
 
         var inputExpression = ex.replace(" ", "");
         var splitExpressions = inputExpression.split("=");
@@ -35,6 +37,9 @@ export class GuideProgressService {
     private traverseNodes(node: GuideNode, splitExpressions: string[], currentPath: number, tree: GuideTree): boolean {
         if (!node) {
             return false;
+        }
+        if(!node.expression) {
+            throw new UndefinedException("nodeExpression");
         }
 
         var check = this.checkNode(node, splitExpressions);
