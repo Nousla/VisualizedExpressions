@@ -229,9 +229,9 @@ describe('Mirror Mountain Service suite', () => {
         rootNode.group = InternalNodeGroup.Operator;
 
         let operatorNode: InternalNode = new InternalNode();
-        rootNode.text = "+";
-        rootNode.type = InternalNodeType.Addition;
-        rootNode.group = InternalNodeGroup.Operator;
+        operatorNode.text = "+";
+        operatorNode.type = InternalNodeType.Addition;
+        operatorNode.group = InternalNodeGroup.Operator;
 
         let leafNode1: InternalNode = new InternalNode();
         leafNode1.text = "5";
@@ -276,6 +276,68 @@ describe('Mirror Mountain Service suite', () => {
         }
 
         expect(leafCheck).toBe(3);
+    });
+
+    it('#visualize should put equality nodes at same level as leaf nodes', () => {
+        let nativeElement = document.createElement("div");
+        document.body.appendChild(nativeElement);      
+        addedDocumentElement = nativeElement;  
+
+        let elementRef: ElementRef = new ElementRef(nativeElement);
+
+        let rootNode: InternalNode = new InternalNode();
+        rootNode.text = "=";
+        rootNode.type = InternalNodeType.Equality;
+        rootNode.group = InternalNodeGroup.Operator;
+
+        let operatorNode: InternalNode = new InternalNode();
+        operatorNode.text = "+";
+        operatorNode.type = InternalNodeType.Addition;
+        operatorNode.group = InternalNodeGroup.Operator;
+
+        let leafNode1: InternalNode = new InternalNode();
+        leafNode1.text = "5";
+        leafNode1.type = InternalNodeType.Integer;
+        leafNode1.group = InternalNodeGroup.Number;
+
+        let leafNode2: InternalNode = new InternalNode();
+        leafNode2.text = "2";
+        leafNode2.type = InternalNodeType.Integer;
+        leafNode2.group = InternalNodeGroup.Number;
+
+        operatorNode.children = [leafNode1, leafNode2];
+
+        let leafNode3: InternalNode = new InternalNode();
+        leafNode3.text = "7";
+        leafNode3.type = InternalNodeType.Integer;
+        leafNode3.group = InternalNodeGroup.Number;
+
+        rootNode.children = [operatorNode, leafNode3];
+
+        let internalData: InternalData = new InternalData(rootNode);
+        let mockEventHandler: MockEmptyVisualizationHandler = new MockEmptyVisualizationHandler();
+
+        service.visualize(elementRef, internalData, mockEventHandler);
+
+        let svgElement = nativeElement.firstElementChild;
+        let rootElement = svgElement.firstElementChild;
+        let nodeElements = rootElement.querySelectorAll("g");
+
+        var hiddenRect = document.querySelector("#svg-hidden rect");
+        var computedStyle = window.getComputedStyle(hiddenRect);
+        var rectStrokeWidth = parseInt(computedStyle.strokeWidth);
+
+        let leafCheck = 0;
+        for(var i=0; i < nodeElements.length; i++) {
+            // For more information on SVG matrices: 
+            // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform
+            let nodeMatrix = nodeElements[i].getCTM();
+            if(nodeMatrix.f === rectStrokeWidth) {
+                leafCheck++;
+            }
+        }
+
+        expect(leafCheck).toBe(4);
     });
 });
 
