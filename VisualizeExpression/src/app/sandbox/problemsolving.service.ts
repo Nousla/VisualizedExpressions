@@ -5,20 +5,20 @@ import { UndefinedArgumentException } from "../exceptions/undefined-argument-exc
 @Injectable()
 export class ProblemSolvingService {
 
-    checkExpression(ex: string, x: string, y: string): boolean {
+    checkExpression(ex: string, correct: string, wrong: string): boolean {
         var expression = ex.split('=');
         var leftside = expression[0];
         var rightside = expression[1];
         var symbol: string;
 
-        if(!x) {
-            throw new UndefinedArgumentException("x");
+        if(!correct) {
+            throw new UndefinedArgumentException("correct");
         }
-        if(!y) {
-            throw new UndefinedArgumentException("y");
+        if(!wrong) {
+            throw new UndefinedArgumentException("wrong");
         }
-        x = math.parse(x).eval();
-        y = math.parse(y).eval();
+        correct = math.parse(correct).eval();
+        wrong = math.parse(wrong).eval();
 
         try {
             var node = math.parse(ex.replace('=', '=='));
@@ -44,8 +44,8 @@ export class ProblemSolvingService {
 
         var scopeCorrect = {};
         var scopeWrong = {};
-            scopeCorrect[symbol] = x;
-            scopeWrong[symbol] = y;
+            scopeCorrect[symbol] = correct;
+            scopeWrong[symbol] = wrong;
 
         try {
             var nodeL = math.parse(leftside);
