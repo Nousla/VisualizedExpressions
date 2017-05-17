@@ -105,7 +105,6 @@ export class MirrorMountainService implements VisualizationService {
     }
 
     private clearNodes(elementRef: ElementRef): void {
-        console.log("hej");
         d3.select(elementRef.nativeElement)
             .selectAll("*")
             .remove();
