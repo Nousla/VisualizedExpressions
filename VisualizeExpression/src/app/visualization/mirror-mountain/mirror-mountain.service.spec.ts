@@ -7,9 +7,21 @@ import VisualizationEventHandler from '../visualization-event-handler';
 
 describe('Mirror Mountain Service suite', () => {
     var service: MirrorMountainService;
+    var addedDocumentElement: Element;
 
     beforeEach(() => {
         service = new MirrorMountainService();
+
+        addedDocumentElement = undefined;
+    });
+
+    afterEach(() => {
+        var hiddenSVG = document.querySelector("#svg-hidden");
+        hiddenSVG.remove();
+
+        if(addedDocumentElement) {
+            addedDocumentElement.remove();
+        }
     });
 
     it('#visualize should fail at undefined element reference', () => {
@@ -78,7 +90,7 @@ describe('Mirror Mountain Service suite', () => {
 
         service.visualize(elementRef, internalData, mockEventHandler);
 
-        let svgElement = nativeElement.querySelector("svg");
+        let svgElement = nativeElement.firstElementChild;
         let nodeElement = svgElement.querySelector("g");
         expect(nodeElement).toBeDefined();
     });
@@ -99,8 +111,8 @@ describe('Mirror Mountain Service suite', () => {
 
         service.visualize(elementRef, internalData, mockEventHandler);
 
-        let svgElement = nativeElement.querySelector("svg");
-        let nodeElement = svgElement.querySelector("g");
+        let svgElement = nativeElement.firstElementChild;
+        let nodeElement = svgElement.firstElementChild;
         let textElement = svgElement.querySelector("text");
         expect(textElement.textContent).toBe("x");
     });
@@ -112,6 +124,72 @@ describe('Mirror Mountain Service suite', () => {
 
         let rootNode: InternalNode = new InternalNode();
         rootNode.text = "+";
+        rootNode.type = InternalNodeType.Addition;
+        rootNode.group = InternalNodeGroup.Operator;
+
+        let childNode1: InternalNode = new InternalNode();
+        childNode1.text = "5";
+        childNode1.type = InternalNodeType.Integer;
+        childNode1.group = InternalNodeGroup.Number;
+
+        let childNode2: InternalNode = new InternalNode();
+        childNode2.text = "2";
+        childNode2.type = InternalNodeType.Integer;
+        childNode2.group = InternalNodeGroup.Number;
+
+        rootNode.children = [childNode1, childNode2];
+
+        let internalData: InternalData = new InternalData(rootNode);
+        let mockEventHandler: MockEmptyVisualizationHandler = new MockEmptyVisualizationHandler();
+
+        service.visualize(elementRef, internalData, mockEventHandler);
+
+        let svgElement = nativeElement.firstElementChild;
+        let rootElement = svgElement.firstElementChild;
+        let nodeElements = rootElement.querySelectorAll("g");
+        expect(nodeElements.length).toBe(3);
+    });
+
+    it('#visualize should add two path elements', () => {
+        let nativeElement = document.createElement("div");
+
+        let elementRef: ElementRef = new ElementRef(nativeElement);
+
+        let rootNode: InternalNode = new InternalNode();
+        rootNode.text = "+";
+        rootNode.type = InternalNodeType.Addition;
+        rootNode.group = InternalNodeGroup.Operator;
+
+        let childNode1: InternalNode = new InternalNode();
+        childNode1.text = "5";
+        childNode1.type = InternalNodeType.Integer;
+        childNode1.group = InternalNodeGroup.Number;
+
+        let childNode2: InternalNode = new InternalNode();
+        childNode2.text = "2";
+        childNode2.type = InternalNodeType.Integer;
+        childNode2.group = InternalNodeGroup.Number;
+
+        rootNode.children = [childNode1, childNode2];
+
+        let internalData: InternalData = new InternalData(rootNode);
+        let mockEventHandler: MockEmptyVisualizationHandler = new MockEmptyVisualizationHandler();
+
+        service.visualize(elementRef, internalData, mockEventHandler);
+
+        let svgElement = nativeElement.firstElementChild;
+        let rootElement = svgElement.firstElementChild;
+        let pathElements = rootElement.querySelectorAll("path");
+        expect(pathElements.length).toBe(2);
+    });
+
+    it('#visualize should not add path elements for equality', () => {
+        let nativeElement = document.createElement("div");
+
+        let elementRef: ElementRef = new ElementRef(nativeElement);
+
+        let rootNode: InternalNode = new InternalNode();
+        rootNode.text = "=";
         rootNode.type = InternalNodeType.Equality;
         rootNode.group = InternalNodeGroup.Operator;
 
@@ -121,9 +199,9 @@ describe('Mirror Mountain Service suite', () => {
         childNode1.group = InternalNodeGroup.Number;
 
         let childNode2: InternalNode = new InternalNode();
-        childNode1.text = "2";
-        childNode1.type = InternalNodeType.Integer;
-        childNode1.group = InternalNodeGroup.Number;
+        childNode2.text = "2";
+        childNode2.type = InternalNodeType.Integer;
+        childNode2.group = InternalNodeGroup.Number;
 
         rootNode.children = [childNode1, childNode2];
 
@@ -132,10 +210,72 @@ describe('Mirror Mountain Service suite', () => {
 
         service.visualize(elementRef, internalData, mockEventHandler);
 
-        let svgElement = nativeElement.querySelector("svg");
-        let rootElement = svgElement.querySelector("g");
+        let svgElement = nativeElement.firstElementChild;
+        let rootElement = svgElement.firstElementChild;
+        let pathElements = rootElement.querySelectorAll("path");
+        expect(pathElements.length).toBe(0);
+    });
+
+    it('#visualize should put leaf nodes at same level', () => {
+        let nativeElement = document.createElement("div");
+        document.body.appendChild(nativeElement);      
+        addedDocumentElement = nativeElement;  
+
+        let elementRef: ElementRef = new ElementRef(nativeElement);
+
+        let rootNode: InternalNode = new InternalNode();
+        rootNode.text = "-";
+        rootNode.type = InternalNodeType.Subtraction;
+        rootNode.group = InternalNodeGroup.Operator;
+
+        let operatorNode: InternalNode = new InternalNode();
+        rootNode.text = "+";
+        rootNode.type = InternalNodeType.Addition;
+        rootNode.group = InternalNodeGroup.Operator;
+
+        let leafNode1: InternalNode = new InternalNode();
+        leafNode1.text = "5";
+        leafNode1.type = InternalNodeType.Integer;
+        leafNode1.group = InternalNodeGroup.Number;
+
+        let leafNode2: InternalNode = new InternalNode();
+        leafNode2.text = "2";
+        leafNode2.type = InternalNodeType.Integer;
+        leafNode2.group = InternalNodeGroup.Number;
+
+        operatorNode.children = [leafNode1, leafNode2];
+
+        let leafNode3: InternalNode = new InternalNode();
+        leafNode3.text = "7";
+        leafNode3.type = InternalNodeType.Integer;
+        leafNode3.group = InternalNodeGroup.Number;
+
+        rootNode.children = [operatorNode, leafNode3];
+
+        let internalData: InternalData = new InternalData(rootNode);
+        let mockEventHandler: MockEmptyVisualizationHandler = new MockEmptyVisualizationHandler();
+
+        service.visualize(elementRef, internalData, mockEventHandler);
+
+        let svgElement = nativeElement.firstElementChild;
+        let rootElement = svgElement.firstElementChild;
         let nodeElements = rootElement.querySelectorAll("g");
-        expect(nodeElements.length).toBe(3);
+
+        var hiddenRect = document.querySelector("#svg-hidden rect");
+        var computedStyle = window.getComputedStyle(hiddenRect);
+        var rectStrokeWidth = parseInt(computedStyle.strokeWidth);
+
+        let leafCheck = 0;
+        for(var i=0; i < nodeElements.length; i++) {
+            // For more information on SVG matrices: 
+            // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform
+            let nodeMatrix = nodeElements[i].getCTM();
+            if(nodeMatrix.f === rectStrokeWidth) {
+                leafCheck++;
+            }
+        }
+
+        expect(leafCheck).toBe(3);
     });
 });
 
