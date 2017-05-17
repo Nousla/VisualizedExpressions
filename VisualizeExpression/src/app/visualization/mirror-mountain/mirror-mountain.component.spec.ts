@@ -2,8 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { MirrorMountainComponent } from './mirror-mountain.component';
+import { VISUALIZATION_SERVICE } from "../visualization-injection-token";
+import { MirrorMountainService } from "./mirror-mountain.service";
 
-describe('MirrorMountainComponent suite', () => {
+describe('Mirror Mountain Component suite', () => {
     var component: MirrorMountainComponent;
     var componentFixture: ComponentFixture<MirrorMountainComponent>;
     var debugElement: DebugElement;
@@ -11,7 +13,10 @@ describe('MirrorMountainComponent suite', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [MirrorMountainComponent]
+            declarations: [MirrorMountainComponent],
+            providers: [
+                { provide: VISUALIZATION_SERVICE, useFactory: () => {return {} }}
+            ]
         });
 
         componentFixture = TestBed.createComponent(MirrorMountainComponent);

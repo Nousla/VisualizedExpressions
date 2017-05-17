@@ -3,6 +3,7 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { VisualizationComponent } from './visualization.component';
 import { MirrorMountainComponent } from './mirror-mountain/mirror-mountain.component';
+import { VISUALIZATION_SERVICE } from "./visualization-injection-token";
 
 describe('VisualizationComponent suite', () => {
     var component: VisualizationComponent;
@@ -10,7 +11,10 @@ describe('VisualizationComponent suite', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [VisualizationComponent, MirrorMountainComponent]
+            declarations: [VisualizationComponent, MirrorMountainComponent],
+            providers: [
+                { provide: VISUALIZATION_SERVICE, useFactory: () => {return {} }}
+            ]
         });
 
         componentFixture = TestBed.createComponent(VisualizationComponent);

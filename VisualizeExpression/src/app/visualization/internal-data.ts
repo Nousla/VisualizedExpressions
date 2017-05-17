@@ -15,7 +15,7 @@ export class InternalData {
     // Pre-order traversal
     traverseNodes(callback: (node: InternalNode) => void): void {
         if (!callback) {
-            throw new UndefinedArgumentException("callback not defined");
+            throw new UndefinedArgumentException("callback");
         }
 
         this.traverseNodesInternal(callback, this.rootNode);

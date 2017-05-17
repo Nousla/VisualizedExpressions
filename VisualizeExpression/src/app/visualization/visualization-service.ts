@@ -4,7 +4,7 @@ import VisualizationEventHandler from './visualization-event-handler';
 
 interface VisualizationService {
     configure(config: Object): void;
-    construct(elementRef: ElementRef, data: InternalData, eventHandler: VisualizationEventHandler): void;
+    visualize(elementRef: ElementRef, data: InternalData, eventHandler: VisualizationEventHandler): void;
 }
 
 export default VisualizationService;

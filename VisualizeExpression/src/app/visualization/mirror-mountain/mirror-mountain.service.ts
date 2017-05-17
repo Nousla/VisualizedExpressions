@@ -5,6 +5,7 @@ import { MirrorMountainConfig } from "./mirror-mountain-config";
 import * as d3 from 'd3';
 import { InternalNode, Type as InternalNodeType, Group as InternalNodeGroup } from '../internal-node';
 import VisualizationEventHandler from '../visualization-event-handler';
+import { UndefinedArgumentException } from "../../exceptions/undefined-argument-exception";
 
 @Injectable()
 export class MirrorMountainService implements VisualizationService {
@@ -41,16 +42,16 @@ export class MirrorMountainService implements VisualizationService {
         }
     }
 
-    construct(elementRef: ElementRef, internalData: InternalData, eventHandler: VisualizationEventHandler): void {
+    visualize(elementRef: ElementRef, internalData: InternalData, eventHandler: VisualizationEventHandler): void {
         if (!elementRef) {
-            return;
+            throw new UndefinedArgumentException("elementRef");
+        }
+
+        if (!internalData) {
+            throw new UndefinedArgumentException("internalData");
         }
 
         this.clearNodes(elementRef);
-
-        if (!internalData) {
-            return;
-        }
 
         var rootNode = d3.hierarchy(internalData.rootNode);
         rootNode = this.preprocessRootNode(rootNode);

@@ -27,6 +27,6 @@ export class MirrorMountainComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.visualizationService.configure(this.config);
-    this.visualizationService.construct(this.mirrorMountainBox, this.data, this.eventHandler);
+    this.visualizationService.visualize(this.mirrorMountainBox, this.data, this.eventHandler);
   }
 }

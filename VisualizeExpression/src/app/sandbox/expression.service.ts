@@ -12,15 +12,15 @@ export class ExpressionService {
 
     applyChange(data: InternalData, selectedNode: InternalNode, newNode: InternalNode): Object {
         if (!data) {
-            throw new UndefinedArgumentException("data is undefined!");
+            throw new UndefinedArgumentException("data");
         }
 
         if (!selectedNode) {
-            throw new UndefinedArgumentException("selectedNode is undefined!");
+            throw new UndefinedArgumentException("selectedNode");
         }
 
         if (!newNode) {
-            throw new UndefinedArgumentException("newNode is undefined!");
+            throw new UndefinedArgumentException("newNode");
         }
 
         var expression: Object;

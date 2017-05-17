@@ -7,7 +7,7 @@ import { UndefinedArgumentException } from "../exceptions/undefined-argument-exc
 export class GuideProgressService {
 
     checkGuide(ex: string, tree: GuideTree): boolean {
-        if (!tree) { throw new UndefinedArgumentException("tree is undefined") }
+        if (!tree) { throw new UndefinedArgumentException("tree") }
 
         var inputExpression = ex.replace(" ", "");
         var splitExpressions = inputExpression.split("=");

@@ -1,9 +1,10 @@
-export class Exception {
+export class Exception extends Error {
     private _name: string;
     private _message: string;
     private _stack: string;
 
     constructor(name: string, message: string) {
+        super();
         this._name = name;
         this._message = message;
         this._stack = (new Error()).stack;
