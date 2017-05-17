@@ -1,16 +1,12 @@
 import { Injectable, Inject } from "@angular/core";
-import MATH_OUTPUT_SERVICE from "../visualization/math-output-service-token";
-import MathOutputService from "../visualization/math-output-service";
 import InternalData from "../visualization/internal-data";
 import { InternalNode, Group as InternalNodeGroup } from "../visualization/internal-node";
 import UndefinedArgumentException from "../exceptions/undefined-argument-exception";
 
 Injectable()
-export class ExpressionService {
-    constructor( @Inject(MATH_OUTPUT_SERVICE) private mus: MathOutputService) {
-    }
+export class ExpressionOperationService {
 
-    applyChange(data: InternalData, selectedNode: InternalNode, newNode: InternalNode): Object {
+    applyReplacement(data: InternalData, selectedNode: InternalNode, newNode: InternalNode): InternalData {
         if (!data) {
             throw new UndefinedArgumentException("data");
         }
@@ -23,27 +19,30 @@ export class ExpressionService {
             throw new UndefinedArgumentException("newNode");
         }
 
-        var expression: Object;
+        var newData: InternalData;
         var targetNode = this.optimizeTargetNode(selectedNode, newNode);
 
         if (!targetNode) {
-            expression = this.mus.convert(new InternalData(newNode));
+            newData = new InternalData(newNode)
         }
         else {
             let children = targetNode.parent.children;
             let targetNodeIndex = children.indexOf(targetNode);
             let splicedNode = children.splice(targetNodeIndex, 1);
             children.splice(targetNodeIndex, 0, newNode);
+
+            let oldParent = newNode.parent;
             newNode.parent = targetNode.parent;
 
-            expression = this.mus.convert(data);
+            newData = data.clone();
 
             // Reverse changes in the data
             children.splice(targetNodeIndex, 1);
             children.splice(targetNodeIndex, 0, selectedNode);
+            newNode.parent = oldParent;
         }
 
-        return expression;
+        return newData;
     }
 
     // Optimize away containers
@@ -68,4 +67,4 @@ export class ExpressionService {
     }
 }
 
-export default ExpressionService;
+export default ExpressionOperationService;

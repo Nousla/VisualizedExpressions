@@ -7,18 +7,23 @@ import OperationState from './operation-state';
 import { InternalNode } from "../visualization/internal-node";
 import MATH_INPUT_SERVICE from "../visualization/math-input-service-token";
 import MathInputService from "../visualization/math-input-service";
-import { ExpressionService } from "./expression.service";
 import { ProblemSolvingService } from "./problemsolving.service"
 import { ImportExpressionService } from "./import-expression.service";
 import { GuideProgressService } from "./guideprogress.service";
 import { GuideTree, GuideNode } from "./guide-tree";
 import { ButtonModule } from 'primeng/primeng';
+import { MATH_OUTPUT_SERVICE } from "../visualization/math-output-service-token";
+import { MathOutputService } from "../visualization/math-output-service";
 
 @Component({
     selector: 'expression',
     templateUrl: './expression.component.html',
     styleUrls: [`./expression.component.css`],
-    providers: [ExpressionEventHandler, ExpressionService, ProblemSolvingService, GuideProgressService]
+    providers: [
+        ExpressionEventHandler, 
+        ProblemSolvingService, 
+        GuideProgressService
+    ]
 })
 
 export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
@@ -46,7 +51,7 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
 
     constructor(private ees: ExpressionEventService,
         @Inject(MATH_INPUT_SERVICE) private mis: MathInputService,
-        private es: ExpressionService,
+        @Inject(MATH_OUTPUT_SERVICE) private mus: MathOutputService,
         private eh: ExpressionEventHandler,
         private pss: ProblemSolvingService,
         private renderer: Renderer,
@@ -155,9 +160,8 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
         this.updateOperationState();
     }
 
-    onOperationApplied(newNode: InternalNode): void {
-        var expression = this.es.applyChange(this.data, this.selectedNode, newNode);
-        this.ees.addExpression(<string>expression);
+    onOperationApplied(newData: InternalData): void {
+        this.ees.addExpression(<string>this.mus.convert(newData));
         this.onOperationCanceled();
     }
 

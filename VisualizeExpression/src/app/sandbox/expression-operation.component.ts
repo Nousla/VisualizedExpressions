@@ -6,6 +6,7 @@ import MathInputService from "../visualization/math-input-service";
 import MATH_INPUT_SERVICE from "../visualization/math-input-service-token";
 import { ExpressionOperationTextService } from "./expression-operation-text.service";
 import { ButtonModule } from 'primeng/primeng';
+import { ExpressionOperationService } from "./expression-operation.service";
 
 @Component({
     selector: 'expression-operation',
@@ -20,7 +21,7 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
     selectedNode: InternalNode;
 
     @Output()
-    onApplied = new EventEmitter<InternalNode>();
+    onApplied = new EventEmitter<InternalData>();
     @Output()
     onCanceled = new EventEmitter();
 
@@ -28,7 +29,7 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
     applyBtn: HTMLButtonElement;
 
     private currentData: InternalData;
-    private newData: InternalData;
+    private replacementData: InternalData;
     private input: string;
     private infoText: string;
 
@@ -37,7 +38,8 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
     private updated: boolean;
 
     constructor( @Inject(MATH_INPUT_SERVICE) private mis: MathInputService, 
-    private eots: ExpressionOperationTextService) {
+        private eots: ExpressionOperationTextService,
+        private eos: ExpressionOperationService) {
         this.operationState = OperationState.Closed;
         this.updated = false;
     }
@@ -53,7 +55,7 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
                 this.currentData = new InternalData(this.selectedNode);
             }
 
-            this.newData = null;
+            this.replacementData = null;
             this.input = "";
         }
 
@@ -74,12 +76,14 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
     }
 
     private onTimeOut(): void {
-        this.newData = this.mis.convert(this.input);
+        this.replacementData = this.mis.convert(this.input);
         this.updated = true;
     }
 
     private applyOperation(): void {
-        this.onApplied.emit(this.newData.rootNode);
+        let newData: InternalData = this.eos.applyReplacement(this.currentData, 
+                                    this.selectedNode, this.replacementData.rootNode);
+        this.onApplied.emit(newData);
     }
 
     private cancelOperation(): void {
@@ -95,7 +99,7 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
             return true;
         }
 
-        if(!this.newData) {
+        if(!this.replacementData) {
             return true;
         }
 
