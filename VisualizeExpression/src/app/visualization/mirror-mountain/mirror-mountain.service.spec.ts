@@ -74,15 +74,12 @@ describe('Mirror Mountain Service suite', () => {
         expect(svgElement).toBeDefined();
     });
 
-    it('#visualize should add node element', () => {
+    it('#visualize should add symbol node element', () => {
         let nativeElement = document.createElement("div");
 
         let elementRef: ElementRef = new ElementRef(nativeElement);
 
         let internalNode: InternalNode = new InternalNode();
-        internalNode.text = "x";
-        internalNode.children = [];
-        internalNode.type = InternalNodeType.Variable;
         internalNode.group = InternalNodeGroup.Symbol;
 
         let internalData: InternalData = new InternalData(internalNode);
@@ -91,7 +88,89 @@ describe('Mirror Mountain Service suite', () => {
         service.visualize(elementRef, internalData, mockEventHandler);
 
         let svgElement = nativeElement.firstElementChild;
-        let nodeElement = svgElement.querySelector("g");
+        let groupElement = svgElement.firstElementChild;
+        let nodeElement = groupElement.firstElementChild;
+
+        expect(nodeElement).toBeDefined();
+    });
+
+    it('#visualize should add number node element', () => {
+        let nativeElement = document.createElement("div");
+
+        let elementRef: ElementRef = new ElementRef(nativeElement);
+
+        let internalNode: InternalNode = new InternalNode();
+        internalNode.group = InternalNodeGroup.Number;
+
+        let internalData: InternalData = new InternalData(internalNode);
+        let mockEventHandler: MockEmptyVisualizationHandler = new MockEmptyVisualizationHandler();
+
+        service.visualize(elementRef, internalData, mockEventHandler);
+
+        let svgElement = nativeElement.firstElementChild;
+        let groupElement = svgElement.firstElementChild;
+        let nodeElement = groupElement.firstElementChild;
+
+        expect(nodeElement).toBeDefined();
+    });
+
+    it('#visualize should not add container node element', () => {
+        let nativeElement = document.createElement("div");
+
+        let elementRef: ElementRef = new ElementRef(nativeElement);
+
+        let internalNode: InternalNode = new InternalNode();
+        internalNode.group = InternalNodeGroup.Container;
+
+        let internalData: InternalData = new InternalData(internalNode);
+        let mockEventHandler: MockEmptyVisualizationHandler = new MockEmptyVisualizationHandler();
+
+        service.visualize(elementRef, internalData, mockEventHandler);
+
+        let svgElement = nativeElement.firstElementChild;
+        let groupElement = svgElement.firstElementChild;
+        let nodeElement = groupElement.firstElementChild;
+
+        expect(nodeElement).toBeNull();
+    });
+
+    it('#visualize should add operator node element', () => {
+        let nativeElement = document.createElement("div");
+
+        let elementRef: ElementRef = new ElementRef(nativeElement);
+
+        let internalNode: InternalNode = new InternalNode();
+        internalNode.group = InternalNodeGroup.Operator;
+
+        let internalData: InternalData = new InternalData(internalNode);
+        let mockEventHandler: MockEmptyVisualizationHandler = new MockEmptyVisualizationHandler();
+
+        service.visualize(elementRef, internalData, mockEventHandler);
+
+        let svgElement = nativeElement.firstElementChild;
+        let groupElement = svgElement.firstElementChild;
+        let nodeElement = groupElement.firstElementChild;
+
+        expect(nodeElement).toBeDefined();
+    });
+
+    it('#visualize should add unknown node element', () => {
+        let nativeElement = document.createElement("div");
+
+        let elementRef: ElementRef = new ElementRef(nativeElement);
+
+        let internalNode: InternalNode = new InternalNode();
+        internalNode.group = InternalNodeGroup.Unknown;
+
+        let internalData: InternalData = new InternalData(internalNode);
+        let mockEventHandler: MockEmptyVisualizationHandler = new MockEmptyVisualizationHandler();
+
+        service.visualize(elementRef, internalData, mockEventHandler);
+
+        let svgElement = nativeElement.firstElementChild;
+        let groupElement = svgElement.firstElementChild;
+        let nodeElement = groupElement.firstElementChild;
+
         expect(nodeElement).toBeDefined();
     });
 
@@ -102,7 +181,6 @@ describe('Mirror Mountain Service suite', () => {
 
         let internalNode: InternalNode = new InternalNode();
         internalNode.text = "x";
-        internalNode.children = [];
         internalNode.type = InternalNodeType.Variable;
         internalNode.group = InternalNodeGroup.Symbol;
 
@@ -114,6 +192,7 @@ describe('Mirror Mountain Service suite', () => {
         let svgElement = nativeElement.firstElementChild;
         let nodeElement = svgElement.firstElementChild;
         let textElement = svgElement.querySelector("text");
+
         expect(textElement.textContent).toBe("x");
     });
 
@@ -147,6 +226,7 @@ describe('Mirror Mountain Service suite', () => {
         let svgElement = nativeElement.firstElementChild;
         let rootElement = svgElement.firstElementChild;
         let nodeElements = rootElement.querySelectorAll("g");
+
         expect(nodeElements.length).toBe(3);
     });
 
@@ -180,6 +260,7 @@ describe('Mirror Mountain Service suite', () => {
         let svgElement = nativeElement.firstElementChild;
         let rootElement = svgElement.firstElementChild;
         let pathElements = rootElement.querySelectorAll("path");
+
         expect(pathElements.length).toBe(2);
     });
 
@@ -213,6 +294,7 @@ describe('Mirror Mountain Service suite', () => {
         let svgElement = nativeElement.firstElementChild;
         let rootElement = svgElement.firstElementChild;
         let pathElements = rootElement.querySelectorAll("path");
+
         expect(pathElements.length).toBe(0);
     });
 
