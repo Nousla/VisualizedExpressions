@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as math from 'mathjs';
+import { UndefinedArgumentException } from "../exceptions/undefined-argument-exception";
 
 @Injectable()
 export class ProblemSolvingService {
@@ -10,6 +11,12 @@ export class ProblemSolvingService {
         var rightside = expression[1];
         var symbol: string;
 
+        if(!x) {
+            throw new UndefinedArgumentException("x");
+        }
+        if(!y) {
+            throw new UndefinedArgumentException("y");
+        }
         x = math.parse(x).eval();
         y = math.parse(y).eval();
 
@@ -37,8 +44,8 @@ export class ProblemSolvingService {
 
         var scopeCorrect = {};
         var scopeWrong = {};
-        scopeCorrect[symbol] = x;
-        scopeWrong[symbol] = y;
+            scopeCorrect[symbol] = x;
+            scopeWrong[symbol] = y;
 
         try {
             var nodeL = math.parse(leftside);
