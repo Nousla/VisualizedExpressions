@@ -21,8 +21,7 @@ export class MirrorMountainService implements VisualizationService {
             .append("svg")
             .attr("id", "svg-hidden")
             .attr("visibility", "hidden")
-            .style("height", "0")
-            .style("display", "none");
+            .style("height", "0");
 
         svg.append("text");
 
@@ -342,7 +341,7 @@ export class MirrorMountainService implements VisualizationService {
         var rect = newNodeSelection.append("rect")
             .attr("x", "0")
             .attr("y", "0")
-            .attr("width", (node: D3Node) => { return node["width"] })
+            .attr("width", (node: D3Node) => { console.log(node["width"]); return node["width"] })
             .attr("height", this.nodeHeight)
             .attr("class", this.getRectClassName);
 
