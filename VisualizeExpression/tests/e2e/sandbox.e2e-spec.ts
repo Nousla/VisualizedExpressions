@@ -30,13 +30,17 @@ describe('Sandbox', () => {
     });
 
     it('should import expression from guide tree', (done: DoneFn) => {
-        browser.get("/sandbox;ex=x%3D2%2B5");
+        browser.get("/sandbox;sp=gd;tree=%7B%22tree%22%3A%5B%7B%22ex%22"+
+            "%3A%222%2B5%3D10$03%22%7D%2C%7B%22tid%22%3A%220%22%2C%22ex%2"+
+            "2%3A%227%3D10$03%22%7D%2C%7B%22tid%22%3A%220%22%2C%22ex%22%3A"+
+            "%222%2B5%3D7%22%7D%2C%7B%22tid%22%3A%221%2F2%22%2C%22ex%22%3A%227"+
+            "%3D7%22%7D%5D%7D;desc=");
 
         let expression = element(by.tagName('expression'));
         let expressionInput = expression.element(by.css(".expression-edit input"));
 
         expressionInput.getAttribute("value").then((value) => {
-            expect(value).toBe("x=2+5");
+            expect(value).toBe("2+5=10-3");
             done();
         }, () => {
             fail();
@@ -132,9 +136,9 @@ describe('Sandbox', () => {
             return expressionMoveUpButton.click();
         }).then(() => {
             let expressions = element.all(by.tagName('expression'));
-            let expressionInput = expressions.get(0).element(by.css(".expression-edit input"));
+            let originalExpressionInput = expressions.get(0).element(by.css(".expression-edit input"));
 
-            expressionInput.getAttribute("value").then((value) => {
+            originalExpressionInput.getAttribute("value").then((value) => {
                 expect(value).toBe("10");
                 done();
             }, () => {
