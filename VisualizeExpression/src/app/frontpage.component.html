@@ -15,16 +15,16 @@
             </div>
 
             <div *ngSwitchDefault class="SandboxType">
-                <input type="text" pInputText [(ngModel)]="expression" placeholder="Expression">
+                <input type="text" id="expressionInput" pInputText [(ngModel)]="expression" placeholder="Expression">
             </div>
             <div *ngSwitchCase="2" class="ProblemSolvingType">
-                <input type="text" pInputText [(ngModel)]="expression" placeholder="Expression">
-                <input type="text" pInputText [(ngModel)]="correctSolution" placeholder="Correct Solution">
-                <input type="text" pInputText [(ngModel)]="wrongSolution" placeholder="Wrong Solution">
+                <input type="text" id="expressionInput" pInputText [(ngModel)]="expression" placeholder="Expression">
+                <input type="text" id="correctInput" pInputText [(ngModel)]="correctSolution" placeholder="Correct Solution">
+                <input type="text" id="wrongInput" pInputText [(ngModel)]="wrongSolution" placeholder="Wrong Solution">
             </div>
             <div *ngSwitchCase="3" class="GuideType">
-                <textarea [rows]="5" [cols]="30" pInputTextarea [(ngModel)]="tree" placeholder="Tree"></textarea>
-                <textarea [rows]="5" [cols]="30" pInputTextarea [(ngModel)]="description" placeholder="Guide Description"></textarea>
+                <textarea [rows]="5" [cols]="30" id="treeInput" pInputTextarea [(ngModel)]="tree" placeholder="Tree"></textarea>
+                <textarea [rows]="5" [cols]="30" id="descriptionInput" pInputTextarea [(ngModel)]="description" placeholder="Guide Description"></textarea>
             </div>
         </div>
         <textarea id="frontpage-output-area" #outputArea [rows]="2" [cols]="80" pInputTextarea [(ngModel)]="urlOutput" placeholder="URL output"></textarea>
