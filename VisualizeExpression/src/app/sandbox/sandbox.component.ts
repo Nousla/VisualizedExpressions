@@ -36,7 +36,7 @@ import { ExpressionOperationService } from "./expression-operation.service";
 
 export class SandboxComponent {
 
-  @ViewChild("expression-box", { read: ViewContainerRef })
+  @ViewChild("expressionBox", { read: ViewContainerRef })
   private container: ViewContainerRef;
   @ViewChild(ModalSuccessComponent)
   private successModal: ModalSuccessComponent;

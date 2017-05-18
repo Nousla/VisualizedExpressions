@@ -14,7 +14,7 @@ describe('Frontpage', () => {
   it('should go to the sandbox page', () => {
     browser.get("/");
 
-    let sandboxBtn = element(by.css("#frontpage_sandboxbtn"));
+    let sandboxBtn = element(by.css("#frontpage-sandboxbtn"));
     sandboxBtn.click();
 
     browser.getCurrentUrl().then((value: string) => {
