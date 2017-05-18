@@ -1,23 +1,23 @@
-#frontpage_root_box {
+#frontpage-root-box {
     display: flex;
     flex-direction: column;
     padding: 8px;
 }
-#frontpage_title{
+#frontpage-title{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 20pt;
     margin-top: 0px;
     margin-bottom: 5px;
 }
-#frontpage_or_box {
+#frontpage-or-box {
     text-align: center;
 }
-#frontpage_or_text {
+#frontpage-or-text {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: bold;
     margin: 5px 0 0 0;
 }
-#frontpage_inputbox {   
+#frontpage-inputbox {   
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: whitesmoke;
     text-align: center;
@@ -28,33 +28,33 @@
     background-color: grey;
     border-radius: 10px
 }
-.frontpage_expression_box {
+.frontpage-expression-box {
     text-align: center;
 }
-#frontpage_dropdown_generatebtn_box {
+#frontpage-dropdown-generatebtn-box {
     display:flex;
     align-items:flex-start;
     flex-wrap: wrap;
     justify-content: center;
     padding-top: 3px; 
 }
-#frontpage_expression_field {
+#frontpage-expression-field {
     display: block;
     text-align: center;
     margin-left: 60px;
 }
-.frontpage_generatebtn {
+.frontpage-generatebtn {
     display: inline-block;
     margin-left: 2px;
 }
-#frontpage_dropdownmenu {
+#frontpage-dropdownmenu {
     display: inline-block;
     padding-bottom: 10px;
 }
-#frontpage_expression_des {
+#frontpage-expression-des {
     display: block;
 }
-#frontpage_output_area {
+#frontpage-output-area {
     margin-top: 5px;
     margin-bottom: 5px;
     height: 25vh;
@@ -62,7 +62,7 @@
     width: 98%;
     box-sizing: border-box;
 }
-#frontpage_sandboxbtn {
+#frontpage-sandboxbtn {
     text-align: center;
     display: grid;
     padding: 5px;

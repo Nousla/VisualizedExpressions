@@ -1,4 +1,4 @@
-#sandbox_box {
+#sandbox-box {
     height: 100%;
     background-color: rgba(100,170,200,0.35);
     background-image: -webkit-linear-gradient(rgba(255,255,255,1) 0%, rgba(227,227,227,1) 100%);
@@ -7,7 +7,7 @@
     background-image: linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(100,170,200,0.35) 100%);
 }
 
-#sandbox_header_box {
+#sandbox-header-box {
     box-shadow: 0 1px 10px 0px #076993;
     background-color: #3badd7;
 
@@ -15,59 +15,59 @@
     margin-bottom: 10px;
 }
 
-#sandbox_header_box p {
+#sandbox-header-box p {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: whitesmoke;
 }
 
-#sandbox_header_title_box {
+#sandbox-header-title-box {
     display: flex;
     align-items: baseline;
     flex-wrap: wrap;
 }
 
-#sandbox_header_title_box p {
+#sandbox-header-title-box p {
     margin-top: 0;
     margin-bottom: 0;
 }
 
-.sandbox_header_description {
+.sandbox-header-description {
     font-size: 12pt;
     margin-top: 0;
     margin-bottom: 0;
 }
 
-.sandbox_header_text {
+.sandbox-header-text {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin-top: 0;
     margin-bottom: 0;
 }
 
-.sandbox_header_problem {
+.sandbox-header-problem {
     font-weight: bold;
 }
 
-.sandbox_header_guide {
+.sandbox-header-guide {
     margin-top: 5px;
     font-weight: bold;
 }
 
-#sandbox_header_title {
+#sandbox-header-title {
     font-weight: bold;
     font-size: 22pt;
 }
 
-.sandbox_header_title_separator {
+.sandbox-header-title-separator {
     margin-left: 10px;
     margin-right: 10px;
 }
 
-.sandbox_header_subtitle {
+.sandbox-header-subtitle {
     font-weight: bold;
     font-size: 18pt;
 }
 
-.sandbox_information_box {
+.sandbox-information-box {
     display: flex;
     align-items: center;
 
@@ -79,14 +79,14 @@
     margin: 5px;
 }
 
-.sandbox_information_box p {
+.sandbox-information-box p {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     
     margin-bottom: 0;
     color: whitesmoke;
 }
 
-.sandbox_information_icon {
+.sandbox-information-icon {
     width: 24px;
     height: 24px;
     flex-shrink: 0;
@@ -96,15 +96,15 @@
     align-self: flex-start;
 }
 
-#sandbox_imported_expression_box {
+#sandbox-imported-expression-box {
     overflow: hidden;
 }
 
-#sandbox_imported_expression_box_content {
+#sandbox-imported-expression-box-content {
     flex-grow: 1;
 }
 
-#sandbox_imported_expression_title {
+#sandbox-imported-expression-title {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: white;
 
@@ -113,7 +113,7 @@
     border-bottom: 2px solid 444444;
 }
 
-.sandbox_imported_expression {
+.sandbox-imported-expression {
     font-family: monospace;
     font-size: 15pt;
     border: 1px solid grey;
@@ -124,10 +124,10 @@
     box-sizing: border-box; 
 }
 
-#sandbox_imported_expression_visualization {
+#sandbox-imported-expression-visualization {
     margin-top: 5px;
 }
 
-#sandbox_expressions_box {
+#sandbox-expressions-box {
     margin: 10px 5px 5px 5px; 
 }

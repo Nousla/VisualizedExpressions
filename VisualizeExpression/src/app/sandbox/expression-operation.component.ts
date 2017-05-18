@@ -25,9 +25,6 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
     @Output()
     onCanceled = new EventEmitter();
 
-    @ViewChild("applyBtn")
-    applyBtn: HTMLButtonElement;
-
     private currentData: InternalData;
     private replacementData: InternalData;
     private input: string;
