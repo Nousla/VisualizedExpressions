@@ -126,7 +126,7 @@ export class SandboxComponent {
 
   private addExpression(input: string): void {
     var expressionComponent = this.createExpressionComponent();
-    this.getExpressionInstance(expressionComponent).input = input;
+    this.getExpressionInstance(expressionComponent).expressionInput = input;
   }
 
   private removeExpression(index: number) {

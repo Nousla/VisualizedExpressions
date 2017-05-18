@@ -30,14 +30,14 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
     @Input()
     counter: number;
     @Input()
-    input: string;
+    expressionInput: string;
+
+    @ViewChild('banner')
+    private banner: ElementRef;
 
     private subscription: Subscription;
-
     private data: InternalData;
     private config: Object;
-    @ViewChild('banner')
-    banner: ElementRef;
 
     private selectedNode: InternalNode;
     private operationState: OperationState;
@@ -58,7 +58,7 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
         private imp: ImportExpressionService,
         private gps: GuideProgressService
     ) {
-        this.input = "";
+        this.expressionInput = "";
         this.operationState = OperationState.Closed;
         this.expressionEventHandler = eh;
     }
@@ -66,7 +66,7 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
     ngOnInit(): void {
         this.subscription = this.eh.visualizationSelectNode$.subscribe(this.onNodeSelected.bind(this));
         this.updateOperationState();
-        if (this.input) {
+        if (this.expressionInput) {
             this.startInputTimeout();
         }
     }
@@ -96,17 +96,17 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     onTimeOut(): void {
-        this.data = this.mis.convert(this.input);
+        this.data = this.mis.convert(this.expressionInput);
         this.updateOperationState();
     }
 
     onTimeOutCheck(): void {
         if (this.imp.importedSpecifier == "ps") {
-            var psSolution = this.pss.checkExpression(this.input, this.imp.importedCorrectSolution, this.imp.importedWrongSolution);
+            var psSolution = this.pss.checkExpression(this.expressionInput, this.imp.importedCorrectSolution, this.imp.importedWrongSolution);
             if (psSolution == true) {
                 this.renderer.setElementStyle(this.banner.nativeElement, 'backgroundColor', 'green');
 
-                var result = this.input.split('=');
+                var result = this.expressionInput.split('=');
                 var leftside = result[0];
                 var rightside = result[1];
                 if (leftside == this.imp.importedCorrectSolution.toString() || rightside == this.imp.importedCorrectSolution.toString()) {
@@ -118,7 +118,7 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
             }
         } else if (this.imp.importedSpecifier == "gd") {
             var gdSolution = false;
-            try { gdSolution = this.gps.checkGuide(this.input, this.imp.importedGuideTree); }
+            try { gdSolution = this.gps.checkGuide(this.expressionInput, this.imp.importedGuideTree); }
             catch (ex) {
                 //Do nothing
             }
@@ -140,7 +140,7 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     cloneExpression(): void {
-        this.ees.cloneExpression(this.input);
+        this.ees.cloneExpression(this.expressionInput);
     }
 
     moveExpressionUp(): void {
@@ -171,7 +171,7 @@ export class ExpressionComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     updateOperationState(): void {
-        if (this.input !== "") {
+        if (this.expressionInput !== "") {
             if (this.selectedNode) {
                 this.operationState = OperationState.Added;
             }

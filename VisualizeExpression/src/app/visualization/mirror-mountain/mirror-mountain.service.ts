@@ -341,7 +341,7 @@ export class MirrorMountainService implements VisualizationService {
         var rect = newNodeSelection.append("rect")
             .attr("x", "0")
             .attr("y", "0")
-            .attr("width", (node: D3Node) => { console.log(node["width"]); return node["width"] })
+            .attr("width", (node: D3Node) => { return node["width"] })
             .attr("height", this.nodeHeight)
             .attr("class", this.getRectClassName);
 

@@ -1,7 +1,17 @@
 import { browser, element, by } from 'protractor';
 
-describe('Frontpage', function () {
-  it('should go to the sandbox page', function () {
+describe('Frontpage', () => {
+  it('should be on the frontpage', () => {
+        browser.get("/");
+
+        browser.getCurrentUrl().then((value: string) => {
+            expect(value).toEqual(browser.baseUrl + "/");
+        }, () => {
+            fail();
+        });
+    });
+  
+  it('should go to the sandbox page', () => {
     browser.get("/");
 
     let sandboxBtn = element(by.css("#frontpage_sandboxbtn"));
@@ -12,6 +22,5 @@ describe('Frontpage', function () {
     }, () => {
       fail();
     });
-
   });
 });

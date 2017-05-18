@@ -1,4 +1,4 @@
-.expression_box {
+.expression-box {
     position: relative;
 
     background-color: white;
@@ -13,7 +13,7 @@
     overflow: hidden;
 }
 
-.expression_actions {
+.expression-actions {
     display: block;
     padding: 5px;
     background-color: lightblue;
@@ -21,7 +21,7 @@
     margin-bottom: 5px;
 }
 
-.expression_actions_correct {
+.expression-actions-correct {
     display: block;
     padding: 5px;
     background-color: green;
@@ -29,7 +29,7 @@
     margin-bottom: 5px;
 }
 
-.expression_actions_wrong {
+.expression-actions-wrong {
     display: block;
     padding: 5px;
     background-color: red;
@@ -37,11 +37,11 @@
     margin-bottom: 5px;
 }
 
-.expression_actions > button {
+.expression-actions > button {
     font-size: 9pt;
 }
 
-.expression_actions > p {
+.expression-actions > p {
     display: inline-flex;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 10pt;
@@ -56,11 +56,11 @@
     color: white;
 }
 
-.expression_edit {
+.expression-edit {
     margin-bottom: 5px;
 }  
 
-.expression_edit > input {
+.expression-edit > input {
     font-family: monospace;
     font-size: 15pt;
     border: 1px solid grey;
@@ -71,16 +71,10 @@
     box-sizing: border-box; 
 }
 
-.visualization_render {
+.expression-visualization {
     display: block;
     border-top: 1px dashed lightblue;
     padding: 5px;
-}
-
-.visualization_render > img {
-    display: block;
-    zoom: 75%;
-    margin: 0 auto;
 }
 
 .expression {

@@ -1,9 +1,9 @@
-.expression_operation {
+.expression-operation {
     background: grey;
     padding: 5px;
 }
 
-.expression_operation_box {
+.expression-operation-box {
     position: relative;
     border: 2px solid black;
     border-bottom-left-radius: 10px;
@@ -13,12 +13,12 @@
     margin-bottom: 10px;
 }
 
-.expression_operation_info_box {
+.expression-operation-info-box {
     display: flex;
     align-items: center;
 }
 
-.expression_operation_info_box > p {
+.expression-operation-info-box > p {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 10pt;
     font-weight: bold;
@@ -28,27 +28,27 @@
     margin-left: 10px;
 }
 
-.expression_operation_info_box > img {
+.expression-operation-info-box > img {
     width: 24px;
     height: 24px;
 }
 
-.expression_operation_info_icon {
+.expression-operation-info-icon {
     flex-shrink: 0;
 }
 
-.expression_operation_line-divider {
+.expression-operation-line-divider {
     border-top: 1px dashed white;
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-.expression_operation_comparison {
+.expression-operation-comparison {
     display: flex;
     justify-content: space-between;
 }
 
-.expression_operation_current {
+.expression-operation-current {
     background-color: cadetblue;
     border-radius: 5px;
     padding: 5px;
@@ -56,7 +56,7 @@
     overflow: hidden;
 }
 
-.expression_operation_current > p {
+.expression-operation-current > p {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 10pt;
     font-weight: bold;
@@ -65,12 +65,12 @@
     margin-bottom: 5px;
 }
 
-.expression_operation_arrow {
+.expression-operation-arrow {
     align-self: center;
     padding: 5px;
 }
 
-.expression_operation_new {
+.expression-operation-new {
     flex-grow: 0.95;
     background-color: cadetblue;
     border-radius: 5px;
@@ -79,17 +79,17 @@
     overflow: hidden;
 }
 
-.expression_operation_visualization {
+.expression-operation-visualization {
     margin-top: 2px;
 
     overflow: auto;
 }
 
-.expression_operation_edit {    
+.expression-operation-edit {    
     margin-bottom: 5px;
 }
 
-.expression_operation_edit  > label {
+.expression-operation-edit  > label {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 10pt;
     font-weight: bold;
@@ -98,7 +98,7 @@
     margin-bottom: 0;
 }
 
-.expression_operation_edit > input {
+.expression-operation-edit input {
     font-family: monospace;
     font-size: 15pt;
     border: 1px solid grey;
@@ -110,15 +110,15 @@
     box-sizing: border-box; 
 }
 
-.expression_operation_actions {
+.expression-operation-actions {
     float:right;
 }
 
-.expression_operation_actions > button {
+.expression-operation-actions > button {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.expression_operation_actions > button:active {
+.expression-operation-actions > button:active {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: grey;
 }
