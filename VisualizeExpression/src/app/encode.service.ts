@@ -15,6 +15,10 @@ export class EncodeService {
         return encodedURL;
     }
 
+    compress(value: string): string {
+        return value.replace(/(\s|\r\n|\r|\n|\t)/g, "")
+    }
+
     decodeURL(value: string): string {
         if (!value) {
             return null;

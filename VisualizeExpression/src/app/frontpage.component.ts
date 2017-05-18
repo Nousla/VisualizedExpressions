@@ -12,7 +12,6 @@ import { EncodeService } from './encode.service';
 })
 
 export class FrontpageComponent {
-    type: string;
     types: SelectItem[];
     chosenType: number;
     expression: string;
@@ -42,23 +41,23 @@ export class FrontpageComponent {
         switch(this.chosenType){
         case 1:
             URL.push("ex=");
-            URL.push(this.encode.encodeURL(this.expression));
+            URL.push(this.encode.encodeURL(this.encode.compress(this.expression)));
             this.urlOutput=URL.join("");
         break;
         case 2:
             URL.push("sp=ps;");
             URL.push("ex=");
-            URL.push(this.encode.encodeURL(this.expression));
+            URL.push(this.encode.encodeURL(this.encode.compress(this.expression)));
             URL.push(";x=");
-            URL.push(this.encode.encodeURL(this.correctSolution));
+            URL.push(this.encode.encodeURL(this.encode.compress(this.correctSolution)));
             URL.push(";y=");
-            URL.push(this.encode.encodeURL(this.wrongSolution));
+            URL.push(this.encode.encodeURL(this.encode.compress(this.wrongSolution)));
             this.urlOutput=URL.join("");
         break;
         case 3:
             URL.push("sp=gd;");
             URL.push("tree=");
-            URL.push(this.encode.encodeURL(this.tree));
+            URL.push(this.encode.encodeURL(this.encode.compress(this.tree)));
             URL.push(";desc=");
             URL.push(this.encode.encodeURL(this.description));
             this.urlOutput=URL.join("");
