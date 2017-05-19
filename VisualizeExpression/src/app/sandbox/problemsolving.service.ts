@@ -17,8 +17,8 @@ export class ProblemSolvingService {
         if(!wrong) {
             throw new UndefinedArgumentException("wrong");
         }
-        correct = math.parse(correct).eval();
-        wrong = math.parse(wrong).eval();
+        correct = math.eval(correct);
+        wrong = math.eval(wrong);
 
         try {
             var node = math.parse(ex.replace('=', '=='));
@@ -67,8 +67,6 @@ export class ProblemSolvingService {
                 return true
             }
         }
-
         return false
-
     }
 }
