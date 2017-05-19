@@ -4,14 +4,12 @@ import VisualizationEventHandler from './visualization-event-handler';
 
 @Component({
   selector: 'visualization',
-  template: '<visualization-mirror-mountain [data]="data" [config]="config" [eventHandler]="eventHandler"></visualization-mirror-mountain>'
+  template: '<visualization-mirror-mountain [data]="data" [eventHandler]="eventHandler"></visualization-mirror-mountain>'
 })
 
 export class VisualizationComponent {
   @Input()
   private data: InternalData;
-  @Input()
-  private config: Object;
   @Input()
   private eventHandler: VisualizationEventHandler;
 }

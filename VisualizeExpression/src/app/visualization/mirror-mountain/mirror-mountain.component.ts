@@ -17,20 +17,13 @@ export class MirrorMountainComponent implements OnChanges {
   @Input()
   private data: InternalData;
   @Input()
-  private config: Object;
-  @Input()
   private eventHandler: VisualizationEventHandler;
   @ViewChild('mirrorMountainBox')
   private mirrorMountainBox: ElementRef;
 
-  constructor( @Inject(VISUALIZATION_SERVICE) private visualizationService: VisualizationService) { }
+  constructor( @Inject(VISUALIZATION_SERVICE) private visualizationService: MirrorMountainService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    let configChanges = changes["config"];
-    if (configChanges && configChanges.currentValue) {
-      this.visualizationService.configure(this.config);
-    }
-
     let dataChanges = changes["data"];
     if (dataChanges && dataChanges.currentValue) {
       this.visualizationService.visualize(this.mirrorMountainBox, this.data, this.eventHandler);

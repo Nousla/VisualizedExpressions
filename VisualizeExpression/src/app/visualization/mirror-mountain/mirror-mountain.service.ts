@@ -29,14 +29,14 @@ export class MirrorMountainService implements VisualizationService {
             .attr("class", "mirror-mountain-rect");
     }
 
-    configure(config: Object): void {
-        if (config && config instanceof MirrorMountainConfig) {
-            if (config.hasOwnProperty("nodeWidth")) {
-                this.nodeWidth = config["nodeWidth"];
+    configure(config: MirrorMountainConfig): void {
+        if (config) {
+            if (config.nodeWidth) {
+                this.nodeWidth = config.nodeWidth;
             }
 
-            if (config.hasOwnProperty("nodeHeight")) {
-                this.nodeHeight = config["nodeHeight"];
+            if (config.nodeHeight) {
+                this.nodeHeight = config.nodeHeight;
             }
         }
     }
