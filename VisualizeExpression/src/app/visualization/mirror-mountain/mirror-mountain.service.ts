@@ -157,17 +157,6 @@ export class MirrorMountainService implements VisualizationService {
         rootNode["y"] = 0;
 
         var treeHeight = this.calculateHeight(rootNode);
-
-        if (rootNode.children) {
-            for (let i = 0; i < rootNode.children.length; i++) {
-                let childHeight = this.calculateHeight(rootNode.children[i]);
-                let heightDifference = treeHeight - childHeight;
-                if (heightDifference !== 1) {
-                    rootNode.children[i]["offsetHeight"] = heightDifference - 1;
-                }
-            }
-        }
-
         var layoutState = new LayoutState(treeHeight);
         layoutState.currentLevel = 1;
 
@@ -210,7 +199,14 @@ export class MirrorMountainService implements VisualizationService {
                     }
                 }
                 else {
-                    accumulatedChildren.push.apply(accumulatedChildren, nodes[i].children);
+                    let height = this.calculateHeight(nodes[i]);
+                    if(height < layoutState.maxLevel - layoutState.currentLevel)
+                    {
+                        accumulatedChildren.push(nodes[i]); 
+                    }
+                    else {
+                        accumulatedChildren.push.apply(accumulatedChildren, nodes[i].children);
+                    }
                 }
             }
             else {
@@ -250,16 +246,10 @@ export class MirrorMountainService implements VisualizationService {
     }
 
     private postprocessRootNode(rootNode: D3Node, layoutOutput: LayoutOutput): void {
-        var offsetX: number;
-        var offsetY: number;
+        var offsetY: number = 0;
         if (rootNode.children && rootNode.children.length > 0) {
             let topLeftLeafNode = this.findEdgeLeaf(rootNode.children[0], true);
-            offsetX = topLeftLeafNode["x"];
             offsetY = topLeftLeafNode["y"];
-        }
-        else {
-            offsetX = -rootNode["width"] / 2;
-            offsetY = 0;
         }
 
         rootNode.descendants().forEach((node: D3Node) => {
@@ -304,34 +294,9 @@ export class MirrorMountainService implements VisualizationService {
     }
 
     private processNode(node: D3Node, element: d3.EnterElement, eventHandler: VisualizationEventHandler): void {
-        switch (node.data.group) {
-            case InternalNodeGroup.Number: this.processNumberNode(node, element, eventHandler);
-                break;
-            case InternalNodeGroup.Operator: this.processOperatorNode(node, element, eventHandler);
-                break;
-            case InternalNodeGroup.Container: this.processContainerNode(node, element, eventHandler);
-                break;
-            case InternalNodeGroup.Symbol: this.processSymbolNode(node, element, eventHandler);
-                break;
-            default: this.processStandardNode(node, element, eventHandler);
-                break;
+        if(node.data.group !== InternalNodeGroup.Container){
+            this.processStandardNode(node, element, eventHandler);
         }
-    }
-
-    private processNumberNode(node: D3Node, element: d3.EnterElement, eventHandler: VisualizationEventHandler): void {
-        this.processStandardNode(node, element, eventHandler);
-    }
-
-    private processOperatorNode(node: D3Node, element: d3.EnterElement, eventHandler: VisualizationEventHandler): void {
-        this.processStandardNode(node, element, eventHandler);
-    }
-
-    private processContainerNode(node: D3Node, element: d3.EnterElement, eventHandler: VisualizationEventHandler): void {
-        return;
-    }
-
-    private processSymbolNode(node: D3Node, element: d3.EnterElement, eventHandler: VisualizationEventHandler): void {
-        this.processStandardNode(node, element, eventHandler);
     }
 
     private processStandardNode(node: D3Node, element: d3.EnterElement, eventHandler: VisualizationEventHandler): void {
@@ -483,6 +448,8 @@ class LayoutOutput {
         this._maxWidth = maxWidth;
     }
 }
+
+
 
 type D3Node = d3.HierarchyNode<InternalNode>;
 type D3Link = d3.HierarchyLink<InternalNode>;
