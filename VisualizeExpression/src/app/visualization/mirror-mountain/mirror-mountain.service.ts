@@ -200,9 +200,8 @@ export class MirrorMountainService implements VisualizationService {
                 }
                 else {
                     let height = this.calculateHeight(nodes[i]);
-                    if(height < layoutState.maxLevel - layoutState.currentLevel)
-                    {
-                        accumulatedChildren.push(nodes[i]); 
+                    if (height < layoutState.maxLevel - layoutState.currentLevel) {
+                        accumulatedChildren.push(nodes[i]);
                     }
                     else {
                         accumulatedChildren.push.apply(accumulatedChildren, nodes[i].children);
@@ -272,7 +271,7 @@ export class MirrorMountainService implements VisualizationService {
                 && node.data.type !== InternalNodeType.Equality) {
                 var leaves = node.leaves();
                 var treeWidth = this.calculateNodesWidth(leaves);
-                node["x"] = leaves[0]["x"] + (treeWidth / 2) - (node["width"] / 2);
+                node["x"] = leaves[0]["x"] + (leaves[0]["width"] / 2) + (treeWidth / 2) - (node["width"] / 2);
             }
 
             node["x"] += layoutOutput.maxWidth / 2;
@@ -290,11 +289,11 @@ export class MirrorMountainService implements VisualizationService {
 
         var leftNode = nodes[0];
         var rightNode = nodes[nodes.length - 1];
-        return (rightNode["x"] + rightNode["width"]) - leftNode["x"];
+        return rightNode["x"] - leftNode["x"];
     }
 
     private processNode(node: D3Node, element: d3.EnterElement, eventHandler: VisualizationEventHandler): void {
-        if(node.data.group !== InternalNodeGroup.Container){
+        if (node.data.group !== InternalNodeGroup.Container) {
             this.processStandardNode(node, element, eventHandler);
         }
     }
