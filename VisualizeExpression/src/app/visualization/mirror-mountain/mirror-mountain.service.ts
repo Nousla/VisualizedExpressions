@@ -289,7 +289,7 @@ export class MirrorMountainService implements VisualizationService {
 
         var leftNode = nodes[0];
         var rightNode = nodes[nodes.length - 1];
-        return rightNode["x"] - leftNode["x"];
+        return (rightNode["x"] + (rightNode["width"]/2)) - (leftNode["x"] + (leftNode["width"]/2));
     }
 
     private processNode(node: D3Node, element: d3.EnterElement, eventHandler: VisualizationEventHandler): void {
