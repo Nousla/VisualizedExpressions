@@ -1,41 +1,33 @@
 import * as math from 'mathjs';
 import { InternalNode, Type as InternalNodeType, Group as InternalNodeGroup } from './internal-node';
 import InternalData from './internal-data';
-import MathConverterService from './math-converter-service';
+import MathInputService from './math-input-service';
 import { Injectable } from "@angular/core";
 
 @Injectable()
-export class MathTextConverterService implements MathConverterService {
+export class MathTextInputService implements MathInputService {
 
     convert(input: string): InternalData {
-        var processedInput = this.preprocess(input);
-        if(input === "") {
+        if (input === "") {
             return null;
         }
 
-        var nodeMap = new Map<mathjs.MathNode, InternalNode>();
-        var nodeSubstituteMap = new Map<mathjs.MathNode, mathjs.MathNode>();
+        var processedInput = this.preprocess(input);
         var rootNode: mathjs.MathNode;
+
         try {
             rootNode = math.parse(processedInput);
-
-            if (rootNode.type === "ParenthesisNode") {
-                rootNode = rootNode["content"];
-            }
         }
         catch (ex) {
             return null;
         }
+
+        var nodeMap = new Map<mathjs.MathNode, InternalNode>();
         var rootInternalNode = this.createNode(rootNode);
         nodeMap.set(rootNode, rootInternalNode);
         var internalData = new InternalData(rootInternalNode);
 
         rootNode.traverse(function (node: mathjs.MathNode, path: string, parent: mathjs.MathNode) {
-            if (node.type === "ParenthesisNode") {
-                nodeSubstituteMap.set(node, parent);
-                return;
-            }
-
             var internalNode = nodeMap.get(node);
 
             if (internalNode === undefined) {
@@ -43,11 +35,8 @@ export class MathTextConverterService implements MathConverterService {
                 nodeMap.set(node, internalNode);
             }
 
-            if (nodeSubstituteMap.has(parent)) {
-                parent = nodeSubstituteMap.get(parent);
-            }
-
             var internalParentNode = nodeMap.get(parent);
+            internalNode.parent = internalParentNode;
 
             if (internalParentNode !== undefined) {
                 if (internalParentNode.children === undefined) {
@@ -61,11 +50,11 @@ export class MathTextConverterService implements MathConverterService {
     }
 
     private preprocess(input: string): string {
-        return input.replace('=', '==').replace('/(\r\n|\r|\n)/g','');
+        return input.replace('=', '==');
     }
 
     private postprocessOperator(input: string): string {
-        return input.replace('==','=');
+        return input.replace('==', '=');
     }
 
     private createNode(node: mathjs.MathNode): InternalNode {
@@ -73,21 +62,31 @@ export class MathTextConverterService implements MathConverterService {
 
         switch (node.type) {
             case "ConstantNode":
-                internalNode.name = node.value;
+                internalNode.text = node.value;
                 internalNode.type = Number.isInteger(+node.value)
                     ? InternalNodeType.Integer
                     : InternalNodeType.Decimal;
                 internalNode.group = InternalNodeGroup.Number;
                 break;
             case "OperatorNode":
-                internalNode.name = (node.op = this.postprocessOperator(node.op));
+                internalNode.text = (node.op = this.postprocessOperator(node.op));
                 internalNode.type = this.getOperatorType(node);
                 internalNode.group = InternalNodeGroup.Operator;
                 break;
+            case "ParenthesisNode":
+                internalNode.text = "()";
+                internalNode.type = InternalNodeType.Parentheses;
+                internalNode.group = InternalNodeGroup.Container;
+                break;
+            case "SymbolNode":
+                internalNode.text = node.name;
+                internalNode.type = InternalNodeType.Variable;
+                internalNode.group = InternalNodeGroup.Symbol;
+                break;
             default:
-                internalNode.name = "?";
-                internalNode.type = undefined;
-                internalNode.group = undefined;
+                internalNode.text = "?";
+                internalNode.type = InternalNodeType.Unknown;
+                internalNode.group = InternalNodeGroup.Unknown;
                 break;
         }
 
@@ -99,8 +98,11 @@ export class MathTextConverterService implements MathConverterService {
             case "+": return InternalNodeType.Addition;
             case "-": return InternalNodeType.Subtraction;
             case "=": return InternalNodeType.Equality;
+            case "*": return InternalNodeType.Multiplication;
+            case "/": return InternalNodeType.Division;
+            default: return InternalNodeType.Unknown;
         }
-
-        return undefined;
     }
 }
+
+export default MathTextInputService;

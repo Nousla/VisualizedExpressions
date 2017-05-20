@@ -1,0 +1,33 @@
+<div id="frontpage-root-box">
+    <h4 id="frontpage-title">Visualized Mathematical Expressions</h4>
+    <div class="frontpage-sandboxbtn-box">
+        <button id="frontpage-sandboxbtn" pButton type="button" (click)="onGoToSandbox()" label="Go to Sandbox"></button>
+    </div>
+    <div id="frontpage-or-box">
+        <p id="frontpage-or-text">Or</p>
+    </div>
+    <div id="frontpage-inputbox">
+        <div class="frontpage-expression-box" [ngSwitch]="chosenType">
+            <label id="frontpage-expression-des">Choose the type of tool you want to use and then fill out the necessary boxes </label>
+            <div id="frontpage-dropdown-generatebtn-box">
+                <p-dropdown id="frontpage-dropdownmenu" [options]="types" [(ngModel)]="type" (onChange)="onDropdownChange($event.originalEvent, $event.value)"></p-dropdown>
+                <button class="frontpage-generatebtn" pButton type="button" (click)="onGenerateURL()" label="Generate URL"></button>
+            </div>
+
+            <div *ngSwitchDefault class="SandboxType">
+                <input type="text" id="expressionInput" pInputText [(ngModel)]="expression" placeholder="Expression">
+            </div>
+            <div *ngSwitchCase="2" class="ProblemSolvingType">
+                <input type="text" id="expressionInput" pInputText [(ngModel)]="expression" placeholder="Expression">
+                <input type="text" id="correctInput" pInputText [(ngModel)]="correctSolution" placeholder="Correct Solution">
+                <input type="text" id="wrongInput" pInputText [(ngModel)]="wrongSolution" placeholder="Wrong Solution">
+            </div>
+            <div *ngSwitchCase="3" class="GuideType">
+                <textarea [rows]="5" [cols]="30" id="treeInput" pInputTextarea [(ngModel)]="tree" placeholder="Tree"></textarea>
+                <textarea [rows]="5" [cols]="30" id="descriptionInput" pInputTextarea [(ngModel)]="description" placeholder="Guide Description"></textarea>
+            </div>
+        </div>
+        <textarea id="frontpage-output-area" #outputArea [rows]="2" [cols]="80" pInputTextarea [(ngModel)]="urlOutput" placeholder="URL output"></textarea>
+        <button class="frontpage-copybtn" pButton type="button" (click)="onCopy()" label="Copy Link"></button>
+    </div>
+</div>

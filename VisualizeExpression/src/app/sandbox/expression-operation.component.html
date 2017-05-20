@@ -1,0 +1,38 @@
+<div class="expression-operation-box" [ngSwitch]="operationState">
+    <div *ngSwitchDefault class="expression-operation expression-operation-closed">
+        <div class="expression-operation-info-box">
+            <img class="expression-operation-info-icon" src="/assets/images/icon-information-white-32x32.png" />
+            <p>{{infoText}}</p>
+        </div>
+    </div>
+    <div *ngSwitchCase="2" class="expression-operation expression-operation-added">
+        <div class="expression-operation-info-box">
+            <img class="expression-operation-info-icon" src="/assets/images/icon-information-white-32x32.png" />
+            <p>{{infoText}}</p>
+        </div>
+        <div class="expression-operation-line-divider"></div>
+        <div class="expression-operation-comparison">
+            <div class="expression-operation-current">
+                <p>Current expression</p>
+                <visualization [data]="currentData" class="expression-operation-visualization"></visualization>
+            </div>
+            <div class="expression-operation-arrow">
+                <img class="expression-operation-info-icon" src="/assets/images/icon-arrow-white-32x24.png" />
+            </div>
+            <div class="expression-operation-new">
+                <div class="expression-operation-edit">
+                    <label> Replacement expression
+                        <input type="text" (ngModelChange)="onInputChange($event)" [(ngModel)]="input" />
+                    </label>
+                </div>
+                <div class="expression-operation-visualization">
+                    <visualization [data]="replacementData" class="expression-operation-visualization"></visualization>
+                </div>
+                <div class="expression-operation-actions">
+                    <button class="expression-operation-apply-button" pButton (click)="applyOperation()" [disabled]="isApplyBtnDisabled()" label="Apply Operation"></button>
+                    <button class="expression-operation-cancel-button" pButton (click)="cancelOperation()" label="Cancel Operation"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

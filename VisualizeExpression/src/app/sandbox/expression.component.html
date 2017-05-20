@@ -1,17 +1,21 @@
-<div class="expression_box">
-    <div class="expression_actions">
+<div class="expression-box">
+    <div class="expression-actions" #banner>
         <p>{{counter}}</p>
-        <button (click)="add()">Insert New</button>
-        <button (click)="clone()">Clone</button>
-        <button (click)="remove()">Remove</button>
-        <button>Move up</button>
-        <button>Move down</button>
+        <button class="expression-add-button" pButton (click)="addExpression()" label="Add New"></button>
+        <button class="expression-clone-button"pButton (click)="cloneExpression()" label="Clone"></button>
+        <button class="expression-remove-button" pButton (click)="removeExpression()" label="Remove"></button>
+        <button class="expression-move-up-button"pButton (click)="moveExpressionUp()" label="Move up"></button>
+        <button class="expression-move-down-button" pButton (click)="moveExpressionDown()" label="Move down"></button>
     </div>
-    <div class="expression_edit">
-        <textarea rows="1" [(ngModel)]="input" (ngModelChange)="onInputChange($event)">Insert expression here</textarea>
+    <div class="expression-edit">
+        <input type="text" (ngModelChange)="onInputChange($event)" [(ngModel)]="expressionInput">
     </div>
-    <div class="visualization_render">
-        <visualization [data]="data" [config]="config"></visualization>
+    <div class="expression-visualization">
+        <visualization [data]="data" [eventHandler]="expressionEventHandler"></visualization>
     </div>
-    <div class="expression" id="expression_2"></div>
 </div>
+
+<expression-operation 
+    [operationState]="operationState" [selectedNode]="selectedNode" 
+    (onApplied)="onOperationApplied($event)" (onCanceled)="onOperationCanceled()">
+</expression-operation>

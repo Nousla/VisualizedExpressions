@@ -1,0 +1,124 @@
+.expression-operation {
+    background: grey;
+    padding: 5px;
+}
+
+.expression-operation-box {
+    position: relative;
+    border: 2px solid black;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    overflow: hidden;
+    margin-top: -11px;
+    margin-bottom: 10px;
+}
+
+.expression-operation-info-box {
+    display: flex;
+    align-items: center;
+}
+
+.expression-operation-info-box > p {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 10pt;
+    font-weight: bold;
+    color: white;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 10px;
+}
+
+.expression-operation-info-box > img {
+    width: 24px;
+    height: 24px;
+}
+
+.expression-operation-info-icon {
+    flex-shrink: 0;
+}
+
+.expression-operation-line-divider {
+    border-top: 1px dashed white;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.expression-operation-comparison {
+    display: flex;
+    justify-content: space-between;
+}
+
+.expression-operation-current {
+    background-color: cadetblue;
+    border-radius: 5px;
+    padding: 5px;
+
+    overflow: hidden;
+}
+
+.expression-operation-current > p {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 10pt;
+    font-weight: bold;
+    color: white;
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.expression-operation-arrow {
+    align-self: center;
+    padding: 5px;
+}
+
+.expression-operation-new {
+    flex-grow: 0.95;
+    background-color: cadetblue;
+    border-radius: 5px;
+    padding: 5px;
+
+    overflow: hidden;
+}
+
+.expression-operation-visualization {
+    margin-top: 2px;
+
+    overflow: auto;
+}
+
+.expression-operation-edit {    
+    margin-bottom: 5px;
+}
+
+.expression-operation-edit  > label {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 10pt;
+    font-weight: bold;
+    color: white;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.expression-operation-edit input {
+    font-family: monospace;
+    font-size: 15pt;
+    border: 1px solid grey;
+    height: 23px;
+    width: 100%;
+    padding: 1px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box; 
+}
+
+.expression-operation-actions {
+    float:right;
+}
+
+.expression-operation-actions > button {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.expression-operation-actions > button:active {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: grey;
+}

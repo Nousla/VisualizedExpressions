@@ -2,8 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { MirrorMountainComponent } from './mirror-mountain.component';
+import { VISUALIZATION_SERVICE } from "../visualization-injection-token";
+import { MirrorMountainService } from "./mirror-mountain.service";
 
-describe('MirrorMountainComponent suite', () => {
+describe('Mirror Mountain Component suite', () => {
     var component: MirrorMountainComponent;
     var componentFixture: ComponentFixture<MirrorMountainComponent>;
     var debugElement: DebugElement;
@@ -11,13 +13,16 @@ describe('MirrorMountainComponent suite', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [MirrorMountainComponent]
+            declarations: [MirrorMountainComponent],
+            providers: [
+                { provide: VISUALIZATION_SERVICE, useFactory: () => {return {} }}
+            ]
         });
 
         componentFixture = TestBed.createComponent(MirrorMountainComponent);
         component = componentFixture.componentInstance;
 
-        debugElement = componentFixture.debugElement.query(By.css(".chartContainer"));
+        debugElement = componentFixture.debugElement;
         htmlElement = debugElement.nativeElement;
     });
 
@@ -27,6 +32,6 @@ describe('MirrorMountainComponent suite', () => {
 
     it('should display nothing if no data', () => {
         componentFixture.detectChanges();
-        expect(htmlElement.innerHTML).toBeNull();
+        expect(htmlElement.querySelector(".mirror-mountain-box").innerHTML).toBe('');
     });
 });

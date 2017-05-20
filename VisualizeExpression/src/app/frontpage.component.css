@@ -1,0 +1,70 @@
+#frontpage-root-box {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+}
+#frontpage-title{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 20pt;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+#frontpage-or-box {
+    text-align: center;
+}
+#frontpage-or-text {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    margin: 5px 0 0 0;
+}
+#frontpage-inputbox {   
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: whitesmoke;
+    text-align: center;
+    margin-top: 5px;
+    padding: 5px;
+
+    box-shadow: 0 1px 10px 0px #555555;
+    background-color: grey;
+    border-radius: 10px
+}
+.frontpage-expression-box {
+    text-align: center;
+}
+#frontpage-dropdown-generatebtn-box {
+    display:flex;
+    align-items:flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-top: 3px; 
+}
+#frontpage-expression-field {
+    display: block;
+    text-align: center;
+    margin-left: 60px;
+}
+.frontpage-generatebtn {
+    display: inline-block;
+    margin-left: 2px;
+}
+#frontpage-dropdownmenu {
+    display: inline-block;
+    padding-bottom: 10px;
+}
+#frontpage-expression-des {
+    display: block;
+}
+#frontpage-output-area {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: 25vh;
+
+    width: 98%;
+    box-sizing: border-box;
+}
+#frontpage-sandboxbtn {
+    text-align: center;
+    display: grid;
+    padding: 5px;
+    width: 100%;
+}
