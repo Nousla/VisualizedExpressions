@@ -18,6 +18,8 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
     @Input()
     operationState: OperationState;
     @Input()
+    expressionData: InternalData;
+    @Input()
     selectedNode: InternalNode;
 
     @Output()
@@ -78,7 +80,7 @@ export class ExpressionOperationComponent implements OnInit, OnChanges {
     }
 
     private applyOperation(): void {
-        let newData: InternalData = this.eos.applyReplacement(this.currentData, 
+        let newData: InternalData = this.eos.applyReplacement(this.expressionData, 
                                     this.selectedNode, this.replacementData.rootNode);
         this.onApplied.emit(newData);
     }
