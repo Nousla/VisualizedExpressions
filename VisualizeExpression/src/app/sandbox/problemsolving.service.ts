@@ -60,10 +60,7 @@ export class ProblemSolvingService {
         }
 
         if (evalL == evalR) {
-            if (evalLW != evalR) {
-                return true
-            }
-            else if (evalRW != evalL) {
+            if (evalLW != evalRW) {
                 return true
             }
         }
